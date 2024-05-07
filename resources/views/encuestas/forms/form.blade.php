@@ -29,9 +29,30 @@ acompanamiento_articulador
 articulacion_alcanza_proposito
 articulacion_fue_fundamental
 articulador_es_capaz
+articulador_hace_seguimiento
+articulador_presenta_recursos
+articulador_demuestra_acompanamiento
+comparte_credenciales
+con_quien_comparte
+motivo_compartir_credenciales
+aspectos_a_mejorar
+alcanza_objetivos
+motivo_no_logrado
+uso_otros_servicios
+otros_servicios
  --}}
-
+ {{-- <p>5 star rating with a default value</p>
+ <div class="stars">
+     <input type="radio" name="rating4" value="1" />
+     <input type="radio" name="rating4" value="2" />
+     <input type="radio" name="rating4" value="3" checked />
+     <input type="radio" name="rating4" value="4" />
+     <input type="radio" name="rating4" value="5" />
+     <i></i>
+ </div> --}}
 <div class="row card-panel">
+    <input type="hidden" name="token_encuesta" value="{{$token}}">
+    <input type="hidden" name="proyecto_id" value="{{$proyecto->id}}">
     <h4 class="center-align primary-text">Datos generales</h4>
     <div class="input-field col s12 m12 l12">
         <h6 class="black-text"><b>Estado de su proyecto</b> <span class="red-text">*</span></h6>
@@ -95,18 +116,42 @@ articulador_es_capaz
                 estrella representa la calificación más baja y tres (3) estrellas la calificación más alta. 
                 Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
-            <p class="range-field">
+            {{-- <p class="range-field">
                 <input type="range" id="infocenter_amabilidad" name="infocenter_amabilidad" min="1" max="3" />
+            </p> --}}
+            <p class="no-p-v">
+                <input class="with-gap " name="infocenter_amabilidad" type="radio"
+                    id="infocenter_amabilidad1" value="1">
+                <label for="infocenter_amabilidad1" class="p-h-md">1</label>
+                <input class="with-gap" t name="infocenter_amabilidad" type="radio"
+                    id="infocenter_amabilidad2" value="2">
+                <label for="infocenter_amabilidad2" class="p-h-md">2</label>
+                <input class="with-gap" name="infocenter_amabilidad" type="radio"
+                    id="infocenter_amabilidad3" value="3">
+                <label for="infocenter_amabilidad3" class="p-h-md">3</label>
             </p>
+            <small id="infocenter_amabilidad-error" class="p-v-xs error red-text"></small>
         </div>
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
                 <b>Puntúe el conocimiento demostrado por Infocenter donde una (1) estrella representa la calificación 
                 más baja y tres (3) estrellas la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
-            <p class="range-field">
+            {{-- <p class="range-field">
                 <input type="range" id="infocenter_conocimiento" name="infocenter_conocimiento" min="1" max="3" />
+            </p> --}}
+            <p class="no-p-v">
+                <input class="with-gap " name="infocenter_conocimiento" type="radio"
+                    id="infocenter_conocimiento1" value="1">
+                <label for="infocenter_conocimiento1" class="p-h-md">1</label>
+                <input class="with-gap" t name="infocenter_conocimiento" type="radio"
+                    id="infocenter_conocimiento2" value="2">
+                <label for="infocenter_conocimiento2" class="p-h-md">2</label>
+                <input class="with-gap" name="infocenter_conocimiento" type="radio"
+                    id="infocenter_conocimiento3" value="3">
+                <label for="infocenter_conocimiento3" class="p-h-md">3</label>
             </p>
+            <small id="infocenter_conocimiento-error" class="p-v-xs error red-text"></small>
         </div>
     </div>
     <div class="col s12 m12 l12">
@@ -127,18 +172,42 @@ articulador_es_capaz
                 estrella representa la calificación más baja y tres (3) estrellas la calificación más alta. 
                 Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
-            <p class="range-field">
+            {{-- <p class="range-field">
                 <input type="range" id="dinamizador_amabilidad" name="dinamizador_amabilidad" min="1" max="3" />
+            </p> --}}
+            <p class="no-p-v">
+                <input class="with-gap " name="dinamizador_amabilidad" type="radio"
+                    id="dinamizador_amabilidad1" value="1">
+                <label for="dinamizador_amabilidad1" class="p-h-md">1</label>
+                <input class="with-gap" t name="dinamizador_amabilidad" type="radio"
+                    id="dinamizador_amabilidad2" value="2">
+                <label for="dinamizador_amabilidad2" class="p-h-md">2</label>
+                <input class="with-gap" name="dinamizador_amabilidad" type="radio"
+                    id="dinamizador_amabilidad3" value="3">
+                <label for="dinamizador_amabilidad3" class="p-h-md">3</label>
             </p>
+            <small id="dinamizador_amabilidad-error" class="p-v-xs error red-text"></small>
         </div>
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
                 <b>Puntúe el conocimiento demostrado por Dinamizador@ donde una (1) estrella representa la calificación 
                 más baja y tres (3) estrellas la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
-            <p class="range-field">
+            {{-- <p class="range-field">
                 <input type="range" id="dinamizador_conocimiento" name="dinamizador_conocimiento" min="1" max="3" />
+            </p> --}}
+            <p class="no-p-v">
+                <input class="with-gap " name="dinamizador_conocimiento" type="radio"
+                    id="dinamizador_conocimiento1" value="1">
+                <label for="dinamizador_conocimiento1" class="p-h-md">1</label>
+                <input class="with-gap" t name="dinamizador_conocimiento" type="radio"
+                    id="dinamizador_conocimiento2" value="2">
+                <label for="dinamizador_conocimiento2" class="p-h-md">2</label>
+                <input class="with-gap" name="dinamizador_conocimiento" type="radio"
+                    id="dinamizador_conocimiento3" value="3">
+                <label for="dinamizador_conocimiento3" class="p-h-md">3</label>
             </p>
+            <small id="dinamizador_conocimiento-error" class="p-v-xs error red-text"></small>
         </div>
     </div>
     <div class="col s12 m12 l12">
@@ -159,18 +228,42 @@ articulador_es_capaz
                 estrella representa la calificación más baja y tres (3) estrellas la calificación más alta. 
                 Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
-            <p class="range-field">
+            {{-- <p class="range-field">
                 <input type="range" id="articulador_amabilidad" name="articulador_amabilidad" min="1" max="3" />
+            </p> --}}
+            <p class="no-p-v">
+                <input class="with-gap " name="articulador_amabilidad" type="radio"
+                    id="articulador_amabilidad1" value="1">
+                <label for="articulador_amabilidad1" class="p-h-md">1</label>
+                <input class="with-gap" t name="articulador_amabilidad" type="radio"
+                    id="articulador_amabilidad2" value="2">
+                <label for="articulador_amabilidad2" class="p-h-md">2</label>
+                <input class="with-gap" name="articulador_amabilidad" type="radio"
+                    id="articulador_amabilidad3" value="3">
+                <label for="articulador_amabilidad3" class="p-h-md">3</label>
             </p>
+            <small id="articulador_amabilidad-error" class="p-v-xs error red-text"></small>
         </div>
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
                 <b>Puntúe el conocimiento demostrado por Articulador@ donde una (1) estrella representa la calificación 
                 más baja y tres (3) estrellas la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
-            <p class="range-field">
+            {{-- <p class="range-field">
                 <input type="range" id="articulador_conocimiento" name="articulador_conocimiento" min="1" max="3" />
+            </p> --}}
+            <p class="no-p-v">
+                <input class="with-gap " name="articulador_conocimiento" type="radio"
+                    id="articulador_conocimiento1" value="1">
+                <label for="articulador_conocimiento1" class="p-h-md">1</label>
+                <input class="with-gap" t name="articulador_conocimiento" type="radio"
+                    id="articulador_conocimiento2" value="2">
+                <label for="articulador_conocimiento2" class="p-h-md">2</label>
+                <input class="with-gap" name="articulador_conocimiento" type="radio"
+                    id="articulador_conocimiento3" value="3">
+                <label for="articulador_conocimiento3" class="p-h-md">3</label>
             </p>
+            <small id="articulador_conocimiento-error" class="p-v-xs error red-text"></small>
         </div>
     </div>
     {{-- <div class="row"> --}}
@@ -182,11 +275,23 @@ articulador_es_capaz
             </h6>
         </div>
     {{-- </div> --}}
-    <div class="col s12 m5 l5">
+    {{-- <div class="col s12 m5 l5">
         <p class="range-field">
             <input width="50%" type="range" id="dispocision_personal" name="dispocision_personal" min="1" max="3" step="1"/>
         </p>
-    </div>
+    </div> --}}
+    <p class="no-p-v">
+        <input class="with-gap " name="dispocision_personal" type="radio"
+            id="dispocision_personal1" value="1">
+        <label for="dispocision_personal1" class="p-h-md">1</label>
+        <input class="with-gap" t name="dispocision_personal" type="radio"
+            id="dispocision_personal2" value="2">
+        <label for="dispocision_personal2" class="p-h-md">2</label>
+        <input class="with-gap" name="dispocision_personal" type="radio"
+            id="dispocision_personal3" value="3">
+        <label for="dispocision_personal3" class="p-h-md">3</label>
+    </p>
+    <small id="dispocision_personal-error" class="p-v-xs error red-text"></small>
     <div class="col s12 m12 l12">
         <h6 class="black-text">
             <b>A continuación, califique las siguientes afirmaciones de acuerdo con su 
@@ -206,6 +311,8 @@ articulador_es_capaz
                     <td>
                         Me sentí acompañado y asesorado para enfrentar el Comité de Ideas, reconociendo claramente 
                         cómo debía presentar mi idea y bajo qué parámetros iba a ser evaluado mi proyecto.
+                        <br>
+                        <small id="acompanamiento_comite-error" class="p-v-xs error red-text"></small>
                     </td>
                     <td>
                         <p class="center">
@@ -227,7 +334,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>El Comité de Ideas se desarrolló oportunamente y bajo los parámetros socializados.</td>
+                    <td>
+                        El Comité de Ideas se desarrolló oportunamente y bajo los parámetros socializados.
+                        <br>
+                        <small id="desarrollo_comite-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert121" name="desarrollo_comite" type="radio" value="En desacuerdo">
@@ -248,7 +359,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>La asignación de mi experto se dió de manera ágil luego de que el Comité de Ideas aprobará mi idea.</td>
+                    <td>
+                        La asignación de mi experto se dió de manera ágil luego de que el Comité de Ideas aprobará mi idea.
+                        <br>
+                        <small id="asignacion_experto-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert131" name="asignacion_experto" type="radio" value="En desacuerdo">
@@ -269,7 +384,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>Realicé la inscripción en plataforma de manera sencilla.</td>
+                    <td>
+                        Realicé la inscripción en plataforma de manera sencilla.
+                        <br>
+                        <small id="inscripcion_plataforma-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert141" name="inscripcion_plataforma" type="radio" value="En desacuerdo">
@@ -290,7 +409,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>Me fue fácil utilizar la plataforma de Tecnoparque pues es una plataforma intuitiva.</td>
+                    <td>
+                        Me fue fácil utilizar la plataforma de Tecnoparque pues es una plataforma intuitiva.
+                        <br>
+                        <small id="uso_plataforma-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert151" name="uso_plataforma" type="radio" value="En desacuerdo">
@@ -332,6 +455,8 @@ articulador_es_capaz
                 <tr>
                     <td>
                         El experto demuestra conocimiento y experiencia en acompañamiento para el desarrollo de proyectos
+                        <br>
+                        <small id="conocimiento_experto-error" class="p-v-xs error red-text"></small>
                     </td>
                     <td>
                         <p class="center">
@@ -353,7 +478,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>El acompañamiento del experto ayudó a lograr los objetivos propuestos.</td>
+                    <td>
+                        El acompañamiento del experto ayudó a lograr los objetivos propuestos.
+                        <br>
+                        <small id="experto_ayuda_objetivos-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert221" name="experto_ayuda_objetivos" type="radio" value="En desacuerdo">
@@ -374,7 +503,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>El experto cumple con el cronograma de las actividades planeadas y concertadas previamente.</td>
+                    <td>
+                        El experto cumple con el cronograma de las actividades planeadas y concertadas previamente.
+                        <br>
+                        <small id="experto_cumple_cronograma-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert231" name="experto_cumple_cronograma" type="radio" value="En desacuerdo">
@@ -395,7 +528,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>El experto realiza seguimiento a las actividades que me han sido asignadas como Talento.</td>
+                    <td>
+                        El experto realiza seguimiento a las actividades que me han sido asignadas como Talento.
+                        <br>
+                        <small id="experto_hace_seguimiento-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert241" name="experto_hace_seguimiento" type="radio" value="En desacuerdo">
@@ -416,7 +553,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>El experto presenta recursos y ayudas para el desarrollo del proyecto.</td>
+                    <td>
+                        El experto presenta recursos y ayudas para el desarrollo del proyecto.
+                        <br>
+                        <small id="experto_presenta_recursos-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert251" name="experto_presenta_recursos" type="radio" value="En desacuerdo">
@@ -437,7 +578,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>El experto entrega documentos de seguimiento en el desarrollo del proyecto de manera oportuna y eficiente.</td>
+                    <td>
+                        El experto entrega documentos de seguimiento en el desarrollo del proyecto de manera oportuna y eficiente.
+                        <br>
+                        <small id="experto_entrega_documentos-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert261" name="experto_entrega_documentos" type="radio" value="En desacuerdo">
@@ -458,7 +603,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>El experto demuestra calidad, responsabilidad, puntualidad y motivación en el acompañamiento del proyecto.</td>
+                    <td>
+                        El experto demuestra calidad, responsabilidad, puntualidad y motivación en el acompañamiento del proyecto.
+                        <br>
+                        <small id="experto_acompana-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert271" name="experto_acompana" type="radio" value="En desacuerdo">
@@ -500,6 +649,8 @@ articulador_es_capaz
                 <tr>
                     <td>
                         La infraestructura tecnológica del Tecnoparque es acorde a las necesidades de desarrollo de mi proyecto.
+                        <br>
+                        <small id="infraestructura_acorde_necesidades-error" class="p-v-xs error red-text"></small>
                     </td>
                     <td>
                         <p class="center">
@@ -521,7 +672,12 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>Existía la disponibilidad física (de sillas, mesas, maquinaría, iluminación, ventilación, entre otras condiciones) adecuada en el Tecnoparque para el desarrollo de mi proyecto.</td>
+                    <td>
+                        Existía la disponibilidad física (de sillas, mesas, maquinaría, iluminación, ventilación, 
+                        entre otras condiciones) adecuada en el Tecnoparque para el desarrollo de mi proyecto.
+                        <br>
+                        <small id="infraestructura_disponibilidad-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert321" name="infraestructura_disponibilidad" type="radio" value="En desacuerdo">
@@ -542,7 +698,11 @@ articulador_es_capaz
                     </td>
                 </tr>
                 <tr>
-                    <td>Los materiales utilizados estuvieron disponibles y me ayudaron en el logro del mi proyecto.</td>
+                    <td>
+                        Los materiales utilizados estuvieron disponibles y me ayudaron en el logro de mi proyecto.
+                        <br>
+                        <small id="materiales_disponibilidad-error" class="p-v-xs error red-text"></small>
+                    </td>
                     <td>
                         <p class="center">
                             <input class="with-gap" id="likert331" name="materiales_disponibilidad" type="radio" value="En desacuerdo">
@@ -568,19 +728,19 @@ articulador_es_capaz
     <div class="input-field col s12 m12 l12">
         <h6 class="black-text"><b>¿Recibió acompañamiento del Articulador del Tecnoparque que lo atendió?</b> <span class="red-text">*</span></h6>
         <p>
-            <input class="with-gap" id="radio31" name="acompanamiento_articulador" type="radio" onclick="divArticuladorAcompanamiento.show()" value="Sí lo necesitaba y recibí acompañamiento en mi proyecto">
+            <input class="with-gap" id="radio31" name="acompanamiento_articulador" type="radio" onclick="javascript:void(0); divArticuladorAcompanamiento.show()" value="Sí lo necesitaba y recibí acompañamiento en mi proyecto">
             <label for="radio31" class="p-h-md">Sí lo necesitaba y recibí acompañamiento en mi proyecto</label>
         </p>
         <p>
-            <input class="with-gap" id="radio32" name="acompanamiento_articulador" type="radio" onclick="divArticuladorAcompanamiento.show()" value="Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo">
+            <input class="with-gap" id="radio32" name="acompanamiento_articulador" type="radio" onclick="javascript:void(0); divArticuladorAcompanamiento.show()" value="Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo">
             <label for="radio32" class="p-h-md">Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo</label>
         </p>
         <p>
-            <input class="with-gap" id="radio33" name="acompanamiento_articulador" type="radio" onclick="divArticuladorAcompanamiento.hide()" value="Mi proyecto no lo requería">
+            <input class="with-gap" id="radio33" name="acompanamiento_articulador" type="radio" onclick="javascript:void(0); divArticuladorAcompanamiento.hide()" value="Mi proyecto no lo requería">
             <label for="radio33" class="p-h-md">Mi proyecto no lo requería</label>
         </p>
         <p>
-            <input class="with-gap" id="radio34" name="acompanamiento_articulador" type="radio" onclick="divArticuladorAcompanamiento.hide()" value="No conozco el servicio que ofrece el articulador del Tecnoparque">
+            <input class="with-gap" id="radio34" name="acompanamiento_articulador" type="radio" onclick="javascript:void(0); divArticuladorAcompanamiento.hide()" value="No conozco el servicio que ofrece el articulador del Tecnoparque">
             <label for="radio34" class="p-h-md">No conozco el servicio que ofrece el articulador del Tecnoparque</label>
         </p>
         <small id="acompanamiento_articulador-error" class="p-v-xs error red-text"></small>
@@ -604,6 +764,8 @@ articulador_es_capaz
                     <tr>
                         <td>
                             La articulación realizada alcanzó el propósito que buscaba.
+                            <br>
+                            <small id="articulacion_alcanza_proposito-error" class="p-v-xs error red-text"></small>
                         </td>
                         <td>
                             <p class="center">
@@ -625,7 +787,11 @@ articulador_es_capaz
                         </td>
                     </tr>
                     <tr>
-                        <td>La articulación ha sido fundamental para darle mayor alcance a mi proyecto.</td>
+                        <td>
+                            La articulación ha sido fundamental para darle mayor alcance a mi proyecto.
+                            <br>
+                            <small id="articulacion_fue_fundamental-error" class="p-v-xs error red-text"></small>
+                        </td>
                         <td>
                             <p class="center">
                                 <input class="with-gap" id="likert421" name="articulacion_fue_fundamental" type="radio" value="En desacuerdo">
@@ -646,7 +812,11 @@ articulador_es_capaz
                         </td>
                     </tr>
                     <tr>
-                        <td>El articulador demuestra conocimiento y experiencia frente a la convocatoria y/o actor articulado.</td>
+                        <td>
+                            El articulador demuestra conocimiento y experiencia frente a la convocatoria y/o actor articulado.
+                            <br>
+                            <small id="articulador_es_capaz-error" class="p-v-xs error red-text"></small>
+                        </td>
                         <td>
                             <p class="center">
                                 <input class="with-gap" id="likert431" name="articulador_es_capaz" type="radio" value="En desacuerdo">
@@ -667,7 +837,11 @@ articulador_es_capaz
                         </td>
                     </tr>
                     <tr>
-                        <td>El articulador realiza seguimiento a las actividades que me han sido asignadas como Talento.</td>
+                        <td>
+                            El articulador realiza seguimiento a las actividades que me han sido asignadas como Talento.
+                            <br>
+                            <small id="articulador_hace_seguimiento-error" class="p-v-xs error red-text"></small>
+                        </td>
                         <td>
                             <p class="center">
                                 <input class="with-gap" id="likert441" name="articulador_hace_seguimiento" type="radio" value="En desacuerdo">
@@ -688,7 +862,11 @@ articulador_es_capaz
                         </td>
                     </tr>
                     <tr>
-                        <td>El articulador presenta recursos y ayudas para el desarrollo de la articulación requerida.</td>
+                        <td>
+                            El articulador presenta recursos y ayudas para el desarrollo de la articulación requerida.
+                            <br>
+                            <small id="articulador_presenta_recursos-error" class="p-v-xs error red-text"></small>
+                        </td>
                         <td>
                             <p class="center">
                                 <input class="with-gap" id="likert451" name="articulador_presenta_recursos" type="radio" value="En desacuerdo">
@@ -709,7 +887,11 @@ articulador_es_capaz
                         </td>
                     </tr>
                     <tr>
-                        <td>El articulador demuestra calidad, responsabilidad, puntualidad y motivación en el acompañamiento del proyecto.</td>
+                        <td>
+                            El articulador demuestra calidad, responsabilidad, puntualidad y motivación en el acompañamiento del proyecto.
+                            <br>
+                            <small id="articulador_demuestra_acompanamiento-error" class="p-v-xs error red-text"></small>
+                        </td>
                         <td>
                             <p class="center">
                                 <input class="with-gap" id="likert461" name="articulador_demuestra_acompanamiento" type="radio" value="En desacuerdo">
@@ -774,10 +956,10 @@ articulador_es_capaz
             <small id="con_quien_comparte-error" class="p-v-xs error red-text"></small>
         </div>
         <div class="input-field col s12 m12 l12">
-            <input type="text" id="motivo_compartir_credencuales" name="motivo_compartir_credencuales" style="border-color: green" value="">
-            <label for="motivo_compartir_credencuales">Explique de manera breve los motivos por los cuales ha tenido que 
+            <input type="text" id="motivo_compartir_credenciales" name="motivo_compartir_credenciales" style="border-color: green" value="">
+            <label for="motivo_compartir_credenciales">Explique de manera breve los motivos por los cuales ha tenido que 
                 compartir su clave de acceso a la plataforma Tecnoparque</label>
-            <small id="motivo_compartir_credencuales-error" class="error red-text"></small>
+            <small id="motivo_compartir_credenciales-error" class="error red-text"></small>
         </div>
     </div>
     <div class="input-field col s12 m12 l12">
@@ -807,22 +989,22 @@ articulador_es_capaz
     <div class="input-field col s12 m12 l12">
         <h6 class="black-text"><b>¿Cómo se enteró de la Red Tecnoparque del Servicio Nacional de Aprendizaje -SENA?</b> <span class="red-text">*</span></h6>
         <p>
-            <input class="with-gap" id="radio51" name="con_quien_comparte" type="radio" value="Por un amigo">
+            <input class="with-gap" id="radio51" name="como_conoce_tecnoparque" type="radio" value="Por un amigo">
             <label for="radio51" class="p-h-md">Por un amigo</label>
         </p>
         <p>
-            <input class="with-gap" id="radio52" name="con_quien_comparte" type="radio" value="Por las redes sociales">
+            <input class="with-gap" id="radio52" name="como_conoce_tecnoparque" type="radio" value="Por las redes sociales">
             <label for="radio52" class="p-h-md">Por las redes sociales</label>
         </p>
         <p>
-            <input class="with-gap" id="radio53" name="con_quien_comparte" type="radio" value="Por WhatsApp">
+            <input class="with-gap" id="radio53" name="como_conoce_tecnoparque" type="radio" value="Por WhatsApp">
             <label for="radio53" class="p-h-md">Por WhatsApp</label>
         </p>
         <p>
-            <input class="with-gap" id="radio54" name="con_quien_comparte" type="radio" value="Por la página del SENA">
+            <input class="with-gap" id="radio54" name="como_conoce_tecnoparque" type="radio" value="Por la página del SENA">
             <label for="radio54" class="p-h-md">Por la página del SENA</label>
         </p>
-        <small id="con_quien_comparte-error" class="p-v-xs error red-text"></small>
+        <small id="como_conoce_tecnoparque-error" class="p-v-xs error red-text"></small>
     </div>
     <div class="col s12 m12 l12">
         <h6 class="black-text"><b>¿Ha utilizado otros servicios del SENA en el proyecto que ha desarrollado?</B <span class="red-text">*</span></h6>
@@ -839,24 +1021,24 @@ articulador_es_capaz
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text"><b>Indique qué otros servicios del SENA utilizó o está utilizando para el desarrollo de su proyecto que ha desarrollado</b> <span class="red-text">*</span></h6>
             <p>
-                <input class="with-gap" id="radio61" name="con_quien_comparte" type="radio" value="Pruebas de Servicios Tecnológicos">
+                <input class="with-gap" id="radio61" name="uso_otros_servicios" type="radio" value="Pruebas de Servicios Tecnológicos">
                 <label for="radio61" class="p-h-md">Pruebas de Servicios Tecnológicos</label>
             </p>
             <p>
-                <input class="with-gap" id="radio62" name="con_quien_comparte" type="radio" value="Extensionismo Tecnológico (MiPymes se transforma)">
+                <input class="with-gap" id="radio62" name="uso_otros_servicios" type="radio" value="Extensionismo Tecnológico (MiPymes se transforma)">
                 <label for="radio62" class="p-h-md">Extensionismo Tecnológico (MiPymes se transforma)</label>
             </p>
             <p>
-                <input class="with-gap" id="radio63" name="con_quien_comparte" type="radio" value="Fondo Emprender">
+                <input class="with-gap" id="radio63" name="uso_otros_servicios" type="radio" value="Fondo Emprender">
                 <label for="radio63" class="p-h-md">Fondo Emprender</label>
             </p>
             <p>
-                <input class="with-gap" id="radio64" name="con_quien_comparte" type="radio" value="Cursos cortos del SENA">
+                <input class="with-gap" id="radio64" name="uso_otros_servicios" type="radio" value="Cursos cortos del SENA">
                 <label for="radio64" class="p-h-md">Cursos cortos del SENA</label>
             </p>
             <p>
                 <div class="col s12 m3 l3">
-                    <input class="with-gap" id="radio65" name="con_quien_comparte" type="radio" value="Otras">
+                    <input class="with-gap" id="radio65" name="uso_otros_servicios" type="radio" value="Otras">
                     <label for="radio65" class="p-h-md">Otras</label>
                 </div>
                 <div class="col s12 m9 l9">
@@ -864,6 +1046,7 @@ articulador_es_capaz
                     <small id="otros_servicios-error" class="error red-text"></small>
                 </div>
             </p>
+            <small id="uso_otros_servicios-error" class="error red-text"></small>
         </div>
     </div>
 </div>

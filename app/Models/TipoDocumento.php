@@ -21,7 +21,7 @@ class TipoDocumento extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class, 'tipodocumento_id', 'id');
+        return $this->hasMany(\App\User::class, 'tipodocumento_id', 'id');
     }
 
     public function scopeAllTipoDocumento($query)

@@ -85,7 +85,7 @@
                 <span>Barrio</span>
             </div>
             <div class="server-stat col s6 m4 l3">
-                <p>{{$user->direccion}}</p>
+                <p>{{isset($user->direccion) ? $user->direccion : 'No registra'}}</p>
                 <span>Dirección</span>
             </div>
             <div class="server-stat col s6 m4 l3">
@@ -112,15 +112,23 @@
                 <p>{{$user->gradoescolaridad}}</p>
                 <span>Grado Escolaridad</span>
             </div>
-            <div class="server-stat col s6 m8 l6">
+            <div class="server-stat col s6 m8 l3">
                 <p>{{$user->ocupaciones}}</p>
                 <span>Ocupaciones</span>
             </div>
-            <div class="server-stat col s6 m8 l6">
+            @if(!empty($user->otra_ocupacion))
+            <div class="server-stat col s6 m8 l3">
+                <p>{{$user->otra_ocupacion}}</p>
+                <span>Otra Ocupacion</span>
+            </div>
+            @endif
+        </div>
+        <div class="server-load  row">
+            <div class="server-stat col s12 m6 l3">
                 <p>{{$user->present()->userTituloObtenido()}}</p>
                 <span>Titulo Obtenido</span>
             </div>
-            <div class="server-stat col s6 m8 l6">
+            <div class="server-stat col s12 m6 l3">
                 <p>{{$user->present()->userFechaTerminacion()}}</p>
                 <span>Fecha Teminación</span>
             </div>

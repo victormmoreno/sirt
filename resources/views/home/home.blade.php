@@ -16,7 +16,6 @@
                         <p class="card-title aling-center">Bienvenido <span class="secondary-title"> Sistema Nacional de la Red de Tecnoparques Colombia</span>
                         </p>
                     </div>
-                    <a href="{{route('encuesta.show', 14359)}}">Enviar</a>
                     <div class="row">
                         <div class="col s12 m12 l10 offset-l1">
                             <img class="materialboxed responsive-img"

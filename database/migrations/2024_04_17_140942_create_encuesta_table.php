@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ResultadosEncuesta extends Migration
+class CreateEncuestaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,15 +15,9 @@ class ResultadosEncuesta extends Migration
     {
         Schema::create('encuesta_tokens', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('user_id');
-            $table->string('token', 100);
-            $table->dateTime('fecha_envio');
-            $table->timestamps();
-
-            $table->foreign('user_id')
-            ->references('id')->on('users')
-            ->onDelete('no action')
-            ->onUpdate('no action');
+            $table->string('email')->index();
+            $table->string('token')->index();
+            $table->timestamp('created_at');
         });
 
         Schema::create('resultados_encuesta', function (Blueprint $table) {
@@ -45,8 +39,6 @@ class ResultadosEncuesta extends Migration
             ->onDelete('no action')
             ->onUpdate('no action');
         });
-
-
     }
 
     /**

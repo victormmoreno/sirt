@@ -142,17 +142,11 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="input-field col s12 m6 l6">
+                                        <div class="input-field col s12 m12 l12">
                                             <input class="validate" id="barrio" name="barrio" type="text"
                                                 value="{{ isset($user->barrio) ? $user->barrio : old('barrio') }}">
                                             <label for="barrio">Barrio <span class="red-text">*</span></label>
                                             <small id="barrio-error" class="error red-text"></small>
-                                        </div>
-                                        <div class="input-field col s12 m6 l6">
-                                            <input class="validate" id="direccion" name="direccion" type="text"
-                                                value="{{ isset($user->direccion) ? $user->direccion : old('direccion') }}">
-                                            <label for="direccion">Dirección <span class="red-text">*</span></label>
-                                            <small id="direccion-error" class="error red-text"></small>
                                         </div>
                                     </div>
                                 </div>
