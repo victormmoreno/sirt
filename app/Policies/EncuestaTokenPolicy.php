@@ -7,11 +7,11 @@ use App\Models\Proyecto;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class EncuestaTokenPolicy
 {
     use HandlesAuthorization;
-
     /**
      * Policy que establece quienes puede enviar una encuesta
      * @author julicode
@@ -21,6 +21,23 @@ class EncuestaTokenPolicy
      */
     public function enviarEncuesta(User $user, Model $model)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador(),$user->IsActivador(), $user->IsExperto()]) && ($model instanceof Proyecto && $model->fase->nombre === Proyecto::IsEjecucion());
+        if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador(), $user->IsExperto()])) {
+            if ($model instanceof Proyecto && $model->fase->nombre === Proyecto::IsEjecucion()) {
+                if (isset($model->resultadosEncuesta)) {
+                    return false;
+                } else {
+                    if (isset($model->encuestaToken)) {
+                        if ($model->encuestaToken->created_at->diffInDays(Carbon::now()) >= 3) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+        // return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador(), $user->IsExperto()]) && 
+        // ($model instanceof Proyecto && $model->fase->nombre === Proyecto::IsEjecucion());
     }
 }

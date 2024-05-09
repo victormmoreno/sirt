@@ -1108,10 +1108,8 @@ class ProyectoRepository extends Repository
      */
     public function notificarAprobacionDeFase(Proyecto $proyecto, string $fase = null, string $fecha = null)
     {
-
         DB::beginTransaction();
         try {
-
             $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($proyecto);
             $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
             $conf_envios = false;
@@ -1265,7 +1263,7 @@ class ProyectoRepository extends Repository
                 'fase_id' => Fase::where('nombre', $proyecto->IsSuspendido())->first()->id,
                 'fecha_cierre' => Carbon::now()
             ]);
-            Notification::send(User::findOrFail($proyecto->asesor->id), new ProyectoSuspendidoAprobado($proyecto));
+            Notification::send(User::withTrashed()->findOrFail($proyecto->asesor->id), new ProyectoSuspendidoAprobado($proyecto));
             DB::commit();
             return true;
         } catch (\Throwable $th) {

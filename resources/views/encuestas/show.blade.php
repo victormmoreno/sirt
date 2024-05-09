@@ -103,7 +103,7 @@
         <div class="container">
             <div class="row  no-m-t no-m-b">
                 <div class="col s12 m12 l12 ">
-                    <h3 class="center primary-text">Encuesta de satifascción al cliente</h3>
+                    <h3 class="center primary-text">Encuesta de satisfacción al cliente</h3>
                     <h4 class="center primary-text">Proyecto: {{$proyecto->codigo_proyecto}}</h4>
                     <div class="card-panel">
                         <h5>Estimado Talento.</h5>
@@ -145,12 +145,7 @@
                                 <button type="submit" id="login-btn"
                                     class="waves-effect waves-light btn bg-secondary center-align">
                                     <i class="material-icons left">send</i>
-                                    Enviar
-                                </button>
-                                <button type="reset" id="login-btn"
-                                    class="modal-action modal-open waves-effect bg-danger btn center-align">
-                                    <i class="material-icons left">backspace</i>
-                                    Regresar
+                                    Enviar resultados
                                 </button>
                             </div>
                         </form>
@@ -160,99 +155,3 @@
         </div>
     </div>
 @endsection
-@push('script')
-<script>
-    $(document).ready(function () {
-        divInfocenter = $('#infocenter_content');
-        divDinamizador = $('#dinamizador_content');
-        divArticulador = $('#articulador_content');
-        divArticuladorAcompanamiento = $('#articulador_acompanamiento_content');
-        divCredenciales = $('#credenciales_content');
-        divAlcanzaObjetivo = $('#alcanza_objetivo_content');
-        divOtrosServicios = $('#otros_servicios_content');
-        divInfocenter.hide();
-        divDinamizador.hide();
-        divArticulador.hide();
-        divArticuladorAcompanamiento.hide();
-        divCredenciales.hide();
-        divAlcanzaObjetivo.show();
-        divOtrosServicios.hide();
-    });
-    function showInput_Infocenter() {
-        if ($('#conoce_infocenter').is(':checked')) {
-            divInfocenter.show();
-        } else {
-            divInfocenter.hide();
-        }
-    }
-
-    function showInput_Dinamizador() {
-        if ($('#conoce_dinamizador').is(':checked')) {
-            divDinamizador.show();
-        } else {
-            divDinamizador.hide();
-        }
-    }
-
-    function showInput_Articulador() {
-        if ($('#conoce_articulador').is(':checked')) {
-            divArticulador.show();
-        } else {
-            divArticulador.hide();
-        }
-    }
-
-    function showInput_CompartirCredenciales() {
-        if ($('#comparte_credenciales').is(':checked')) {
-            divCredenciales.show();
-        } else {
-            divCredenciales.hide();
-        }
-    }
-
-    function showInput_AlcanzaObjetivos() {
-        if (!$('#alcanza_objetivos').is(':checked')) {
-            divAlcanzaObjetivo.show();
-        } else {
-            divAlcanzaObjetivo.hide();
-        }
-    }
-
-    function showInput_OtrosServicios() {
-        if ($('#usa_otros_servicios').is(':checked')) {
-            divOtrosServicios.show();
-        } else {
-            divOtrosServicios.hide();
-        }
-    }
-
-    function sendFormSurvey(form, data, url) {
-    $.ajax({
-        type: form.attr('method'),
-        url: url,
-        data: data,
-        cache: false,
-        contentType: false,
-        dataType: 'json',
-        processData: false,
-        success: function (data) {
-            $('button[type="submit"]').removeAttr('disabled');
-            $('.error').hide();
-            printErroresFormulario(data);
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                alert("Error: " + errorThrown);
-            }
-        });
-    };
-
-    $(document).on('submit', 'form#formSaveSurvey', function (event) {
-        $('button[type="submit"]').attr('disabled', 'disabled');
-        event.preventDefault();
-        var form = $(this);
-        var data = new FormData($(this)[0]);
-        var url = form.attr("action");
-        sendFormSurvey(form, data, url);
-    });
-</script>
-@endpush

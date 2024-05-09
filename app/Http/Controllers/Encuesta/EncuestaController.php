@@ -6,8 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Encuesta\EncuestaResponder;
 use App\Models\Proyecto;
-use App\Models\Articulation;
 use App\Models\Encuesta;
+use App\Models\Movimiento;
+use App\Models\ResultadoEncuesta;
+use App\Models\Role;
+use App\Notifications\Encuesta\EncuestaRespondida;
+use App\User;
+use Illuminate\Support\Facades\Notification;
+use Carbon\Carbon;
 use DB;
 use Validator;
 
@@ -25,16 +31,12 @@ class EncuestaController extends Controller
                 break;
         }
 
-        $query->interlocutor($query);
+        $query->setQuery($query);
         //verificar si existe aun el token
         if(!$query->exists($token)){
             return abort(404);
         }
         return view('encuestas.show', ['proyecto' => $query, 'token' => $token]);
-        // return dd(['user'=> $user, 'model' => $query]);
-        //elminiar el token
-        //se debe eliminar un vez se envie la encuesta.
-        //$query->deleteToken();
     }
 
     public function answers(Request $request) {
@@ -46,12 +48,68 @@ class EncuestaController extends Controller
                 'errors' => $validator->errors(),
             ]);
         }
-        $data = $this->getDataToStore($request);
+        DB::beginTransaction();
+        try {
+            $proyecto = Proyecto::find($request->proyecto_id);
+            $proyecto->setQuery($proyecto);
+            $data = $this->getDataToStore($request);
+            $this->store($proyecto, $data);
+            Notification::send($proyecto->asesor, new EncuestaRespondida($proyecto));
+            // Falta el registro del historial
+            $encuestado = $this->verificar_encuestado();
+            $this->trazabilidad_encuesta_respondida($proyecto, $encuestado); 
+            $proyecto->deleteToken();
+            DB::commit();
+            return response()->json([
+                'state' => true,
+                'title' => 'Registro exitoso',
+                'msj' => 'Los resultados de la encuesta se han guardado', 
+                'type' => 'success', 
+                'url' => route('home')
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'state' => false,
+                'title' => 'Registro erróneo',
+                'msj' => 'Los resultados de la encuesta se no han guardado: ' . $th->getMessage(), 
+                'type' => 'error'
+            ]);
+        }
+    }
 
-        // $query = Proyecto::find($request->proyecto_id);
-        // $query->interlocutor($query);
-        // $query->deleteToken();
-        // exit;
+    /**
+     * Verificar quien está respondió la encuesta de satisfacción
+     *
+     * @return string
+     * @author dum
+     **/
+    private function verificar_encuestado()
+    {
+        $observacion = null;
+        if (isset(auth()->user()->id)) {
+            $observacion = 'El usuario ' . auth()->user()->nombres .' '. auth()->user()->apellidos . ' fue quién respondió la encuesta';
+        }
+        return $observacion;
+    }
+
+    /**
+     * Registra la trazabilidad cuando se contesta la encuesta
+     *
+     * @param Proyecto $proyecto
+     * @param string $encuestado
+     * @return Model
+     * @author dum
+     **/
+    private function trazabilidad_encuesta_respondida(Proyecto $proyecto, $encuestado)
+    {
+        return $proyecto->movimientos()->attach(Movimiento::where('movimiento', Movimiento::IsResponderEncuestaSatisfaccion())->first(), [
+            'proyecto_id' => $proyecto->id,
+            'user_id' => $proyecto->getUser()->id,
+            'fase_id' => $proyecto->fase->id,
+            'role_id' => Role::where('name', User::IsUsuario())->first()->id,
+            'comentarios' => $encuestado
+        ]);
     }
     
     /**
@@ -82,11 +140,14 @@ class EncuestaController extends Controller
                     'articulador_amabilidad' => isset(request()->conoce_articulador) ? $request->articulador_amabilidad : 'No aplica',
                     'articulador_conocimiento' => isset(request()->conoce_articulador) ? $request->articulador_conocimiento : 'No aplica',
                 ],
-                'acompanamiento_comite' => $request->acompanamiento_comite,
-                'desarrollo_comite' => $request->desarrollo_comite,
-                'asignacion_experto' => $request->asignacion_experto,
-                'inscripcion_plataforma' => $request->inscripcion_plataforma,
-                'uso_plataforma' => $request->uso_plataforma,
+                'dispocision_personal' => $request->dispocision_personal,
+                'experiencia_proceso_atencion' => [
+                    'acompanamiento_comite' => $request->acompanamiento_comite,
+                    'desarrollo_comite' => $request->desarrollo_comite,
+                    'asignacion_experto' => $request->asignacion_experto,
+                    'inscripcion_plataforma' => $request->inscripcion_plataforma,
+                    'uso_plataforma' => $request->uso_plataforma,
+                ],
                 'calificacion_experto' => [
                     'conocimiento_experto' => $request->conocimiento_experto,
                     'experto_ayuda_objetivos' => $request->experto_ayuda_objetivos,
@@ -119,6 +180,7 @@ class EncuestaController extends Controller
                     'alcanza_objetivos' => !isset(request()->alcanza_objetivos) ? 'Si' : 'No',
                     'motivo_no_logrado' => !isset(request()->alcanza_objetivos) ? $request->motivo_no_logrado : 'No alica',
                 ],
+                'aspectos_a_mejorar' => $request->aspectos_a_mejorar,
                 'como_conoce_tecnoparque' => $request->como_conoce_tecnoparque,
                 'otros_servicios_sena' => [
                     'usa_otros_servicios' => isset(request()->usa_otros_servicios) ? 'Si' : 'No',
@@ -132,21 +194,19 @@ class EncuestaController extends Controller
     /**
      * Almacena las respuestas de la encuesta
      *
-     * @param Request $$request
+     * @param Proyecto $proyecto
      * @param array $data
      * @return array
      * @author dum
      **/
-    public function store(Request $request, array $data)
+    public function store(Proyecto $proyecto, array $data)
     {
-        $proyecto = Proyecto::find($request->proyecto_id);
-        DB::beginTransaction();
-        try {
-            
-            DB::commit();
-        } catch (\Throwable $th) {
-            DB::rollBack();
-        }
+        return $proyecto->resultadosEncuesta()->create([
+            'user_id' => $proyecto->getUser()->id,
+            'resultados' => $data,
+            'fecha_envio' => $proyecto->encuestaToken->created_at,
+            'fecha_respuesta' => Carbon::now()
+        ]);
     }
     
     /**

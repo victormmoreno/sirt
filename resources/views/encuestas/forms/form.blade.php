@@ -112,8 +112,8 @@ otros_servicios
     <div id="infocenter_content">
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
-                <b>Puntúe la amabilidad con la cuál fue atendido por Infocenter donde una (1) 
-                estrella representa la calificación más baja y tres (3) estrellas la calificación más alta. 
+                <b>Puntúe la amabilidad con la cuál fue atendido por Infocenter donde un (1) 
+                representa la calificación más baja y tres (3) la calificación más alta. 
                 Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
             {{-- <p class="range-field">
@@ -134,8 +134,8 @@ otros_servicios
         </div>
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
-                <b>Puntúe el conocimiento demostrado por Infocenter donde una (1) estrella representa la calificación 
-                más baja y tres (3) estrellas la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
+                <b>Puntúe el conocimiento demostrado por Infocenter donde uno (1) representa la calificación 
+                más baja y tres (3) la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
             {{-- <p class="range-field">
                 <input type="range" id="infocenter_conocimiento" name="infocenter_conocimiento" min="1" max="3" />
@@ -169,7 +169,7 @@ otros_servicios
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
                 <b>Puntúe la amabilidad con la cuál fue atendido por Dinamizador@ donde una (1) 
-                estrella representa la calificación más baja y tres (3) estrellas la calificación más alta. 
+                representa la calificación más baja y tres (3) la calificación más alta. 
                 Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
             {{-- <p class="range-field">
@@ -190,8 +190,8 @@ otros_servicios
         </div>
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
-                <b>Puntúe el conocimiento demostrado por Dinamizador@ donde una (1) estrella representa la calificación 
-                más baja y tres (3) estrellas la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
+                <b>Puntúe el conocimiento demostrado por Dinamizador@ donde uno (1) representa la calificación 
+                más baja y tres (3) la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
             {{-- <p class="range-field">
                 <input type="range" id="dinamizador_conocimiento" name="dinamizador_conocimiento" min="1" max="3" />
@@ -224,8 +224,8 @@ otros_servicios
     <div id="articulador_content">
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
-                <b>Puntúe la amabilidad con la cuál fue atendido por Articulador@ donde una (1) 
-                estrella representa la calificación más baja y tres (3) estrellas la calificación más alta. 
+                <b>Puntúe la amabilidad con la cuál fue atendido por Articulador@ donde uno (1) 
+                representa la calificación más baja y tres (3) la calificación más alta. 
                 Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
             {{-- <p class="range-field">
@@ -246,8 +246,8 @@ otros_servicios
         </div>
         <div class="input-field col s12 m12 l12">
             <h6 class="black-text">
-                <b>Puntúe el conocimiento demostrado por Articulador@ donde una (1) estrella representa la calificación 
-                más baja y tres (3) estrellas la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
+                <b>Puntúe el conocimiento demostrado por Articulador@ donde uno (1) representa la calificación 
+                más baja y tres (3) la calificación más alta. Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
             {{-- <p class="range-field">
                 <input type="range" id="articulador_conocimiento" name="articulador_conocimiento" min="1" max="3" />
@@ -270,7 +270,7 @@ otros_servicios
         <div class="row col s12 m12 l12">
             <h6 class="black-text">
                 <b>Puntúe la disposición del talento humano del Tecnoparque en general para atender sus 
-                inquietudes donde una (1) estrella representa la calificación más baja y tres (3) estrellas la calificación 
+                inquietudes donde uno (1) representa la calificación más baja y tres (3) la calificación 
                 más alta. Considere lo siguiente</b> <span class="red-text">*</span>
             </h6>
         </div>

@@ -136,6 +136,7 @@ mix.minify('public/js/app2.js')
 mix.scripts([
     'resources/app/auth/verifyUser.js',
     'resources/app/auth/register.js',
+    'resources/app/encuesta/form.js',
     ],'public/js/web.js');
 
 
