@@ -126,11 +126,6 @@
         </ul>
     </div>
 </li>
-<li class="no-padding {{setActiveRoute('encuesta')}}">
-    <a class="waves-effect waves-grey {{setActiveRouteActivePage('encuesta')}}" href="{{route('encuesta.index')}}" rel="canonical" title="Encuestas">
-        <i class="material-icons {{setActiveRouteActiveIcon('encuesta')}}">mood</i>Encuestas
-    </a>
-</li>
 <li class="no-padding {{setActiveRoute('asesorias')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('asesorias')}}" href="{{route('asesorias.index')}}" rel="canonical" title="Asesorias y usos">
         <i class="material-icons {{setActiveRouteActiveIcon('asesorias')}}">domain</i>Asesorias y usos

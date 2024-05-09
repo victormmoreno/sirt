@@ -10,13 +10,11 @@ Route::group(
     ],
     ],
     function () {
-        Route::get('/', 'Encuesta\EncuestaController@index')->name('encuesta.index');
-        Route::get('/create', 'Encuesta\EncuestaController@create')->name('encuesta.create');
-
+        // Route::get('/', 'Encuesta\EncuestaController@index')->name('encuesta.index');
+        // Route::get('/create', 'Encuesta\EncuestaController@create')->name('encuesta.create');
         Route::get('/{module}/{id}', 'Encuesta\EnvioEncuestaController@enviarLinkEncuesta')->name('encuesta.link')->middleware(['auth', 'role_session:Administrador|Activador|Experto']);
         Route::get('/{module}/{id}/{token}', 'Encuesta\EncuestaController@mostrarFormularioEncuesta')->name('encuesta.formulario');
-        
         Route::post('/', 'Encuesta\EncuestaController@answers')->name('encuesta.answer');
-        Route::get('/{id}', 'Encuesta\EncuestaController@show')->name('encuesta.show');
+        // Route::get('/{id}', 'Encuesta\EncuestaController@show')->name('encuesta.show');
     }
 );

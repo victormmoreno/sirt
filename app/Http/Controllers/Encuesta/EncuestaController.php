@@ -208,22 +208,4 @@ class EncuestaController extends Controller
             'fecha_respuesta' => Carbon::now()
         ]);
     }
-    
-    /**
-     **/
-    public function show(Proyecto $id)
-    {
-        return view('encuestas.show');
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return view('encuestas.index');
-    }
-
 }
