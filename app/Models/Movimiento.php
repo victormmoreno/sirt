@@ -27,6 +27,7 @@ class Movimiento extends Model
     const IS_CAMBIAR_TALENTOS = 'cambió los talentos del proyecto';
     const IS_ESTABLECER = 'estableció';
     const IS_ENVIAR_ENCUESTA_SATISFACCION = 'envió la encuesta de satisfacción';
+    const IS_RESPONDER_ENCUESTA_SATISFACCION = 'respondió la encuesta de satisfacción';
 
     protected $table = 'movimientos';
 
@@ -73,6 +74,11 @@ class Movimiento extends Model
     public static function IsEnviarEncuestaSatisfaccion()
     {
         return self::IS_ENVIAR_ENCUESTA_SATISFACCION;
+    }
+
+    public static function IsResponderEncuestaSatisfaccion()
+    {
+        return self::IS_RESPONDER_ENCUESTA_SATISFACCION;
     }
 
     public static function IsSolicitarDinamizador()

@@ -9,6 +9,7 @@ use App\Models\Movimiento;
 use App\Models\Proyecto;
 use App\Models\Articulation;
 use App\Models\EncuestaToken;
+use App\Models\ResultadoEncuesta;
 use App\Notifications\Encuesta\EnviarEncuesta as EncuestaNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -27,6 +28,11 @@ trait HasEnvioEncuesta {
     public function encuestaToken()
     {
         return $this->morphOne(EncuestaToken::class, 'encuestable');
+    }
+
+    public function resultadosEncuesta()
+    {
+        return $this->hasOne(ResultadoEncuesta::class, 'proyecto_id', 'id');
     }
 
     public function setQuery($query)
@@ -249,7 +255,7 @@ trait HasEnvioEncuesta {
                 'fase_id' => Fase::where('nombre', Proyecto::IsEjecucion())->first()->id,
                 'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
                 'comentarios' => $mensaje
-                ]);
+            ]);
             return $trazabilidad;
         }
     }

@@ -20,6 +20,26 @@ class CreateEncuestaTable extends Migration
             $table->string('token')->index();
             $table->timestamp('created_at');
         });
+
+        Schema::create('resultados_encuesta', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedInteger('proyecto_id');
+            $table->unsignedInteger('user_id');
+            $table->longText('resultados')->nullable();
+            $table->dateTime('fecha_envio')->nullable();
+            $table->dateTime('fecha_respuesta')->nullable();
+            $table->timestamps();
+
+            $table->foreign('proyecto_id')
+            ->references('id')->on('proyectos')
+            ->onDelete('no action')
+            ->onUpdate('no action');
+
+            $table->foreign('user_id')
+            ->references('id')->on('users')
+            ->onDelete('no action')
+            ->onUpdate('no action');
+        });
     }
 
     /**
@@ -30,5 +50,6 @@ class CreateEncuestaTable extends Migration
     public function down()
     {
         Schema::dropIfExists('encuesta_tokens');
+        Schema::dropIfExists('resultados_encuesta');
     }
 }
