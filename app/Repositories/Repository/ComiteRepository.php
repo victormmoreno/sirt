@@ -184,8 +184,8 @@ class ComiteRepository
             $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
             $syncGestores = $this->arraySyncGestoresAgendamiento($request);
             $this->registrarHistorialIdeasComite($comite, Movimiento::IsRegistrar(), 'cambio', $syncIdeas);
-            $comite->ideas()->sync($syncIdeas, true);
-            $comite->evaluadores()->sync($syncGestores, true);
+            $comite->ideas()->sync($syncIdeas);
+            $comite->evaluadores()->sync($syncGestores);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
             DB::commit();
             return true;
@@ -394,8 +394,8 @@ class ComiteRepository
                 'fechacomite' => $request->input('txtfechacomite_create'),
                 'estado_comite_id' => EstadoComite::where('nombre', 'Programado')->first()->id
             ]);
-            $comite->ideas()->sync($syncIdeas, false);
-            $comite->evaluadores()->sync($syncGestores, false);
+            $comite->ideas()->sync($syncIdeas);
+            $comite->evaluadores()->sync($syncGestores);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
             $this->registrarHistorialIdeasComite($comite, Movimiento::IsRegistrar(), 'registro');
             $comite->registrarHistorialComite(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'el comité de ideas programado para el día ' . $comite->fechacomite->isoFormat('DD/MM/YYYY'));

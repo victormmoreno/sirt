@@ -1263,7 +1263,7 @@ class ProyectoRepository extends Repository
                 'fase_id' => Fase::where('nombre', $proyecto->IsSuspendido())->first()->id,
                 'fecha_cierre' => Carbon::now()
             ]);
-            Notification::send(User::findOrFail($proyecto->asesor->id), new ProyectoSuspendidoAprobado($proyecto));
+            Notification::send(User::withTrashed()->findOrFail($proyecto->asesor->id), new ProyectoSuspendidoAprobado($proyecto));
             DB::commit();
             return true;
         } catch (\Throwable $th) {

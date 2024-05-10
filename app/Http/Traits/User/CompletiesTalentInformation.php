@@ -22,15 +22,16 @@ trait CompletiesTalentInformation
     {
         $user = $this->userRepository->findUserByDocumentEloquent($request->user()->documento)->firstOrFail();
         return $request->user()->hasCompletedTalentInformation()
-                ? redirect($this->redirectPath())
-                : view('users.complete-talent-information', [
-                    'user'            => $user,
-                    'tipotalentos'    => $this->userRepository->getAllTipoTalento(),
-                    'regionales'      => $this->userRepository->getAllRegionales(),
-                    'tipoformaciones' => $this->userRepository->getAllTipoFormaciones(),
-                    'tipoestudios'    => $this->userRepository->getAllTipoEstudios(),
-                    'lineas'          => $this->userRepository->getAllLineas()
-                ]);
+            ? redirect($this->redirectPath())
+            : view('users.complete-talent-information', [
+                'user'            => $user,
+                'tipotalentos'    => $this->userRepository->getAllTipoTalento(),
+                'regionales'      => $this->userRepository->getAllRegionales(),
+                'tipoformaciones' => $this->userRepository->getAllTipoFormaciones(),
+                'tipoestudios'    => $this->userRepository->getAllTipoEstudios(),
+                'lineas'          => $this->userRepository->getAllLineas(),
+                'ocupaciones' => $this->userRepository->getAllOcupaciones(),
+            ]);
     }
 
     /**
@@ -76,28 +77,25 @@ trait CompletiesTalentInformation
                 ],
             ]);
         }
-
     }
 
     private function buildMergeRequest($request)
     {
-        if($request->talent_type == 1){
+        if ($request->talent_type == 1) {
             $request->merge([
                 'tipo_talento' => 'aprendiz_sena_con_apoyo_de_sostenimiento',
                 'regional' => $request->regional,
                 'centro_formacion' => $request->training_center,
                 'programa_formacion' => $request->training_program,
             ]);
-        }
-        else if($request->talent_type == 2){
+        } else if ($request->talent_type == 2) {
             $request->merge([
                 'tipo_talento' => 'aprendiz_sena_sin_apoyo_de_sostenimiento',
                 'regional' => $request->regional,
                 'centro_formacion' => $request->training_center,
                 'programa_formacion' => $request->training_program,
             ]);
-        }
-        else if($request->talent_type == 3){
+        } else if ($request->talent_type == 3) {
             $request->merge([
                 'tipo_talento' => 'egresado_sena',
                 'regional' => $request->regional,
@@ -105,43 +103,36 @@ trait CompletiesTalentInformation
                 'programa_formacion' => $request->training_program,
                 'tipo_formacion' => $request->formation_type,
             ]);
-        }
-        else if($request->talent_type == 7)
-        {
+        } else if ($request->talent_type == 7) {
             $request->merge([
                 'tipo_talento' => 'emprendedor'
             ]);
-        }
-        else if($request->talent_type == 8){
+        } else if ($request->talent_type == 8) {
             $request->merge([
                 'tipo_talento' => 'estudiante_universitario',
                 'tipo_estudio' => $request->study_type,
                 'universidad' => $request->university,
                 'carrera' => $request->career,
             ]);
-        }
-        else if($request->talent_type == 9){
+        } else if ($request->talent_type == 9) {
             $request->merge([
                 'tipo_talento' => 'funcionario_de_empresa',
                 'empresa' => $request->company
             ]);
-        }
-        else if($request->talent_type == 5){
+        } else if ($request->talent_type == 5) {
             $request->merge([
                 'tipo_talento' => 'funcionario_sena',
                 'regional' => $request->regional,
                 'centro_formacion' => $request->training_center,
                 'dependencia' => $request->dependency
             ]);
-        }
-        else if($request->talent_type == 4){
+        } else if ($request->talent_type == 4) {
             $request->merge([
                 'tipo_talento' => 'instructor_sena',
                 'regional' => $request->regional,
                 'centro_formacion' => $request->training_center,
             ]);
-        }
-        else if($request->talent_type == 6){
+        } else if ($request->talent_type == 6) {
             $request->merge([
                 'tipo_talento' => 'propietario_empresa',
                 'empresa' => $request->company
