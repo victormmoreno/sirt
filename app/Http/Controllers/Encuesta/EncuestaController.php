@@ -162,7 +162,7 @@ class EncuestaController extends Controller
                     'infraestructura_disponibilidad' => $request->infraestructura_disponibilidad,
                     'materiales_disponibilidad' => $request->materiales_disponibilidad,
                 ],
-                'acompanamiento_articlacion' => [
+                'acompanamiento_articulacion' => [
                     'acompanamiento_articulador' => $request->acompanamiento_articulador,
                     'articulacion_alcanza_proposito' => isset($request->articulacion_alcanza_proposito) ? $request->articulacion_alcanza_proposito : 'No aplica',
                     'articulacion_fue_fundamental' => isset($request->articulacion_fue_fundamental) ? $request->articulacion_fue_fundamental : 'No aplica',
@@ -177,8 +177,8 @@ class EncuestaController extends Controller
                     'motivo_compartir_credenciales' => isset($request->comparte_credenciales) ? $request->motivo_compartir_credenciales : 'No aplica',
                 ],
                 'objetivos_proyecto' => [
-                    'alcanza_objetivos' => !isset(request()->alcanza_objetivos) ? 'Si' : 'No',
-                    'motivo_no_logrado' => !isset(request()->alcanza_objetivos) ? $request->motivo_no_logrado : 'No alica',
+                    'alcanza_objetivos' => !isset(request()->alcanza_objetivos) ? 'No' : 'Si',
+                    'motivo_no_logrado' => !isset(request()->alcanza_objetivos) ? $request->motivo_no_logrado : 'No aplica',
                 ],
                 'aspectos_a_mejorar' => $request->aspectos_a_mejorar,
                 'como_conoce_tecnoparque' => $request->como_conoce_tecnoparque,
