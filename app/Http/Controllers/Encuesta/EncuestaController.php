@@ -140,7 +140,7 @@ class EncuestaController extends Controller
                     'articulador_amabilidad' => isset(request()->conoce_articulador) ? $request->articulador_amabilidad : 'No aplica',
                     'articulador_conocimiento' => isset(request()->conoce_articulador) ? $request->articulador_conocimiento : 'No aplica',
                 ],
-                'dispocision_personal' => $request->dispocision_personal,
+                'disposicion_personal' => $request->disposicion_personal,
                 'experiencia_proceso_atencion' => [
                     'acompanamiento_comite' => $request->acompanamiento_comite,
                     'desarrollo_comite' => $request->desarrollo_comite,
@@ -176,11 +176,11 @@ class EncuestaController extends Controller
                     'con_quien_comparte' => isset($request->comparte_credenciales) ? $request->con_quien_comparte : 'No aplica',
                     'motivo_compartir_credenciales' => isset($request->comparte_credenciales) ? $request->motivo_compartir_credenciales : 'No aplica',
                 ],
+                'aspectos_a_mejorar' => $request->aspectos_a_mejorar,
                 'objetivos_proyecto' => [
                     'alcanza_objetivos' => !isset(request()->alcanza_objetivos) ? 'No' : 'Si',
                     'motivo_no_logrado' => !isset(request()->alcanza_objetivos) ? $request->motivo_no_logrado : 'No aplica',
                 ],
-                'aspectos_a_mejorar' => $request->aspectos_a_mejorar,
                 'como_conoce_tecnoparque' => $request->como_conoce_tecnoparque,
                 'otros_servicios_sena' => [
                     'usa_otros_servicios' => isset(request()->usa_otros_servicios) ? 'Si' : 'No',

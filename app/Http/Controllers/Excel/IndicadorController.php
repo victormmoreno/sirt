@@ -10,6 +10,8 @@ use App\Exports\Metas\MetasArticulationExport;
 use App\Exports\Idea\IdeasIndicadorExport;
 use App\Exports\Proyectos\{ProyectosExport};
 use App\Exports\Empresas\EmpresasExport;
+use App\Exports\Encuestas\ResultadosEncuesta;
+use App\Exports\Encuestas\ResultadosEncuestaExport;
 use App\Exports\GruposInvestigacion\GruposExport;
 use App\Exports\User\Talento\TalentoUserExport;
 use App\Repositories\Repository\{IdeaRepository, ProyectoRepository};
@@ -19,7 +21,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Imports\MigracionMetasImport;
 use Illuminate\Http\Request;
-use App\Models\{Articulation, Proyecto, Nodo};
+use App\Models\{Articulation, Proyecto, Nodo, ResultadoEncuesta};
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -99,6 +101,19 @@ class IndicadorController extends Controller
             $query = null;
             $query = $this->retornarQueryAExportar($request);
             return $this->generarExcel($request, $query);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function exportResultadosEncuesta(Request $request)
+    {
+        try {
+            $query = null;
+            $query = ResultadoEncuesta::query()->getResultados();
+            // $query = $this->proyectoRepository->indicadoresProyectos();
+            $query = $this->nodos($request, $query);
+            return Excel::download(new ResultadosEncuestaExport($query->get()), 'Resultados_encuesta_'.Carbon::now().'.xlsx');
         } catch (\Throwable $th) {
             throw $th;
         }

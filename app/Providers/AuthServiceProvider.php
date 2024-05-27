@@ -26,6 +26,7 @@ use App\Models\IngresoVisitante;
 use App\Models\Visitante;
 use App\Models\Tag;
 use App\Models\EncuestaToken;
+use App\Models\ResultadoEncuesta;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Equipo\EquipoPolicy;
 use App\Policies\LineaTecnologica\LineaTecnologicaPolicy;
@@ -49,6 +50,7 @@ use App\Policies\IngresoVisitantePolicy;
 use App\Policies\VisitantePolicy;
 use App\Policies\TagPolicy;
 use App\Policies\EncuestaTokenPolicy;
+use App\Policies\ResultadoEncuestaPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -87,6 +89,7 @@ class AuthServiceProvider extends ServiceProvider
         Visitante::class => VisitantePolicy::class,
         Tag::class => TagPolicy::class,
         EncuestaToken::class => EncuestaTokenPolicy::class,
+        ResultadoEncuesta::class => ResultadoEncuestaPolicy::class,
     ];
 
     /**
