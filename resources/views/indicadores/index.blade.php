@@ -241,25 +241,42 @@
     });
     }
 
-      $(document).ready(function(){
-        $('#TableEsperado').pageMe({
-            pagerSelector:'#PagerEsperado',
-            activeColor: 'blue',
-            prevText:'Anterior',
-            nextText:'Siguiente',
-            showPrevNext:true,
-            hidePageNumbers:false,
-            perPage:5
+      function generarExcelResultadosEncuesta(e) {
+        let idnodo = $("#selectNodos_resultados_encuesta").val();
+        e.preventDefault();
+        $.ajax({
+            type: "get",
+            url: `${host_url}/excel/export_resultados_encuesta`,
+            xhrFields: {
+                responseType: "blob",
+            },
+            data: {
+                nodos: idnodo
+            },
+            success: function (result, status, xhr) {
+                let disposition = xhr.getResponseHeader("content-disposition");
+                let matches = /"([^"]*)"/.exec(disposition);
+                let filename =
+                    matches != null && matches[1]
+                        ? matches[1]
+                        : "Resultados_encuesta.xlsx";
+
+                let blob = new Blob([result], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+                let link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+
+                document.body.appendChild(link);
+
+                link.click();
+                document.body.removeChild(link);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+            },
         });
-        $('#TableActual').pageMe({
-            pagerSelector:'#PagerActual',
-            activeColor: 'blue',
-            prevText:'Anterior',
-            nextText:'Siguiente',
-            showPrevNext:true,
-            hidePageNumbers:false,
-            perPage:5
-        });
-      });
+      }
     </script>
 @endpush

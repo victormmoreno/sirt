@@ -33,7 +33,7 @@ class EncuestaResponder extends FormRequest
             'dinamizador_conocimiento' => Rule::requiredIf(isset(request()->conoce_dinamizador)),
             'articulador_amabilidad' => Rule::requiredIf(isset(request()->conoce_articulador)),
             'articulador_conocimiento' => Rule::requiredIf(isset(request()->conoce_articulador)),
-            'dispocision_personal' => 'required',
+            'disposicion_personal' => 'required',
             // Likert 1
             'acompanamiento_comite' => 'required',
             'desarrollo_comite' => 'required',
@@ -83,7 +83,7 @@ class EncuestaResponder extends FormRequest
             'dinamizador_conocimiento.required' => 'Debe puntuar el conocimiento demostrado por Dinamizador@.',
             'articulador_amabilidad.required' => 'Debe puntuar la amabilidad con la cuál fue atendido por Articulador@.',
             'articulador_conocimiento.required' => 'Debe puntuar el conocimiento demostrado por Articulador@.',
-            'dispocision_personal.required' => 'Debe puntuar la disposición del talento humano del Tecnoparque en general para atender sus inquietudes.',
+            'disposicion_personal.required' => 'Debe puntuar la disposición del talento humano del Tecnoparque en general para atender sus inquietudes.',
             // Likert 1
             'acompanamiento_comite.required' => 'Debe calificar si se sintió acompañado y asesorado para enfrentar el Comité de Ideas.',
             'desarrollo_comite.required' => 'Debe calificar si el Comité de Ideas se desarrolló oportunamente.',

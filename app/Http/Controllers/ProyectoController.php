@@ -855,7 +855,7 @@ class ProyectoController extends Controller
     {
 
         $proyecto = Proyecto::find($id);
-        if(!request()->user()->can('notificar_aprobacion', $proyecto)) {
+        if(!request()->user()->can('notificar_aprobacion', [$proyecto, $fase])) {
             alert('No autorizado', 'No puedes solicitar la aprobación de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
