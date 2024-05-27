@@ -77,4 +77,12 @@
             </div>
         </li>
     @endcan
+    @can('download_results', App\Models\ResultadoEncuesta::class)
+        <li>
+            <div class="collapsible-header"><i class="material-icons">assignment_turned_in</i>Resultados de encuesta</div>
+            <div class="collapsible-body">
+                @include('indicadores.componentes.encuestas.resultados')
+            </div>
+        </li>
+    @endcan
 </ul>

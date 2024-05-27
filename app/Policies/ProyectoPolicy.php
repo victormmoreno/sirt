@@ -246,12 +246,15 @@ class ProyectoPolicy
      * @return bool
      * @author dum
      **/
-    public function notificar_aprobacion(User $user, Proyecto $proyecto)
+    public function notificar_aprobacion(User $user, Proyecto $proyecto, $fase = null)
     {
 
         if (Str::contains($proyecto->fase->nombre, [$proyecto->IsFinalizado(), $proyecto->IsSuspendido()])) {
             return false;
         } else {
+            if ($fase == $proyecto->IsSuspendido()) {
+                return true;
+            }
             if ( (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == auth()->user()->id) || session()->get('login_role') == $user->IsAdministrador() ) {
                 if ($proyecto->fase->nombre == $proyecto->IsEjecucion() && !isset($proyecto->resultadosEncuesta)) {
                     return false;

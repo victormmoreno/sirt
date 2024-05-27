@@ -12,7 +12,7 @@ dinamizador_conocimiento
 conoce_articulador
 articulador_amabilidad
 articulador_conocimiento
-dispocision_personal
+disposicion_personal
 acompanamiento_comite
 desarrollo_comite
 conocimiento_experto
@@ -277,21 +277,21 @@ otros_servicios
     {{-- </div> --}}
     {{-- <div class="col s12 m5 l5">
         <p class="range-field">
-            <input width="50%" type="range" id="dispocision_personal" name="dispocision_personal" min="1" max="3" step="1"/>
+            <input width="50%" type="range" id="disposicion_personal" name="disposicion_personal" min="1" max="3" step="1"/>
         </p>
     </div> --}}
     <p class="no-p-v">
-        <input class="with-gap " name="dispocision_personal" type="radio"
-            id="dispocision_personal1" value="1">
-        <label for="dispocision_personal1" class="p-h-md">1</label>
-        <input class="with-gap" t name="dispocision_personal" type="radio"
-            id="dispocision_personal2" value="2">
-        <label for="dispocision_personal2" class="p-h-md">2</label>
-        <input class="with-gap" name="dispocision_personal" type="radio"
-            id="dispocision_personal3" value="3">
-        <label for="dispocision_personal3" class="p-h-md">3</label>
+        <input class="with-gap " name="disposicion_personal" type="radio"
+            id="disposicion_personal1" value="1">
+        <label for="disposicion_personal1" class="p-h-md">1</label>
+        <input class="with-gap" t name="disposicion_personal" type="radio"
+            id="disposicion_personal2" value="2">
+        <label for="disposicion_personal2" class="p-h-md">2</label>
+        <input class="with-gap" name="disposicion_personal" type="radio"
+            id="disposicion_personal3" value="3">
+        <label for="disposicion_personal3" class="p-h-md">3</label>
     </p>
-    <small id="dispocision_personal-error" class="p-v-xs error red-text"></small>
+    <small id="disposicion_personal-error" class="p-v-xs error red-text"></small>
     <div class="col s12 m12 l12">
         <h6 class="black-text">
             <b>A continuación, califique las siguientes afirmaciones de acuerdo con su 

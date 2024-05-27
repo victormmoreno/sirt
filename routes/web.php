@@ -331,6 +331,7 @@ Route::group(
         Route::get('/export/downloadMetas/articulaciones', 'Excel\IndicadorController@downloadMetasArticulaciones')->name('indicador.export.metas-articulaciones');
         Route::get('/export/downloadIdeas', 'Excel\IndicadorController@downloadIdeas')->name('indicador.export.ideas');
         Route::get('/export_proyectos_indicadores', 'Excel\IndicadorController@exportIndicadoresProyectos')->name('indicador.proyectos.export.excel')->middleware('role_session:Auxiliar|Experto|Infocenter|Dinamizador|Activador');
+        Route::get('/export_resultados_encuesta', 'Excel\IndicadorController@exportResultadosEncuesta')->name('encuesta.resultados')->middleware('role_session:Administrador|Auxiliar|Activador');
         // Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
         Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Activador');
         Route::get('/export_materiales', 'Excel\MaterialController@download')->name('download.materiales');
