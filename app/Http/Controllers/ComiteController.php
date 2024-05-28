@@ -285,7 +285,7 @@ class ComiteController extends Controller
       ]);
     } else {
       $result = $this->getComiteRepository()->updateRealizado($request, $id);
-      if ($result) {
+      if ($result['state']) {
         return response()->json(['state' => 'registro']);
       } else {
         return response()->json(['state' => 'no_registro']);
