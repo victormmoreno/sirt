@@ -228,10 +228,11 @@ class ComiteRepository
             // Registrar el historial del comité
             $comite->registrarHistorialComite(Movimiento::IsCalificar(), Session::get('login_role'), null, 'el comité de ideas');
             DB::commit();
-            return true;
+            return ['state' => true];
         } catch (\Throwable $th) {
             DB::rollBack();
-            return false;
+            throw $th;
+            return ['state' => false, 'err_msg' => $th->getMessage()];
         }
     }
 
