@@ -13,12 +13,25 @@ class ResultadoEncuesta extends Model
     protected $table = 'resultados_encuesta';
 
     protected $fillable = [
-        'proyecto_id', 'user_id', 'resultados', 'fecha_envio', 'fecha_respuesta'
+        'proyecto_id', 'user_id', 'estado', 'resultados', 'fecha_envio', 'fecha_respuesta'
     ];
 
     protected $casts = [
         'resultados' => 'array',
     ];
+
+    const IS_NO_RESPONDIDA = 0;
+    const IS_RESPONDIDA = 1;
+
+    public static function IsNoRespondida()
+    {
+        return self::IS_NO_RESPONDIDA;
+    }
+
+    public static function IsRespondida()
+    {
+        return self::IS_RESPONDIDA;
+    }
 
     public function encuestaToken()
     {
@@ -44,13 +57,12 @@ class ResultadoEncuesta extends Model
             'fecha_respuesta',
             'proyectos.codigo_proyecto',
             'proyectos.nombre AS nombre_proyecto',
-            'entidades.nombre AS nodo',
-            'fecha_envio',
-            'fecha_respuesta'
+            'entidades.nombre AS nodo'
         )
         ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(resultados,  '$.resultados')) as resultados")
         ->join('proyectos', 'proyectos.id', '=', 'resultados_encuesta.proyecto_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->where('estado', $this->IsRespondida());
     }
 }

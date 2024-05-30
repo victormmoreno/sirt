@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    divForm = $('#form_content');
     divInfocenter = $('#infocenter_content');
     divDinamizador = $('#dinamizador_content');
     divArticulador = $('#articulador_content');
@@ -6,6 +7,7 @@ $(document).ready(function () {
     divCredenciales = $('#credenciales_content');
     divAlcanzaObjetivo = $('#alcanza_objetivo_content');
     divOtrosServicios = $('#otros_servicios_content');
+    divForm.hide();
     divInfocenter.hide();
     divDinamizador.hide();
     divArticulador.hide();

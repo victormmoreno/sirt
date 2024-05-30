@@ -2,7 +2,7 @@ const sendTokenEncuesta = (route, fase, e) => {
     e.preventDefault();
     if (fase == "Ejecución") {
         Swal.fire({
-            title: "¿Está seguro(a) de enviar la encuesta de satisfacción?",
+            title: "¿Está seguro(a) de enviar la encuesta de percepción?",
             text: "Esta encuesta es obligatoria para poder avanzar a la siguiente fase.",
             type: "warning",
             showCancelButton: true,

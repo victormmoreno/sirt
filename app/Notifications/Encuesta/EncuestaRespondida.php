@@ -47,7 +47,7 @@ class EncuestaRespondida extends Notification implements ShouldQueue
             'icon'  => 'assignment_turned_in',
             'color' => 'bg-secondary',
             'autor' => "{$this->proyecto->getUser()->nombres} {$this->proyecto->getUser()->apellidos}",
-            'text'  => "El usuario ha respondido la encuesta de satisfacción del proyecto {$this->proyecto->codigo_proyecto} - {$this->proyecto->nombre} | {$this->proyecto->resultadosEncuesta->fecha_respuesta}",
+            'text'  => "El usuario ha respondido la encuesta de percepción del proyecto {$this->proyecto->codigo_proyecto} - {$this->proyecto->nombre} | {$this->proyecto->resultadosEncuesta->fecha_respuesta}",
           ];
     }
 }
