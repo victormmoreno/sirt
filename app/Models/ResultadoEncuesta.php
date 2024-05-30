@@ -63,6 +63,6 @@ class ResultadoEncuesta extends Model
         ->join('proyectos', 'proyectos.id', '=', 'resultados_encuesta.proyecto_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-        ->where('estado', $this->IsRespondida());
+        ->where('resultados_encuesta.estado', $this->IsRespondida());
     }
 }
