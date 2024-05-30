@@ -248,7 +248,7 @@ trait HasEnvioEncuesta {
      */
     protected function crearTrazabilidad($query){
         if(class_basename($query) == class_basename(Proyecto::class)){
-            $mensaje = 'El experto solicitó realzar la encuesta de satisfacción';
+            $mensaje = 'El experto solicitó realzar la encuesta de percepción';
             $trazabilidad = $query->movimientos()->attach(Movimiento::where('movimiento', Movimiento::IsEnviarEncuestaSatisfaccion())->first(), [
                 'proyecto_id' => $query->id,
                 'user_id' => auth()->user()->id,

@@ -79,7 +79,7 @@ class EncuestaController extends Controller
     }
 
     /**
-     * Verificar quien está respondió la encuesta de satisfacción
+     * Verificar quien está respondió la encuesta de percepción
      *
      * @return string
      * @author dum
@@ -121,8 +121,21 @@ class EncuestaController extends Controller
      **/
     private function getDataToStore(Request $request)
     {
+        return $request->autoriza_tratamiento == 'SI' ? $this->dataFromForm($request) : $this->dataNoAutoriza($request);
+    }
+
+    /**
+     * Retornar la información que diligencia el usuario
+     *
+     * @param Request $request
+     * @return array
+     * @author dum
+     **/
+    public function dataFromForm(Request $request)
+    {
         return [
             'resultados' => [
+                'autoriza_tratamiento' => $request->autoriza_tratamiento,
                 'estado_proyecto' => $request->estado_proyecto,
                 'afinidad_proyecto' => $request->afinidad_proyecto,
                 'infocenter' => [
@@ -192,6 +205,86 @@ class EncuestaController extends Controller
     }
 
     /**
+     * Retornar la información que diligencia el usuario
+     *
+     * @param Resquest $request
+     * @return array
+     * @author dum
+     **/
+    public function dataNoAutoriza($request)
+    {
+        return [
+            'resultados' => [
+                'autoriza_tratamiento' => $request->autoriza_tratamiento,
+                'estado_proyecto' => 'No aplica',
+                'afinidad_proyecto' => 'No aplica',
+                'infocenter' => [
+                    'conoce_infocenter' => 'No aplica',
+                    'infocenter_amabilidad' => 'No aplica',
+                    'infocenter_conocimiento' => 'No aplica',
+                ],
+                'dinamizador' => [
+                    'conoce_dinamizador' => 'No aplica',
+                    'dinamizador_amabilidad' => 'No aplica',
+                    'dinamizador_conocimiento' => 'No aplica',
+                ],
+                'articulador' => [
+                    'conoce_articulador' => 'No aplica',
+                    'articulador_amabilidad' => 'No aplica',
+                    'articulador_conocimiento' => 'No aplica',
+                ],
+                'disposicion_personal' => 'No aplica',
+                'experiencia_proceso_atencion' => [
+                    'acompanamiento_comite' => 'No aplica',
+                    'desarrollo_comite' => 'No aplica',
+                    'asignacion_experto' => 'No aplica',
+                    'inscripcion_plataforma' => 'No aplica',
+                    'uso_plataforma' => 'No aplica',
+                ],
+                'calificacion_experto' => [
+                    'conocimiento_experto' => 'No aplica',
+                    'experto_ayuda_objetivos' => 'No aplica',
+                    'experto_cumple_cronograma' => 'No aplica',
+                    'experto_hace_seguimiento' => 'No aplica',
+                    'experto_presenta_recursos' => 'No aplica',
+                    'experto_entrega_documentos' => 'No aplica',
+                    'experto_acompana' => 'No aplica',
+                ],
+                'calificacion_infraestructura' => [
+                    'infraestructura_acorde_necesidades' => 'No aplica',
+                    'infraestructura_disponibilidad' => 'No aplica',
+                    'materiales_disponibilidad' => 'No aplica',
+                ],
+                'acompanamiento_articulacion' => [
+                    'acompanamiento_articulador' => 'No aplica',
+                    'articulacion_alcanza_proposito' => 'No aplica',
+                    'articulacion_fue_fundamental' => 'No aplica',
+                    'articulador_es_capaz' => 'No aplica',
+                    'articulador_hace_seguimiento' => 'No aplica',
+                    'articulador_presenta_recursos' => 'No aplica',
+                    'articulador_demuestra_acompanamiento' => 'No aplica',
+                ],
+                'usuario_compartido' => [
+                    'comparte_credenciales' => 'No aplica',
+                    'con_quien_comparte' => 'No aplica',
+                    'motivo_compartir_credenciales' => 'No aplica',
+                ],
+                'aspectos_a_mejorar' => 'No aplica',
+                'objetivos_proyecto' => [
+                    'alcanza_objetivos' => 'No aplica',
+                    'motivo_no_logrado' => 'No aplica',
+                ],
+                'como_conoce_tecnoparque' => 'No aplica',
+                'otros_servicios_sena' => [
+                    'usa_otros_servicios' => 'No aplica',
+                    'uso_otros_servicios' => 'No aplica',
+                    'otros_servicios' => 'No aplica',
+                ]
+            ]
+        ];
+    }
+
+    /**
      * Almacena las respuestas de la encuesta
      *
      * @param Proyecto $proyecto
@@ -204,6 +297,7 @@ class EncuestaController extends Controller
         return $proyecto->resultadosEncuesta()->create([
             'user_id' => $proyecto->getUser()->id,
             'resultados' => $data,
+            'estado' => $data['resultados']['autoriza_tratamiento'] == 'SI' ? ResultadoEncuesta::IsRespondida() : ResultadoEncuesta::IsNoRespondida(),
             'fecha_envio' => $proyecto->encuestaToken->created_at,
             'fecha_respuesta' => Carbon::now()
         ]);
