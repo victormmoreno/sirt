@@ -5,7 +5,7 @@ Señor(a)<br>
 <b>_{{$notifiable->nombres.' '.$notifiable->apellidos}}_</b><br>
 Cordial Saludo.
 <br>
-Ha recibido este mensaje porque se solicitó diligenciar la encuesta de satisfacción de {{class_basename($query)}}: {{$query->codigo_proyecto}}.
+Ha recibido este mensaje porque se solicitó diligenciar la encuesta de percepción de {{class_basename($query)}}: {{$query->codigo_proyecto}}.
 
 @component('mail::promotion')
     <center>

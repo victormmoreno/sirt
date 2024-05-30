@@ -332,7 +332,7 @@ class ComiteRepository
     private function updateObservacionesIdea($comite, $request)
     {
         foreach ($request->get('ideas') as $key => $value) {
-            $comite->ideas()->updateExistingPivot($value, ['observaciones' => $request->get('txtobservacionesidea')[$key]]);
+            $comite->ideas()->updateExistingPivot($value, ['observaciones' => str_replace('', '', $request->get('txtobservacionesidea')[$key])]);
         }
     }
 

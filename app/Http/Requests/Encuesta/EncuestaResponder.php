@@ -24,57 +24,65 @@ class EncuestaResponder extends FormRequest
      */
     public function rules()
     {
-        return [
-            'estado_proyecto' => 'required',
-            'afinidad_proyecto' => 'required',
-            'infocenter_amabilidad' => Rule::requiredIf(isset(request()->conoce_infocenter)),
-            'infocenter_conocimiento' => Rule::requiredIf(isset(request()->conoce_infocenter)),
-            'dinamizador_amabilidad' => Rule::requiredIf(isset(request()->conoce_dinamizador)),
-            'dinamizador_conocimiento' => Rule::requiredIf(isset(request()->conoce_dinamizador)),
-            'articulador_amabilidad' => Rule::requiredIf(isset(request()->conoce_articulador)),
-            'articulador_conocimiento' => Rule::requiredIf(isset(request()->conoce_articulador)),
-            'disposicion_personal' => 'required',
-            // Likert 1
-            'acompanamiento_comite' => 'required',
-            'desarrollo_comite' => 'required',
-            'asignacion_experto' => 'required',
-            'inscripcion_plataforma' => 'required',
-            'uso_plataforma' => 'required',
-            // Likert 2
-            'conocimiento_experto' => 'required',
-            'experto_ayuda_objetivos' => 'required',
-            'experto_cumple_cronograma' => 'required',
-            'experto_hace_seguimiento' => 'required',
-            'experto_presenta_recursos' => 'required',
-            'experto_entrega_documentos' => 'required',
-            'experto_acompana' => 'required',
-            // Likert 3
-            'infraestructura_acorde_necesidades' => 'required',
-            'infraestructura_disponibilidad' => 'required',
-            'materiales_disponibilidad' => 'required',
-            //
-            'acompanamiento_articulador' => 'required',
-            // Likert 4
-            'articulacion_alcanza_proposito' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->acompanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
-            'articulacion_fue_fundamental' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->ampanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
-            'articulador_es_capaz' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->ampanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
-            'articulador_hace_seguimiento' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->ampanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
-            'articulador_presenta_recursos' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->mpanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
-            'articulador_demuestra_acompanamiento' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->ampanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
-            //
-            'con_quien_comparte' => Rule::requiredIf(isset(request()->comparte_credenciales)),
-            'motivo_compartir_credenciales' => Rule::requiredIf(isset(request()->comparte_credenciales)) . '|max:100',
-            'motivo_no_logrado' => Rule::requiredIf(!isset(request()->alcanza_objetivos)) . '|max:100',
-            'aspectos_a_mejorar' => 'required|max:100',
-            'como_conoce_tecnoparque' => 'required',
-            'uso_otros_servicios' => Rule::requiredIf(isset(request()->usa_otros_servicios)),
-            'otros_servicios' => Rule::requiredIf(isset(request()->usa_otros_servicios) && request()->uso_otros_servicios == 'Otras'),
+        $array = [
+            'autoriza_tratamiento' => 'required'
         ];
+        if (request()->autoriza_tratamiento == 'SI') {
+            $array_cond = [
+                'estado_proyecto' => 'required',
+                'afinidad_proyecto' => 'required',
+                'infocenter_amabilidad' => Rule::requiredIf(isset(request()->conoce_infocenter)),
+                'infocenter_conocimiento' => Rule::requiredIf(isset(request()->conoce_infocenter)),
+                'dinamizador_amabilidad' => Rule::requiredIf(isset(request()->conoce_dinamizador)),
+                'dinamizador_conocimiento' => Rule::requiredIf(isset(request()->conoce_dinamizador)),
+                'articulador_amabilidad' => Rule::requiredIf(isset(request()->conoce_articulador)),
+                'articulador_conocimiento' => Rule::requiredIf(isset(request()->conoce_articulador)),
+                'disposicion_personal' => 'required',
+                // Likert 1
+                'acompanamiento_comite' => 'required',
+                'desarrollo_comite' => 'required',
+                'asignacion_experto' => 'required',
+                'inscripcion_plataforma' => 'required',
+                'uso_plataforma' => 'required',
+                // Likert 2
+                'conocimiento_experto' => 'required',
+                'experto_ayuda_objetivos' => 'required',
+                'experto_cumple_cronograma' => 'required',
+                'experto_hace_seguimiento' => 'required',
+                'experto_presenta_recursos' => 'required',
+                'experto_entrega_documentos' => 'required',
+                'experto_acompana' => 'required',
+                // Likert 3
+                'infraestructura_acorde_necesidades' => 'required',
+                'infraestructura_disponibilidad' => 'required',
+                'materiales_disponibilidad' => 'required',
+                //
+                'acompanamiento_articulador' => 'required',
+                // Likert 4
+                'articulacion_alcanza_proposito' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->acompanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
+                'articulacion_fue_fundamental' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->ampanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
+                'articulador_es_capaz' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->ampanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
+                'articulador_hace_seguimiento' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->ampanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
+                'articulador_presenta_recursos' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->mpanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
+                'articulador_demuestra_acompanamiento' => Rule::requiredIf(request()->acompanamiento_articulador == 'Sí lo necesitaba y recibí acompañamiento en mi proyecto' || request()->ampanamiento_articulador == 'Si lo necesitaba, pero no recibí atención por parte de articulador a pesar de solicitarlo'),
+                //
+                'con_quien_comparte' => Rule::requiredIf(isset(request()->comparte_credenciales)),
+                'motivo_compartir_credenciales' => Rule::requiredIf(isset(request()->comparte_credenciales)) . '|max:100',
+                'motivo_no_logrado' => Rule::requiredIf(!isset(request()->alcanza_objetivos)) . '|max:100',
+                'aspectos_a_mejorar' => 'required|max:100',
+                'como_conoce_tecnoparque' => 'required',
+                'uso_otros_servicios' => Rule::requiredIf(isset(request()->usa_otros_servicios)),
+                'otros_servicios' => Rule::requiredIf(isset(request()->usa_otros_servicios) && request()->uso_otros_servicios == 'Otras'),
+            ];
+            $array = array_merge($array, $array_cond);
+        }
+        return $array;
     }
 
     public function messages()
     {
         return [
+            'autoriza_tratamiento.required' => '¿Autoriza el tratamiento de datos?',
             'estado_proyecto.required' => 'El estado del proyecto es obligatorio.',
             'afinidad_proyecto.required' => 'Debe elegir una opción más afín a las características de su proyecto.',
             'infocenter_amabilidad.required' => 'Debe puntuar la amabilidad con la cuál fue atendido por Infocenter.',
