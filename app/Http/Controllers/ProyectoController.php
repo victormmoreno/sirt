@@ -250,7 +250,7 @@ class ProyectoController extends Controller
     {
         $experto = "";
         $nodo = "";
-        if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter()) {
+        if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter() || session()->get('login_role') == User::IsArticulador()) {
             $experto = null;
             $nodo = request()->user()->getNodoUser();
         } elseif (session()->get('login_role') == User::IsExperto()) {

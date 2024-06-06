@@ -330,7 +330,7 @@ Route::group(
         Route::get('/export/downloadMetas', 'Excel\IndicadorController@downloadMetas')->name('indicador.export.metas');
         Route::get('/export/downloadMetas/articulaciones', 'Excel\IndicadorController@downloadMetasArticulaciones')->name('indicador.export.metas-articulaciones');
         Route::get('/export/downloadIdeas', 'Excel\IndicadorController@downloadIdeas')->name('indicador.export.ideas');
-        Route::get('/export_proyectos_indicadores', 'Excel\IndicadorController@exportIndicadoresProyectos')->name('indicador.proyectos.export.excel')->middleware('role_session:Auxiliar|Experto|Infocenter|Dinamizador|Activador');
+        Route::get('/export_proyectos_indicadores', 'Excel\IndicadorController@exportIndicadoresProyectos')->name('indicador.proyectos.export.excel')->middleware('role_session:Articulador|Auxiliar|Experto|Infocenter|Dinamizador|Activador');
         Route::get('/export_resultados_encuesta', 'Excel\IndicadorController@exportResultadosEncuesta')->name('encuesta.resultados')->middleware('role_session:Administrador|Auxiliar|Activador|Dinamizador');
         // Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
         Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Activador');
@@ -369,7 +369,7 @@ Route::group(
         Route::get('/seguimientoEsperadoDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoEsperadoDeLaLinea');
         Route::get('/seguimientoEsperado', 'SeguimientoController@seguimientoEsperado')->name('seguimiento.esperado');
         Route::get('/seguimientoEsperadoDeTecnoparque', 'SeguimientoController@seguimientoEsperadoDeTecnoparque')->middleware('role_session:Activador');
-        Route::get('/seguimientoDeUnNodoFases', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Auxiliar|Activador|Dinamizador|Experto|Infocenter');
+        Route::get('/seguimientoDeUnNodoFases', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Articulador|Auxiliar|Activador|Dinamizador|Experto|Infocenter');
         // Route::get('/seguimientoEsperadoDeUnNodo', 'SeguimientoController@seguimientoEsperado')->middleware('role_session:Activador|Dinamizador');
         Route::get('/seguimientoDeTecnoparqueFases', 'SeguimientoController@seguimientoDeTecnoparqueFases')->middleware('role_session:Dinamizador|Activador|Auxiliar');
         Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
