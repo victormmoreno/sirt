@@ -70,7 +70,7 @@
         </script>
         <script src="{{ asset('js/libs.js') }}">
         </script>
-        <script src="{{ asset('js/app2.js') }}">
+        <script src="{{ asset('js/app2.js?v=1') }}">
         </script>
         @stack('script')
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129874326-1"></script>

@@ -51,6 +51,7 @@ class ModelPolicy
                         (session()->get('login_role') == User::IsAuxiliar() && $user->IsAuxiliar() ) ||
                         (session()->get('login_role') == User::IsAdministrador() && $user->IsAdministrador() ) ||
                         (session()->get('login_role') == User::IsActivador() && $user->IsActivador()) ||
+                        (session()->get('login_role') == User::IsArticulador() && $user->IsArticulador()) ||
                         (session()->get('login_role') == User::IsDinamizador() && $user->IsDinamizador()) ||
                         (session()->get('login_role') == User::IsExperto() && $user->IsExperto()) ||
                         (session()->get('login_role') == User::IsInfocenter() && $user->IsInfocenter())

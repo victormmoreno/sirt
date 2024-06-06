@@ -42,6 +42,11 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
     </a>
 </li>
+<li class="no-padding {{setActiveRoute('proyecto')}}">
+    <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
+        <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos
+    </a>
+</li>
 <li class="no-padding {{setActiveRoute('indicadores')}}">
     <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
         <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
