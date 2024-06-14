@@ -81,7 +81,9 @@
                                     </select>
                                 </div>
                                 <div class="col s12 m12 l4 offset-m3 right">
-                                    <button class="waves-effect waves-grey bg-secondary-lighten  white-text btn-flat search-tabs-button right m-l-xs" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
+                                    @can('viewNodes', \App\User::class)
+                                        <button class="waves-effect waves-grey bg-secondary-lighten  white-text btn-flat search-tabs-button right m-l-xs" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
+                                    @endcan
                                     <button class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right m-l-xs" id="filter_user"><i class="material-icons">search</i>Filtrar</button>
                                 </div>
                             </div>
