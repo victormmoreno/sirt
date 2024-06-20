@@ -30,6 +30,7 @@ class ArticulationPolicy
                 $ability != 'create' &&
                 $ability != 'showButtonAprobacion' &&
                 $ability != 'delete' &&
+                $ability != 'cancel' &&
                 $ability != 'requestApproval'
             )) {
             return true;
@@ -395,4 +396,43 @@ class ArticulationPolicy
         && (isset($user->articulador->nodo_id) && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
         && ($articulation->phase->nombre == Articulation::IsInicio());
     }
+
+    /**
+     * Determine if the given articulations can be canceled by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ArticulationStage  $articulationStage
+     * @return bool
+     */
+    public function cancel(User $user, Articulation $articulation)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsDinamizador()])
+        && (session()->has('login_role') && (session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsDinamizador()))
+        && ((isset($user->articulador->nodo_id) && $user->articulador->nodo_id == $articulation->articulationstage->node_id) || (isset($user->dinamizador->nodo_id) && $user->dinamizador->nodo_id == $articulation->articulationstage->node_id))
+
+        && ($articulation->phase->nombre != Articulation::IsFinalizado() || $articulation->phase->nombre != Articulation::IsCancelado());
+    }
+
+    /**
+     * Determine if the given articulations can be change talent by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\$articulation  $articulation
+     * @return bool
+     */
+    public function requestCancel(User $user, Articulation $articulation):bool
+    {
+        return (bool) $user->hasAnyRole([
+                User::IsArticulador()
+            ])
+            && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsArticulador()
+                && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                )
+            )
+            && $articulation->phase->nombre != Articulation::IsFinalizado()
+        && (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE);
+    }
+
 }

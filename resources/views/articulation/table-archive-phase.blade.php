@@ -2,8 +2,9 @@
     <thead class="bg-primary white-text">
     <tr>
         <th>Archivo</th>
+
         <th style="width: 10%">Descargar</th>
-        @if(Route::currentRouteName() == 'articulations.show.phase')
+        @if(Route::currentRouteName() == 'articulations.show.phase' || Route::currentRouteName() == 'articulations.cancel')
             <th style="width: 10%">Eliminar</th>
         @endif
     </tr>

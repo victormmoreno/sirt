@@ -403,4 +403,48 @@ class ArticulationListController extends Controller
             'redirect_url' => route('articulation-stage'),
         ]);
     }
+
+    /**
+     * Vista para cancelar una accion de articualcion
+     * @param string $code
+     * @return Response
+     **/
+    public function cancel(string $code)
+    {
+        $articulation = Articulation::query()
+            ->with(['articulationstage'])
+            ->where('code', $code)->firstOrFail();
+        if (request()->user()->cannot('cancel', $articulation)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+
+        $traceability = Articulation::getTraceability($articulation)->get();
+        $ult_traceability = Articulation::getTraceability($articulation)->get()->last();
+        $ult_notificacion = $this->articulationRespository->retornarUltimaNotificacionPendiente($articulation);
+        $rol_destinatario = $this->articulationRespository->verifyRecipientNotification($ult_notificacion);
+        return view('articulation.cancel-articulacion', compact('articulation', 'traceability', 'ult_traceability', 'ult_notificacion', 'rol_destinatario'));
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function requestCancel(string $code)
+    {
+        $articulation = Articulation::query()
+        ->where('code', $code)->firstOrFail();
+        if (request()->user()->cannot('requestCancel', $articulation))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        $notification = $this->articulationRespository->notifyCancel($articulation);
+        if ($notification['notificacion']) {
+            Alert::success('Notificación Exitosa!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
+        } else {
+            Alert::error('Notificación Errónea!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
+        }
+        return back();
+    }
 }

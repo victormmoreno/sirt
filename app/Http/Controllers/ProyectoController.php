@@ -817,7 +817,6 @@ class ProyectoController extends Controller
             'ult_notificacion' => $ult_notificacion,
             'rol_destinatario' => $rol_destinatario
         ]);
-
     }
 
     /**

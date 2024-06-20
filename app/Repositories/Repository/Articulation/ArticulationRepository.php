@@ -5,6 +5,7 @@ namespace App\Repositories\Repository\Articulation;
 use App\Models\ControlNotificaciones;
 use App\Models\Movimiento;
 use App\Notifications\Articulation\RequestFinalizeArticulation;
+use App\Notifications\Articulation\RequestCancelArticulation;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ArticulationStage;
@@ -536,5 +537,51 @@ class ArticulationRepository extends Repository
         ->whereIn('fases.nombre', [Articulation::IsFinalizado()])
         ->groupBy("mes", "nombre_mes")
         ->orderBy("mes");
+    }
+
+    /**
+     * @param Articulation $articulation
+     * @return array
+     */
+    public function notifyCancel(Articulation $articulation)
+    {
+        DB::beginTransaction();
+        try {
+            $movimiento = null;
+            $comentario = "";
+            $phase = $articulation->phase_id;
+            $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($articulation);
+            $ult_traceability = Articulation::getTraceability($articulation)->get()->last();
+
+            $msg = 'No se ha podido enviar la solicitud de cancelación, inténtalo nuevamente';
+            $conf_envios = false;
+            if ($notificacion_fase_actual == null) {
+                $conf_envios = $this->settingsNotificationDynamizer($articulation);
+                $movimiento = Movimiento::IsSolicitarDinamizador();
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la cancelación de la articulación';
+            } else {
+                $conf_envios = $this->settingsNotificationDynamizer($articulation);
+                $movimiento = Movimiento::IsSolicitarDinamizador();
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la cancelación de la articulación';
+            }
+
+            $notificacion = $articulation->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], $phase, $msg);
+            if ($conf_envios != false) {
+                Notification::send($notificacion->receptor, new RequestCancelArticulation($articulation, $notificacion));
+                $articulation->createTraceability($movimiento, Session::get('login_role'), $movimiento, 'cancelar');
+            }
+            DB::commit();
+            return [
+                'notificacion' => true,
+                'msg' => $msg,
+                'notify' => $notificacion
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'notificacion' => false,
+                'msg' => 'Ha ocurrido un error ' . $th->getMessage()
+            ];
+        }
     }
 }
