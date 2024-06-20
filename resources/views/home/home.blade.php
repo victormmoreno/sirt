@@ -18,9 +18,8 @@
                         </p>
                     </div>
                     <div class="row">
-                        <div class="col s12 m12 l10 offset-l2">
+                        <div class="col s12 m12 l12 center">
                             <iframe title="1 ModuloTecnoBI_SIRT_2024" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiNDQ1YmIwMWYtOTg4Yy00MzAzLTgwYTgtNjVkODkxYTE3YmM3IiwidCI6ImNiYzJjMzgxLTJmMmUtNGQ5My05MWQxLTUwNmM5MzE2YWNlNyIsImMiOjR9" frameborder="0" allowFullScreen="true"></iframe>
-
                         </div>
                     </div>
                     @else

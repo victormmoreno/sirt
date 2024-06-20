@@ -349,7 +349,8 @@ class ProyectoRepository extends Repository
             'entidades.nombre AS nombre_nodo', 'lineastecnologicas.nombre AS nombre_linea', 'sublineas.nombre AS nombre_sublinea',
             'ideas.codigo_idea', 'ideas.nombre_proyecto AS nombre_idea', 'codigo_proyecto',
             'areasconocimiento.nombre AS nombre_area_conocimiento', 'otro_areaconocimiento', 'fecha_inicio',
-            'fases.nombre AS nombre_fase', 'fecha_cierre', 'proyectos.id', 'proyectos.nombre AS nombre_proyecto'
+            'fases.nombre AS nombre_fase', 'fecha_cierre', 'proyectos.id', 'proyectos.nombre AS nombre_proyecto',
+            'fecha_inicio_planeacion', 'fecha_inicio_ejecucion', 'fecha_inicio_cierre'
         )
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS experto')
         ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
@@ -951,19 +952,22 @@ class ProyectoRepository extends Repository
                         if ($proyecto->fase->nombre == "Inicio") {
                         // Cambiar el proyecto de fase
                         $proyecto->update([
-                            'fase_id' => Fase::where('nombre', 'Planeación')->first()->id
+                            'fase_id' => Fase::where('nombre', 'Planeación')->first()->id,
+                            'fecha_inicio_planeacion' => Carbon::now()
                         ]);
                         }
                         if ($proyecto->fase->nombre == "Planeación") {
                         // Cambiar el proyecto de fase
                         $proyecto->update([
-                            'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id
+                            'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
+                            'fecha_inicio_ejecucion' => Carbon::now()
                         ]);
                         }
                         if ($proyecto->fase->nombre == "Ejecución") {
                         // Cambiar el proyecto de fase
                         $proyecto->update([
-                            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
+                            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
+                            'fecha_inicio_cierre' => Carbon::now()
                         ]);
                         }
                         if ($proyecto->fase->nombre == "Cierre") {
@@ -1259,7 +1263,7 @@ class ProyectoRepository extends Repository
                 'fase_id' => Fase::where('nombre', $proyecto->IsSuspendido())->first()->id,
                 'fecha_cierre' => Carbon::now()
             ]);
-            Notification::send(User::findOrFail($proyecto->asesor->id), new ProyectoSuspendidoAprobado($proyecto));
+            Notification::send(User::withTrashed()->findOrFail($proyecto->asesor->id), new ProyectoSuspendidoAprobado($proyecto));
             DB::commit();
             return true;
         } catch (\Throwable $th) {

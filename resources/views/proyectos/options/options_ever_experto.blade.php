@@ -11,4 +11,9 @@
             El talento interlocutor ya aprobó el cambio de fase, enviar solicitud de aprobación al dinamizador.
         @endif
     </a>
+@elsecan('enviarEncuesta', [App\Models\EncuestaToken::class, $proyecto])
+    <a href="" class="collection-item orange-text" onclick="sendTokenEncuesta('{{route('encuesta.link', ['proyecto', $proyecto->id])}}', '{{$proyecto->fase->nombre}}', event)">
+        <i class="material-icons left">list</i>
+        Enviar encuesta de percepción.
+    </a>
 @endcan

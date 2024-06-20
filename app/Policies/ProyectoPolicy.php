@@ -246,15 +246,24 @@ class ProyectoPolicy
      * @return bool
      * @author dum
      **/
-    public function notificar_aprobacion(User $user, Proyecto $proyecto)
+    public function notificar_aprobacion(User $user, Proyecto $proyecto, $fase = null)
     {
-        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
+
+        if (Str::contains($proyecto->fase->nombre, [$proyecto->IsFinalizado(), $proyecto->IsSuspendido()])) {
             return false;
-        // if ($proyecto->fase->nombre == $proyecto->IsEjecucion() && ($proyecto->prorrogas()->get()->last()->fecha_ejecucion < Carbon::now()->format('Y-m-d')) && Str::contains(session()->get('login_role'), [$user->IsExperto(), $user->IsAdministrador()])) {
-        //     return false;
-        // }
-        if ((session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == auth()->user()->id) || session()->get('login_role') == $user->IsAdministrador())
-            return true;
+        } else {
+            if ($fase == $proyecto->IsSuspendido()) {
+                return true;
+            }
+            if ( (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == auth()->user()->id) || session()->get('login_role') == $user->IsAdministrador() ) {
+                if ($proyecto->fase->nombre == $proyecto->IsEjecucion() && !isset($proyecto->resultadosEncuesta)) {
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
         return false;
     }
 
@@ -267,7 +276,7 @@ class ProyectoPolicy
      **/
     public function showActivadorFilter(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+        if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador()])) {
             return true;
         }
         return false;

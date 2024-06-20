@@ -26,6 +26,9 @@ class Movimiento extends Model
     const IS_CAMBIAR_INTERLOCUTOR = 'cambió el talento interlocutor';
     const IS_CAMBIAR_TALENTOS = 'cambió los talentos del proyecto';
     const IS_ESTABLECER = 'estableció';
+    const IS_ENVIAR_ENCUESTA_SATISFACCION = 'envió la encuesta de percepción';
+    const IS_RESPONDER_ENCUESTA_SATISFACCION = 'respondió la encuesta de percepción';
+
     protected $table = 'movimientos';
 
     /**
@@ -66,6 +69,16 @@ class Movimiento extends Model
     public static function IsSolicitarTalento()
     {
         return self::IS_SOLICITAR_TALENTO;
+    }
+
+    public static function IsEnviarEncuestaSatisfaccion()
+    {
+        return self::IS_ENVIAR_ENCUESTA_SATISFACCION;
+    }
+
+    public static function IsResponderEncuestaSatisfaccion()
+    {
+        return self::IS_RESPONDER_ENCUESTA_SATISFACCION;
     }
 
     public static function IsSolicitarDinamizador()
@@ -163,7 +176,7 @@ class Movimiento extends Model
 
     public function fases_movimientos()
     {
-      return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
+            ->withTimestamps();
     }
 }

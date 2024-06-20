@@ -72,7 +72,9 @@
                 // min: 10,
                 placeHolder: 'Fecha (YYYY-MM-DD)'
             },
-            showCancelButton: true,
+            showCancelButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             cancelButtonText: 'Cancelar',
@@ -94,10 +96,13 @@
             '<input type="text" id="fecha" class="swal2-input" placeholder="Fecha (YYYY-MM-DD)" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"><label for="fecha" class="red-text" id="fecha_error"></label>'+
             '<textarea id="justificacion" class="swal2-input" placeholder="Justificación" maxlength="200"></textarea><label for="justificacion" id="justificacion_error"></label>',
             type: 'warning',
-            showCancelButton: true,
+            showCancelButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            // isDismissed: false,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancelar',
+            // cancelButtonText: 'Cancelar',
             confirmButtonText: 'Guardar!',
             preConfirm: () => {
                 $('#fecha_error').empty();

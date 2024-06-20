@@ -95,6 +95,7 @@ mix.scripts([
     'resources/app/proyecto/forms_aprobacion.js',
     'resources/app/proyecto/gestor/form.js',
     'resources/app/proyecto/gestor/form_cierre.js',
+    'resources/app/encuesta/index.js',
     'resources/app/edt/gestor/form.js',
     'resources/app/edt/gestor/index.js',
     'resources/app/edt/index.js',
@@ -135,6 +136,7 @@ mix.minify('public/js/app2.js')
 mix.scripts([
     'resources/app/auth/verifyUser.js',
     'resources/app/auth/register.js',
+    'resources/app/encuesta/form.js',
     ],'public/js/web.js');
 
 

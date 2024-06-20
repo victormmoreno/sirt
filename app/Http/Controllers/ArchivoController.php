@@ -97,6 +97,7 @@ class ArchivoController extends Controller
             $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
             $nodo_id = $charla->nodo_id;
             $file = request()->file('nombreArchivo');
+            $size = $file->getSize();
             $route = "";
             // La ruta con la se guardan los archivos de una es la siguiente:
             // id_nodo/anho_de_la_fecha_de_incio/Edts/id_gestor/edt_id/max_id_archivo_proyecto_nombre_del_archivo.extension
@@ -108,7 +109,7 @@ class ArchivoController extends Controller
             // $anho = $edt->fecha_inicio->isoFormat('YYYY');
             $route = 'public/' . $nodo . '/' . $anho . '/Charlas' . '/' . $id;
             $fileUrl = $file->storeAs($route, $fileName);
-            $this->archivoRepository->storeFileCharlaInformativaRepository($id, Storage::url($fileUrl));
+            $this->archivoRepository->storeFileCharlaInformativaRepository($id, Storage::url($fileUrl), $size);
         }
     }
 
@@ -163,6 +164,7 @@ class ArchivoController extends Controller
                     'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
                 ]);
             $file = request()->file('nombreArchivo');
+            $size = $file->getSize();
             $route = "";
             // La ruta con la se guardan los archivos de una es la siguiente:
             // id_nodo/anho_de_la_fecha_de_incio/Edts/id_gestor/edt_id/max_id_archivo_proyecto_nombre_del_archivo.extension
@@ -176,7 +178,7 @@ class ArchivoController extends Controller
             // $anho = $edt->fecha_inicio->isoFormat('YYYY');
             $route = 'public/' . $nodo . '/' . $anho . '/Edts' . '/' . $gestor . '/' . $id;
             $fileUrl = $file->storeAs($route, $fileName);
-            $this->archivoRepository->storeFileEdt($id, Storage::url($fileUrl));
+            $this->archivoRepository->storeFileEdt($id, Storage::url($fileUrl), $size);
         }
     }
 
@@ -337,6 +339,7 @@ class ArchivoController extends Controller
                     'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
                 ]);
             $file = request()->file('nombreArchivo');
+            $size = $file->getSize();
             // La ruta con la se guardan los archivos de un entrenamiento es la siguiente:
             // id_nodo/anho_de_la_fecha_de_sesion_1/entrenamientos/max_id_archivo_proyecto_nombre_del_archivo.extension
             $idArchivoEntrenamiento = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
@@ -348,7 +351,7 @@ class ArchivoController extends Controller
             $anho = $entrenamiento->fecha_sesion1->isoFormat('YYYY');
             $route = 'public/' . $nodo . '/' . $anho . '/Entrenamientos' . '/' . $id;
             $fileUrl = $file->storeAs($route, $fileName);
-            $this->archivoRepository->storeFileEntrenamiento($id, Storage::url($fileUrl));
+            $this->archivoRepository->storeFileEntrenamiento($id, Storage::url($fileUrl), $size);
         }
     }
 
@@ -369,6 +372,7 @@ class ArchivoController extends Controller
             'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
         ]);
         $file = request()->file('nombreArchivo');
+        $size = $file->getSize();
         // La ruta con la se guardan los archivos de un proyecto es la siguiente:
         // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
         $idArchivoModel = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
@@ -390,7 +394,8 @@ class ArchivoController extends Controller
         $id = $proyecto->id;
         $proyecto->archivos()->create([
             'ruta' => Storage::url($fileUrl),
-            'fase_id' => $fase_id
+            'fase_id' => $fase_id,
+            'filesize' => $size
         ]);
         }
     }
@@ -547,7 +552,7 @@ class ArchivoController extends Controller
                     'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
                 ]);
             $file = request()->file('nombreArchivo');
-
+            $size = $file->getSize();
             $archivo = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
             $fileName = $archivo->max . '_' . $file->getClientOriginalName();
             $route = "";
@@ -577,11 +582,13 @@ class ArchivoController extends Controller
                 $phase = Fase::where('nombre',$request->phase)->first();
                 $articulation->archivomodel()->create([
                     'ruta' => Storage::url($fileUrl),
-                    'fase_id' => isset($phase)? $phase->id : null
+                    'fase_id' => isset($phase)? $phase->id : null,
+                    'filesize' => $size
                 ]);
             }else{
                 $articulation->archivomodel()->create([
-                    'ruta' => Storage::url($fileUrl)
+                    'ruta' => Storage::url($fileUrl),
+                    'filesize' => $size
                 ]);
             }
         }
@@ -651,7 +658,7 @@ class ArchivoController extends Controller
                 ]);
 
             $file = request()->file('nombreArchivo');
-
+            $size = $file->getSize();
             $archivo = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
             $fileName = $archivo->max . '_' . $file->getClientOriginalName();
             $route = "";
@@ -669,7 +676,8 @@ class ArchivoController extends Controller
             }
             $fileUrl = $file->storeAs($route, $fileName);
             $node->model()->create([
-                'ruta' => Storage::url($fileUrl)
+                'ruta' => Storage::url($fileUrl),
+                'filesize' => $size
             ]);
         }
     }

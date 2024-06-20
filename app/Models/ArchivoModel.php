@@ -12,7 +12,8 @@ class ArchivoModel extends Model
 
     protected $fillable = [
         'ruta',
-        'fase_id'
+        'fase_id',
+        'filesize'
     ];
 
     public function model()

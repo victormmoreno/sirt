@@ -15,6 +15,7 @@
                 @include('proyectos.options.options_ever_dinamizador')
             @endcan
         @endif
+
         @can('showOptionsForExperto', App\Models\Proyecto::class)
             @if (Route::currentRouteName() == 'proyecto.inicio')
                 @include('proyectos.options.options_inicio')

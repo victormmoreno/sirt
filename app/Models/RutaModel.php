@@ -9,7 +9,7 @@ class RutaModel extends Model
 
     protected $table = 'ruta_model';
 
-    protected $fillable = ['ruta'];
+    protected $fillable = ['ruta', 'filesize'];
 
     public function rutamodel()
     {

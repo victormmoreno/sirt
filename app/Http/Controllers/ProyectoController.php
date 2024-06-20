@@ -250,7 +250,7 @@ class ProyectoController extends Controller
     {
         $experto = "";
         $nodo = "";
-        if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter()) {
+        if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter() || session()->get('login_role') == User::IsArticulador()) {
             $experto = null;
             $nodo = request()->user()->getNodoUser();
         } elseif (session()->get('login_role') == User::IsExperto()) {
@@ -743,6 +743,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($proyecto->encuestaToken->created_at->diffInDays(Carbon::now()) >= 3);
         $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
@@ -851,8 +852,9 @@ class ProyectoController extends Controller
      */
     public function solicitar_aprobacion(int $id, string $fase = null, string $fecha = null)
     {
+
         $proyecto = Proyecto::find($id);
-        if(!request()->user()->can('notificar_aprobacion', $proyecto)) {
+        if(!request()->user()->can('notificar_aprobacion', [$proyecto, $fase])) {
             alert('No autorizado', 'No puedes solicitar la aprobación de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
@@ -1015,6 +1017,7 @@ class ProyectoController extends Controller
             return back();
         }
         $update = $this->getProyectoRepository()->updateAprobacionSuspendido($id, $request);
+
         if ($update) {
             Alert::success('Modificación Exitosa!', 'La fase de cancelado del proyecto se aprobó!')->showConfirmButton('Ok', '#3085d6');
             return redirect('proyecto');

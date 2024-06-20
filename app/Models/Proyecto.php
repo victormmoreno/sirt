@@ -8,9 +8,12 @@ use App\Presenters\ProyectoPresenter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use \App\Http\Traits\Encuesta\HasEnvioEncuesta as EncuestaTrait;
 
 class Proyecto extends Model
 {
+
+    use EncuestaTrait;
 
     /**
      * the table name
@@ -76,6 +79,9 @@ class Proyecto extends Model
         'codigo_proyecto',
         'nombre',
         'fecha_inicio',
+        'fecha_inicio_planeacion',
+        'fecha_inicio_ejecucion',
+        'fecha_inicio_cierre',
         'fecha_cierre',
         'objetivo_general',
         'conclusiones',
@@ -446,7 +452,6 @@ class Proyecto extends Model
             }
         }
     }
-
     /**
      * returns an instance of the ProjectPresenter class
      * @author dum
