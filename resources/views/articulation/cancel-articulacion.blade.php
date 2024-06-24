@@ -80,13 +80,13 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            @canany(['showStart', 'showExecution', 'showClosing', 'changeTalents'], $articulation)
+                                            @canany(['showStart', 'showExecution', 'showClosing', 'changeTalents', 'requestCancel', 'approvalCancel'], $articulation)
                                             <div class="collection with-header col s12 m4 l3">
                                                 <h5 href="!#" class="collection-header">Opciones</h5>
                                                 @include('articulation.options.articulation-options-menu-left')
                                             </div>
                                             @endcanany
-                                        <div class="@canany(['showStart', 'showExecution', 'showClosing', 'changeTalents', 'changePhase'], $articulation)col s12 m8 l9 @else col s12 m12 l12  @endcanany">
+                                        <div class="@canany(['showStart', 'showExecution', 'showClosing', 'changeTalents', 'changePhase', 'requestCancel', 'approvalCancel'], $articulation)col s12 m8 l9 @else col s12 m12 l12  @endcanany">
                                             <div class="row">
                                                 <div class="col s12 m12 l4">
                                                     <ul class="collection">

@@ -31,7 +31,8 @@ class ArticulationPolicy
                 $ability != 'showButtonAprobacion' &&
                 $ability != 'delete' &&
                 $ability != 'cancel' &&
-                $ability != 'requestApproval'
+                $ability != 'requestApproval' &&
+                $ability != 'approvalCancel'
             )) {
             return true;
         }
@@ -422,6 +423,7 @@ class ArticulationPolicy
      */
     public function requestCancel(User $user, Articulation $articulation):bool
     {
+        // return true;
         return (bool) $user->hasAnyRole([
                 User::IsArticulador()
             ])
@@ -429,6 +431,22 @@ class ArticulationPolicy
                 && (
                     session()->get('login_role') == User::IsArticulador()
                 && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                )
+            )
+            && $articulation->phase->nombre != Articulation::IsFinalizado()
+        && (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE);
+    }
+
+    public function approvalCancel(User $user, Articulation $articulation):bool
+    {
+        // return true;
+        return (bool) $user->hasAnyRole([
+                User::IsDinamizador()
+            ])
+            && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsDinamizador()
+                && (isset($user->dinamizador) && isset($articulation->articulationstage)  && $user->dinamizador->nodo_id == $articulation->articulationstage->node_id)
                 )
             )
             && $articulation->phase->nombre != Articulation::IsFinalizado()
