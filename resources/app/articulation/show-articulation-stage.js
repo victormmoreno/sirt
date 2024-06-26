@@ -83,6 +83,10 @@ function questionRejectEndorsementArticulationStage(e) {
         }
     })
 }
+
+
+
+
 function endorsementQuestionArticulation(e) {
     e.preventDefault();
     //$('button[type="submit"]').attr('disabled', true);
@@ -102,6 +106,56 @@ function endorsementQuestionArticulation(e) {
             document.getElementById("frmApprovalArticulations").submit();
         }
     });
+}
+
+function endorsementQuestionArticulationCancel(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de canclear?',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta acción de articulación  y los documento adjuntos.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            $('#decision').val('aceptado');
+            document.frmEndorsementArticulationCancel.submit();
+        }
+    });
+}
+
+function questionRejectEndorsementArticulationCancel(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de no aprobar la cancalación?',
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Las observaciones deben ser obligatorias!'
+            } else {
+                $('#decision').val('rechazado');
+                $('#motivosNoAprueba').val(value);
+            }
+        },
+        inputAttributes: {
+            maxlength: 100,
+            placeHolder: '¿Por qué?'
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+        if (result.value) {
+            document.frmEndorsementArticulationCancel.submit();
+        }
+    })
 }
 
 function questionRejectEndorsementArticulation(e) {

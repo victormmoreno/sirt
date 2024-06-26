@@ -5,6 +5,10 @@
     Enviar solicitud de aprobación para cancelar esta acción de articulación
 </a>
 @endcan
+
+@can('showButtonAprobacion', [$articulation, \App\Models\Articulation::IsCancelado()])
+@include('articulation.form.endorsement-articulation-cancel-form')
+@endcan
 @else
 @can('showStart', $articulation)
 <a href="{{route('articulations.show.phase', [$articulation, 'inicio'])}}" class="collection-item">

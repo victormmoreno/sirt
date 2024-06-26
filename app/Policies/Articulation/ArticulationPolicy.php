@@ -267,11 +267,11 @@ class ArticulationPolicy
      * @return bool
      * @author dum
      **/
-    public function showButtonAprobacion(User $user, Articulation $articulation)
+    public function showButtonAprobacion(User $user, Articulation $articulation, string $fase = nulL)
     {
-        //$ult_notificacion = $articulationStage->notifications()->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
+    
         $ult_notificacion = $articulation->notifications()->get()->last();
-        if ($ult_notificacion != null && $articulation->phase_id == Fase::IsCierre()) {
+        if ($ult_notificacion != null && $articulation->phase_id == Fase::IsCierre() && $fase != Articulation::IsCancelado() && !is_null($fase)) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
                     if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
@@ -284,6 +284,21 @@ class ArticulationPolicy
                 }
             }
         }
+
+        if ($ult_notificacion != null  && $fase == Articulation::IsCancelado() && !is_null($fase)) {
+            if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
+                if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
+                    if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
+                        return true;
+                    } else {
+                        if ($ult_notificacion->receptor->id == auth()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role') && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     /**
@@ -423,7 +438,7 @@ class ArticulationPolicy
      */
     public function requestCancel(User $user, Articulation $articulation):bool
     {
-        // return true;
+        // dd($articulation->phase->nombre);
         return (bool) $user->hasAnyRole([
                 User::IsArticulador()
             ])
@@ -433,13 +448,13 @@ class ArticulationPolicy
                 && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
                 )
             )
-            && $articulation->phase->nombre != Articulation::IsFinalizado()
+            && ($articulation->phase->nombre != Articulation::IsFinalizado() && $articulation->phase->nombre != Articulation::IsCancelado())
         && (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE);
     }
 
     public function approvalCancel(User $user, Articulation $articulation):bool
     {
-        // return true;
+    
         return (bool) $user->hasAnyRole([
                 User::IsDinamizador()
             ])

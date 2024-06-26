@@ -437,9 +437,16 @@ class ArticulationRepository extends Repository
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
                 $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario, $phase);
 
-                if ($articulation->phase_id == Fase::IsCierre()) {
+                if ($articulation->phase_id == Fase::IsCierre() && $phase != Articulation::IsCancelado()) {
                     $articulation->update([
                         'phase_id' => Fase::IsFinalizado(),
+                        'end_date' => Carbon::now()
+                    ]);
+                }
+
+                if ($articulation->phase_id != Fase::IsCancelado() && $phase == Articulation::IsCancelado()) {
+                    $articulation->update([
+                        'phase_id' => Fase::IsCancelado(),
                         'end_date' => Carbon::now()
                     ]);
                 }
@@ -454,7 +461,7 @@ class ArticulationRepository extends Repository
             DB::rollBack();
             return [
                 'state' => false,
-                'mensaje' => 'No se ha aprobado la finalización de la articulación',
+                'mensaje' => 'No se ha aprobado la articulación',
                 'title' => 'Aprobación errónea'
             ];
         }

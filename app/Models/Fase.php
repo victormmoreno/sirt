@@ -14,6 +14,7 @@ class Fase extends Model
     const IS_EJECUCION = 3;
     const IS_CIERRE = 4;
     const IS_SUSPENDIDO = 5;
+    const IS_CANCELADO = 5;
     const IS_FINALIZADO = 6;
 
     protected $fillable = [
@@ -43,6 +44,11 @@ class Fase extends Model
     public static function IsSuspendido()
     {
         return self::IS_SUSPENDIDO;
+    }
+
+    public static function IsCancelado()
+    {
+        return self::IS_CANCELADO;
     }
 
     public static function IsFinalizado()

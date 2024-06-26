@@ -43,7 +43,7 @@ Route::group(
 
         Route::get('/articulaciones/{code}', 'ArticulationListController@show')->name('articulations.show');
         Route::put('/articulaciones/{code}/editar', 'ArticulationRegisterController@update')->name('articulation.update');
-
+        
         Route::put('articulaciones/gestionar_aprobacion/{id}/{fase}', 'ArticulationListController@manageApprovall')->name('articulations.manage-approval');
 
         Route::put('/gestionar_aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@manageEndorsement')->name('articulation-stage.manage-endorsement');

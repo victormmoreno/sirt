@@ -320,7 +320,7 @@ class ArticulationListController extends Controller
     public function manageApprovall(Request $request, $id, string $phase = null)
     {
         $articulation = Articulation::findOrFail($id);
-        if (request()->user()->cannot('showButtonAprobacion', $articulation)) {
+        if (request()->user()->cannot('showButtonAprobacion', [$articulation, $phase])) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
