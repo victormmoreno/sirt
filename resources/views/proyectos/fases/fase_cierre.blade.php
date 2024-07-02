@@ -14,11 +14,12 @@
                     <div class="card-content">
                         <div class="row">
                             @include('proyectos.titulo')
-                            @include('proyectos.navegacion')
+                            {{-- @include('proyectos.navegacion')
                             @include('proyectos.historial_cambios')
                             @include('proyectos.options.options')
                             @include('proyectos.detalles.detalle_general')
-                            @include('proyectos.detalles.detalle_fase_cierre')
+                            @include('proyectos.detalles.detalle_fase_cierre') --}}
+                            @include('proyectos.detalles.navegacion')
                             @can('aprobar', $proyecto)
                                 @include('proyectos.forms.form_aprobacion')
                             @endcan

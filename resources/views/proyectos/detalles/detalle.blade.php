@@ -21,63 +21,36 @@
             </div>
             <div class="row no-m-t no-m-b">
                 <div class="col s12 m12 l12">
-                    <div class="card mailbox-content">
+                    <div class="card-panel">
                         <div class="card-content container-fluid">
                             <div class="row no-m-t no-m-b">
                                 <div class="col s12 m12 l12">
                                     <div class="mailbox-view">
                                         <div class="mailbox-view-header">
                                             <div class="left">
-                                                <span
-                                                    class=" mailbox-title title primary-text">{{$proyecto->present()->proyectoNode()}}</span>
+                                                <span class=" mailbox-title title primary-text">{{$proyecto->present()->proyectoNode()}}</span>
                                             </div>
                                             <div class="right mailbox-buttons">
-                                            <span class="mailbox-title">
-                                            <p class="rigth">
-                                                {{$proyecto->present()->proyectoCode()}} -  {{$proyecto->present()->proyectoName()}}
-                                            </p>
-                                            <br/>
-                                            <p class="right">Linea Tecnológica:
-                                                {{$proyecto->present()->proyectoAbreviaturaLinea()}} - {{$proyecto->present()->proyectoLinea()}}
-                                            </p>
-                                            <br/>
-                                            <small class="right">Fecha de inicio del proyecto:
-                                                {{$proyecto->fecha_inicio}}
-                                            </small>
-                                        </span>
+                                                <span class="mailbox-title">
+                                                    <p class="rigth">
+                                                        {{$proyecto->present()->proyectoCode()}} -  {{$proyecto->present()->proyectoName()}}
+                                                    </p>
+                                                    <br/>
+                                                    <p class="right">Linea Tecnológica:
+                                                        {{$proyecto->present()->proyectoAbreviaturaLinea()}} - {{$proyecto->present()->proyectoLinea()}}
+                                                    </p>
+                                                    <br/>
+                                                    <small class="right">Fecha de inicio del proyecto:
+                                                        {{$proyecto->fecha_inicio}}
+                                                    </small>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="divider"></div>
-                            <ul class="tabs">
-                            <li class="tab col s3"><a class="active" href="#inicio">Inicio</a></li>
-                            <li class="tab col s3"><a href="#planeacion">Planeación</a></li>
-                            <li class="tab col s3"><a href="#ejecucion">Ejecución</a></li>
-                            <li class="tab col s3"><a href="#cierre">Cierre</a></li>
-                            </ul>
-                            @include('proyectos.historial_cambios')
                         </div>
-
-                        <div class="mailbox-view mailbox-text">
-                            <div class="row">
-                                @include('proyectos.options.options_end')
-                                @include('proyectos.detalles.detalle_general')
-                            </div>
-                            <div id="inicio" class="col s12 m12 l12">
-                                @include('proyectos.detalles.detalle_fase_inicio')
-                            </div>
-                            <div id="planeacion" class="col s12 m12 l12">
-                                @include('proyectos.detalles.detalle_fase_planeacion')
-                            </div>
-                            <div id="ejecucion" class="col s12 m12 l12">
-                                @include('proyectos.detalles.detalle_fase_ejecucion')
-                            </div>
-                            <div id="cierre" class="col s12 m12 l12">
-                                @include('proyectos.detalles.detalle_fase_cierre')
-                            </div>
-                        </div>
+                        @include('proyectos.detalles.navegacion')
                     </div>
                 </div>
             </div>
@@ -91,6 +64,7 @@
         datatableArchivosDeUnProyecto_planeacion();
         datatableArchivosDeUnProyecto_ejecucion();
         datatableArchivosDeUnProyecto_cierre();
+        datatableArchivosDeUnProyecto_suspendido();
 
         function datatableArchivosDeUnProyecto_inicio() {
             $('.inicio').DataTable({
@@ -183,6 +157,33 @@
                 order: false,
                 ajax: {
                     url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
+                    type: "get",
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                ],
+            });
+        }
+
+        function datatableArchivosDeUnProyecto_suspendido() {
+            $('.Cancelado').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                ajax: {
+                    url: "{{route('proyecto.files', [$proyecto->id, 'Cancelado'])}}",
                     type: "get",
                 },
                 columns: [

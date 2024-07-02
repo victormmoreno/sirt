@@ -366,6 +366,9 @@ class ProyectoRepository extends Repository
         ->selectRaw('IF(fases.nombre = "'.Proyecto::IsFinalizado().'", IF(diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
         ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
         ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
+        ->selectRaw('MAX(fecha_ejecucion) AS fecha_estimada_finalizacion_ejecucion')
+        ->leftJoin('prorroga_proyecto as pro', 'proyectos.id', '=', 'pro.proyecto_id')
+        ->leftJoin(DB::raw('(select proyecto_id, max(id) as maxid from prorroga_proyecto group by proyecto_id) as b'), 'pro.id', '=', 'b.maxid')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
@@ -396,7 +399,8 @@ class ProyectoRepository extends Repository
         ->leftJoin('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
         ->leftJoin('sectores', 'sectores.id', '=', 'empresas.sector_id')
         ->leftJoin('tamanhos_empresas', 'tamanhos_empresas.id', '=', 'empresas.tamanhoempresa_id')
-        ->leftJoin('tipos_empresas', 'tipos_empresas.id', '=', 'empresas.tipoempresa_id');
+        ->leftJoin('tipos_empresas', 'tipos_empresas.id', '=', 'empresas.tipoempresa_id')
+        ->groupBy('proyectos.id', 'empresas.id');
     }
 
     /**
@@ -417,7 +421,8 @@ class ProyectoRepository extends Repository
         ->join('entidades AS eg', 'eg.id', '=', 'gruposinvestigacion.entidad_id')
         ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
         ->join('ciudades AS cg', 'cg.id', '=', 'eg.ciudad_id')
-        ->join('departamentos AS dg', 'dg.id', '=', 'cg.departamento_id');
+        ->join('departamentos AS dg', 'dg.id', '=', 'cg.departamento_id')
+        ->groupBy('proyectos.id', 'eg.id');
     }
 
     /**
@@ -457,7 +462,8 @@ class ProyectoRepository extends Repository
         ->leftjoin('ciudades AS cr', 'cr.id', '=', 'up.ciudad_id')
         ->leftjoin('departamentos AS dr', 'dr.id', '=', 'cr.departamento_id')
         ->leftjoin('eps', 'eps.id', '=', 'up.eps_id')
-        ->leftjoin('etnias', 'etnias.id', '=', 'up.etnia_id');
+        ->leftjoin('etnias', 'etnias.id', '=', 'up.etnia_id')
+        ->groupBy('proyectos.id', 'up.id');
     }
 
     /**
@@ -496,7 +502,8 @@ class ProyectoRepository extends Repository
         ->leftjoin('ciudades AS cr', 'cr.id', '=', 'ue.ciudad_id')
         ->leftjoin('departamentos AS dr', 'dr.id', '=', 'cr.departamento_id')
         ->leftjoin('eps', 'eps.id', '=', 'ue.eps_id')
-        ->leftjoin('etnias', 'etnias.id', '=', 'ue.etnia_id');
+        ->leftjoin('etnias', 'etnias.id', '=', 'ue.etnia_id')
+        ->groupBy('proyectos.id', 'ue.id');
     }
 
     /**

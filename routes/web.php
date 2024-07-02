@@ -1,5 +1,9 @@
 <?php
-
+use Illuminate\Support\Facades\DB;
+// DB::listen(function($sql) {
+//     var_dump($sql->sql);
+//     var_dump($sql->time);
+// });
 //costos administrativos
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
 

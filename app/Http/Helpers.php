@@ -8,6 +8,10 @@ function setActiveRoute($name){
     return request()->is($name.'*') ? 'active':'';
 }
 
+function isActiveRoute($name){
+    return request()->is($name.'*') ? true : false;
+}
+
 function setActiveRouteActivePage($name){
     return request()->is($name.'*') ? 'active-page':'';
 }
@@ -34,6 +38,20 @@ function arrayRecursiveDiff($aArray1, $aArray2) {
     }
     return $aReturn;
 }
+
+function asNumber($value) {
+    if ($value == null)
+        return 0;
+    return $value;
+}
+
+function asMoney($value) {
+    if ($value<0) 
+        return "-".asMoney(-$value);
+    if( $value == null )
+        return '0';
+    return '$' . number_format($value, 2);
+  }
 
 function nameFase($fase){
     switch ($fase) {
