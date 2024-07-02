@@ -2,7 +2,11 @@
 @can('requestCancel', $articulation)
 <a href="{{route('articulations.request-cancel', [$articulation])}}" class="collection-item yellow lighten-3">
     <i class="material-icons left">priority_high</i>
-    Enviar solicitud de aprobación para cancelar esta acción de articulación
+    @if(session()->get('login_role') == \App\User::IsAdministrador())
+        Cancelar Acción de Articulación
+    @else
+        Enviar solicitud de aprobación para cancelar esta acción de articulación
+    @endif
 </a>
 @endcan
 
@@ -48,17 +52,17 @@
     Descargar acta inicio
 </a>
 @endcan
-@can('uploadEvidences', [$articulation, 'Inicio'])
+@can('uploadEvidences', [$articulation, $articulation->phase->nombre])
 <a href="{{ route('articulations.evidences', [$articulation]) }}" class="collection-item">
     <i class="material-icons left">cloud_upload</i>
     Cargar evidencias
 </a>
 @endcan
-@can('uploadEvidences', [$articulation, 'Cierre'])
-<a href="{{ route('articulations.evidences', [$articulation]) }}" class="collection-item">
-    <i class="material-icons left">cloud_upload</i>
-    Cargar evidencias
-</a>
+@can('cancel', $articulation)
+    <a href="{{route('articulations.cancel', [$articulation])}}" class="collection-item">
+        <i class="material-icons left">priority_high</i>
+        Cancelar acción de articulación.
+    </a>
 @endcan
 @can('delete', $articulation)
 <a href="javascript:void(0)" class="collection-item"
@@ -67,8 +71,4 @@
     Eliminar {{__('articulation')}}
 </a>
 @endcan
-<a href="{{route('articulations.cancel', [$articulation])}}" class="collection-item">
-    <i class="material-icons left">priority_high</i>
-    Cancelar acción de articulación.
-</a>
 @endif

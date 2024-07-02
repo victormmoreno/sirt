@@ -6,8 +6,8 @@ use App\Models\Articulation;
 use App\Models\ControlNotificaciones;
 use App\Models\Fase;
 use App\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\ArticulationStage;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ArticulationPolicy
 {
@@ -28,12 +28,13 @@ class ArticulationPolicy
             && session()->get('login_role') == User::IsAdministrador()
             && (
                 $ability != 'create' &&
-                $ability != 'showButtonAprobacion' &&
+                $ability != 'showButtonAprobacion'&&
                 $ability != 'delete' &&
-                $ability != 'cancel' &&
+                // $ability != 'cancel' &&
                 $ability != 'requestApproval' &&
-                $ability != 'approvalCancel' &&
-                $ability != 'uploadFiles'
+                $ability != 'approvalCancel'
+                // $ability != 'requestCancel'
+                // $ability != 'uploadFiles'
             )) {
             return true;
         }
@@ -478,6 +479,7 @@ class ArticulationPolicy
                 && (
                     session()->get('login_role') == User::IsArticulador()
                 && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE
                 )
             )
         && $articulation->phase->nombre != Articulation::IsCancelado();
@@ -492,6 +494,7 @@ class ArticulationPolicy
                 && (
                     session()->get('login_role') == User::IsArticulador()
                 && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE
                 )
             )
         && $articulation->phase->nombre != Articulation::IsCancelado();

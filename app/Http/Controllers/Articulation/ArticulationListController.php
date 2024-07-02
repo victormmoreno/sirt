@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Articulation;
 use App\Models\AlcanceArticulacion;
 use App\Models\ArticulationType;
 use App\Models\Fase;
+use App\User;
 use App\Repositories\Repository\Articulation\ArticulationRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -439,7 +440,12 @@ class ArticulationListController extends Controller
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-        $notification = $this->articulationRespository->notifyCancel($articulation);
+        if(\Session::get('login_role') == User::IsAdministrador()){
+            $notification = $this->articulationRespository->changeToCanceled($articulation, Articulation::IsCancelado());
+        }
+        else{
+            $notification = $this->articulationRespository->notifyCancel($articulation);
+        }
         if ($notification['notificacion']) {
             Alert::success('Notificación Exitosa!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
         } else {

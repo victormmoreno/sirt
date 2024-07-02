@@ -591,4 +591,36 @@ class ArticulationRepository extends Repository
             ];
         }
     }
+
+    /**
+     * Cambia el estado de la articulacion a cancelado
+     *
+     * @param $request
+     * @param $id Id
+     */
+    public function changeToCanceled($articulation, string $phase)
+    {
+        DB::beginTransaction();
+        try {
+            if ($articulation->phase_id != Fase::IsCancelado() && $phase == Articulation::IsCancelado()) {
+                $articulation->update([
+                    'phase_id' => Fase::IsCancelado(),
+                    'end_date' => Carbon::now()
+                ]);
+            }
+            DB::commit();
+            return [
+                'notificacion' => true,
+                'msg' => 'Acción de articulación cancelada',
+                'notify' => 'Acción exitosa'
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'notificacion' => false,
+                'msg' => 'Acción de articulación ya cancelada',
+                'notify' => 'Acción errónea'
+            ];
+        }
+    }
 }
