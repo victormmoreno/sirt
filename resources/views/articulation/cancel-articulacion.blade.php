@@ -212,14 +212,17 @@
                                             </div>
 
                                         </div>
+
                                         <div class="row">
                                             <div class="col s12 m12 l12">
                                                 <div class="wizard clearfix">
-                                                    @csrf
-                                                    {!! method_field('PUT')!!}
-                                                    <div>
-                                                        @include('articulation.form.cancel-form')
-                                                    </div>
+                                                    @can('uploadFiles', $articulation)
+                                                        @csrf
+                                                        {!! method_field('PUT')!!}
+                                                        <div>
+                                                            @include('articulation.form.cancel-form')
+                                                        </div>
+                                                    @endcan
                                                     <div class="row">
                                                         @include('articulation.table-archive-phase', ['fase' =>
                                                         'Cancel'])
@@ -227,6 +230,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -328,11 +332,13 @@
                         name: 'download',
                         orderable: false,
                     },
+                    @can('deleteFiles', $articulation)
                     {
                         data: 'delete',
                         name: 'delete',
                         orderable: false,
                     }
+                    @endcan
                 ],
             });
         }

@@ -5,7 +5,9 @@
 
         <th style="width: 10%">Descargar</th>
         @if(Route::currentRouteName() == 'articulations.show.phase' || Route::currentRouteName() == 'articulations.cancel')
+        @can('deleteFiles', $articulation)
             <th style="width: 10%">Eliminar</th>
+        @endcan
         @endif
     </tr>
     </thead>
