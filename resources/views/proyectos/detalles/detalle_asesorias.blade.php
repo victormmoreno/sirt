@@ -17,30 +17,38 @@
                 </p>
                 <p>
                     Horas de asesoria totales: <b>{{ $costos_asesorias->getData()->horasAsesorias }}</b>.
-                    <br>
-                    Total de costos de asesoria: <b>{{ asMoney($costos_asesorias->getData()->costosAsesorias) }}</b>.
                 </p>
+                @can('showConfInformation', $proyecto)
+                    <p>
+                        Total de costos de asesoria: <b>{{ asMoney($costos_asesorias->getData()->costosAsesorias) }}</b>.
+                    </p>
+                @endcan
             </li>
             <li class="collection-item avatar">
                 <i class="material-icons circle bg-primary">account_balance_wallet</i>
                 <span class="title">Equipos</span>
                 <p>
                     Horas de uso de equipo totales: <b>{{$costos_asesorias->getData()->horasEquipos}}</b>.
-                    <br>
-                    Total de costos de uso de equipos: <b>{{ asMoney($costos_asesorias->getData()->costosEquipos) }}</b>.
                 </p>
+                @can('showConfInformation', $proyecto)
+                    <p>
+                        Total de costos de uso de equipos: <b>{{ asMoney($costos_asesorias->getData()->costosEquipos) }}</b>.
+                    </p>
+                @endcan
             </li>
-            <li class="collection-item avatar">
-                <i class="material-icons circle bg-primary">local_library</i>
-                <span class="title">Materiales de formación</span>
-                <p>
-                    Total de costos de materiales de formación: <b>{{asMoney($costos_asesorias->getData()->costosMateriales)}}</b>.
-                </p>
-            </li>
-            <li class="collection-item avatar">
-                <i class="material-icons circle bg-primary">attach_money</i>
-                <span class="title">Costo total del proyecto: <b>{{asMoney($costos_asesorias->getData()->costosTotales)}}<b/></span>
-            </li>
+            @can('showConfInformation', $proyecto)
+                <li class="collection-item avatar">
+                    <i class="material-icons circle bg-primary">local_library</i>
+                    <span class="title">Materiales de formación</span>
+                    <p>
+                        Total de costos de materiales de formación: <b>{{asMoney($costos_asesorias->getData()->costosMateriales)}}</b>.
+                    </p>
+                </li>
+                <li class="collection-item avatar">
+                    <i class="material-icons circle bg-primary">attach_money</i>
+                    <span class="title">Costo total del proyecto: <b>{{asMoney($costos_asesorias->getData()->costosTotales)}}<b/></span>
+                </li>
+            @endcan
         </ul>
     </div>
     <div class="col s12 m8 l8">

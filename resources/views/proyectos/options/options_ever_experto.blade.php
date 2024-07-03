@@ -12,7 +12,7 @@
         @endif
     </a>
 @elsecan('enviarEncuesta', [App\Models\EncuestaToken::class, $proyecto])
-    <a href="" class="collection-item orange-text tooltipped" data-position="bottom" data-tooltip="Esta encuesta será enviada al correo del talento interlocutor" onclick="sendTokenEncuesta('{{route('encuesta.link', ['proyecto', $proyecto->id])}}', '{{$proyecto->fase->nombre}}', event)">
+    <a href="" class="collection-item orange-text tooltipped" data-position="bottom" data-tooltip="Esta encuesta será enviada al correo del talento interlocutor, por favor informar al talento que revise bandeja de entrada, correo no deseado o spam" onclick="sendTokenEncuesta('{{route('encuesta.link', ['proyecto', $proyecto->id])}}', '{{$proyecto->fase->nombre}}', event)">
         <i class="material-icons left">list</i>
         Enviar encuesta de percepción.
     </a>
