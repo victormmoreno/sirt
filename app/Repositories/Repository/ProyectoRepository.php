@@ -440,7 +440,7 @@ class ProyectoRepository extends Repository
             up.barrio, up.fechanacimiento, eps.nombre AS nombre_eps, IF(eps.nombre="Otra",up.otra_eps,"No aplica") AS otra_eps, etnias.nombre AS etnia,
             IF(up.grado_discapacidad=1,"Si","No") AS grado_discapacidad, IF(up.grado_discapacidad=1,up.descripcion_grado_discapacidad,"No aplica") AS descripcion_grado_discapacidad,
             IF(up.mujerCabezaFamilia=1,"Si","No") AS mujerCabezaFamilia, IF(up.desplazadoPorViolencia=1,"Si","No") AS desplazadoPorViolencia, up.institucion,
-            up.titulo_obtenido, up.fecha_terminacion
+            up.titulo_obtenido, up.fecha_terminacion, gradosescolaridad.nombre as grado_escolaridad
         ')
         ->selectRaw(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.tipo_talento')) as tipo_talento"))
         ->selectRaw(DB::raw(
@@ -463,6 +463,7 @@ class ProyectoRepository extends Repository
         ->leftjoin('departamentos AS dr', 'dr.id', '=', 'cr.departamento_id')
         ->leftjoin('eps', 'eps.id', '=', 'up.eps_id')
         ->leftjoin('etnias', 'etnias.id', '=', 'up.etnia_id')
+        ->leftjoin('gradosescolaridad', 'gradosescolaridad.id', '=', 'up.gradoescolaridad_id')
         ->groupBy('proyectos.id', 'up.id');
     }
 
@@ -480,7 +481,7 @@ class ProyectoRepository extends Repository
             ue.barrio, ue.fechanacimiento, eps.nombre AS nombre_eps, IF(eps.nombre="Otra",ue.otra_eps,"No aplica") AS otra_eps, etnias.nombre AS etnia,
             IF(ue.grado_discapacidad=1,"Si","No") AS grado_discapacidad, IF(ue.grado_discapacidad=1,ue.descripcion_grado_discapacidad,"No aplica") AS descripcion_grado_discapacidad,
             IF(ue.mujerCabezaFamilia=1,"Si","No") AS mujerCabezaFamilia, IF(ue.desplazadoPorViolencia=1,"Si","No") AS desplazadoPorViolencia, ue.institucion,
-            ue.titulo_obtenido, ue.fecha_terminacion
+            ue.titulo_obtenido, ue.fecha_terminacion, gradosescolaridad.nombre as grado_escolaridad
         ')
         ->selectRaw(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.tipo_talento')) as tipo_talento"))
         ->selectRaw(DB::raw(
@@ -503,6 +504,7 @@ class ProyectoRepository extends Repository
         ->leftjoin('departamentos AS dr', 'dr.id', '=', 'cr.departamento_id')
         ->leftjoin('eps', 'eps.id', '=', 'ue.eps_id')
         ->leftjoin('etnias', 'etnias.id', '=', 'ue.etnia_id')
+        ->leftjoin('gradosescolaridad', 'gradosescolaridad.id', '=', 'ue.gradoescolaridad_id')
         ->groupBy('proyectos.id', 'ue.id');
     }
 
