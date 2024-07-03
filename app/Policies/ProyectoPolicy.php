@@ -13,6 +13,20 @@ class ProyectoPolicy
     use HandlesAuthorization;
 
     /**
+     * Determina que usuarios pueden ver información sensible de un proyecto
+     *
+     * @param User $user
+     * @return bool
+     * @author dum
+     **/
+    public function showConfInformation(User $user)
+    {
+        if (Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsUsuario()]))
+            return false;
+        return true;
+    }
+
+    /**
      * Determina quien y cuando se puede establecer una fecha para finalizar la ejecución de un 
      * proyecto cuando no se ha alcanzado la fecha estimada 
      *
