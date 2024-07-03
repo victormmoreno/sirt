@@ -5,7 +5,7 @@
                 Experto que asesora el proyecto
             </span>
             <p>
-                {{$proyecto->present()->proyectoUserAsesor()}}
+                {{$proyecto->present()->proyectoUserAsesor()}} - {{$proyecto->present()->proyectoNode()}}
             </p>
             <a target="_blank" href="{{route("usuario.show", $proyecto->asesor->documento)}}" class="info-text">
                 Ver mas información del usuario.

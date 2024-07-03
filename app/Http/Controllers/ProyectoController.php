@@ -55,9 +55,11 @@ class ProyectoController extends Controller
                 alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte y/o que aún no han finalizado', 'error')->showConfirmButton('Ok', '#3085d6');
                 return back();
             }
-            $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
+            $historico = Proyecto::consultarHistoricoProyecto($proyecto->id);
+            $costos = new CostoController;
             $costo = $this->costoController->costoProject($proyecto->id);
             return view('proyectos.detalles.detalle', [
+                'costos_asesorias' => $costos->costoProject($proyecto->id),
                 'proyecto' => $proyecto,
                 'costo' => $costo,
                 'historico' => $historico
@@ -690,16 +692,28 @@ class ProyectoController extends Controller
      */
     public function inicio($id)
     {
-        $proyecto = Proyecto::findOrFail($id);
+        $proyecto = Proyecto::with([
+            'asesor',
+            'talentos',
+            'sedes',
+            'sedes.empresa',
+            'gruposinvestigacion',
+            'gruposinvestigacion.entidad',
+            'users_propietarios'
+        ])->findOrFail($id);
         if(!request()->user()->can('detalle', $proyecto)) {
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id);
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
+        $costos = new CostoController;
+        $costo = $this->costoController->costoProject($proyecto->id);
         return view('proyectos.fases.fase_inicio', [
+            'costos_asesorias' => $costos->costoProject($proyecto->id),
             'proyecto' => $proyecto,
+            'costo' => $costo,
             'historico' => $historico,
             'ult_notificacion' => $ult_notificacion,
             'rol_destinatario' => $rol_destinatario
@@ -713,16 +727,19 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id);
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
-
+        $costos = new CostoController;
+        $costo = $this->costoController->costoProject($proyecto->id);
         if ($proyecto->fase->nombre == $proyecto->IsInicio()) {
             alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
             return view('proyectos.fases.fase_planeacion', [
+                'costos_asesorias' => $costos->costoProject($proyecto->id),
                 'proyecto' => $proyecto,
+                'costo' => $costo,
                 'historico' => $historico,
                 'rol_destinatario' => $rol_destinatario,
                 'ult_notificacion' => $ult_notificacion
@@ -744,16 +761,19 @@ class ProyectoController extends Controller
             return back();
         }
         // dd($proyecto->encuestaToken->created_at->diffInDays(Carbon::now()) >= 3);
-        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id);
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
-
+        $costos = new CostoController;
+        $costo = $this->costoController->costoProject($proyecto->id);
         if ($proyecto->fase->nombre == $proyecto->IsInicio() || $proyecto->fase->nombre == $proyecto->IsPlaneacion()) {
             alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
             return view('proyectos.fases.fase_ejecucion', [
+                'costos_asesorias' => $costos->costoProject($proyecto->id),
                 'proyecto' => $proyecto,
+                'costo' => $costo,
                 'historico' => $historico,
                 'rol_destinatario' => $rol_destinatario,
                 'ult_notificacion' => $ult_notificacion
@@ -781,11 +801,14 @@ class ProyectoController extends Controller
             alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
-            $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
+            $historico = Proyecto::consultarHistoricoProyecto($proyecto->id);
             $costo = $this->costoController->costoProject($proyecto->id);
             $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
             $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
+            $costos = new CostoController;
+            $costo = $this->costoController->costoProject($proyecto->id);
             return view('proyectos.fases.fase_cierre', [
+                'costos_asesorias' => $costos->costoProject($proyecto->id),
                 'proyecto' => $proyecto,
                 'costo' => $costo,
                 'historico' => $historico,

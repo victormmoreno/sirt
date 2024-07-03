@@ -27,7 +27,7 @@ class EncuestaTokenPolicy
                     return false;
                 } else {
                     if (isset($model->encuestaToken)) {
-                        if ($model->encuestaToken->created_at->diffInDays(Carbon::now()) >= 3) {
+                        if ($model->encuestaToken->created_at->diffInDays(Carbon::now()) >= 1) {
                             return true;
                         } else {
                             return false;
