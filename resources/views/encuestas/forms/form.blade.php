@@ -583,7 +583,7 @@
                     </tr>
                     <tr>
                         <td>
-                            El experto entrega documentos de seguimiento en el desarrollo del proyecto de manera oportuna y eficiente.
+                            El experto entrega documentos para el cierre del proyecto de manera oportuna y eficiente.
                             <br>
                             <small id="experto_entrega_documentos-error" class="p-v-xs error red-text"></small>
                         </td>

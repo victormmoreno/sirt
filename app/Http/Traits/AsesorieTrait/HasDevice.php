@@ -17,6 +17,13 @@ trait HasDevice
             ]);
     }
 
+    public function scopeGetUsoEquipos($query, $uso) {
+        return $query->selectRaw("sum(equipo_uso.tiempo) as uso_equipos, sum(equipo_uso.costo_equipo) as costo_uso_equipos, 
+        sum(costo_administrativo) AS costo_administrativo")
+        ->leftJoin('equipo_uso', 'equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
+        ->where('usoinfraestructuras.id', $uso);
+    }
+
     /**
      * Elimina los datos de equipo_uso
      *
