@@ -27,7 +27,7 @@
                     mientras el proyecto estaba en fase {{$item->fase}}.
                     @endif
                     <br>
-                    Fecha de este evento: <a href="!#">{{$item->created_at}}</a>
+                    Fecha de este evento: <a href="#!">{{$item->created_at}}</a>
                 </li>
             @endforeach
         </ul>
