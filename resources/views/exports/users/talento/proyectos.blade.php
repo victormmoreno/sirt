@@ -45,6 +45,7 @@
         <th>¿Tiene algún grado de discapacidad?</th>
         <th>¿Cuál es el grado de discapacidad?</th>
         <th>¿Es madre cabeza de familia?</th>
+        <th>¿Desplazado por la violencia?</th>
         <th>Grado de escolaridad</th>
         <th>Institución</th>
         <th>Título obtenido</th>
@@ -112,6 +113,7 @@
             <td>{{ $user->descripcion_grado_discapacidad }}</td>
             <td>{{ $user->mujerCabezaFamilia }}</td>
             <td>{{ $user->desplazadoPorViolencia }}</td>
+            <td>{{ $user->grado_escolaridad }}</td>
             <td>{{ $user->institucion }}</td>
             <td>{{ $user->titulo_obtenido }}</td>
             <td>{{ $user->fecha_terminacion }}</td>
