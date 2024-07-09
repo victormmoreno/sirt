@@ -263,6 +263,13 @@ return [
             'inicio' => env('DURACION_PROYECTO_INICIO', 15),
             'planeacion' => env('DURACION_PROYECTO_PLANEACION', 30)
         ]
+        ],
+    'ftp' => [
+        'host' => env('FTP_HOST', null),
+        'port' => env('FTP_PORT', 21),
+        'user' => env('FTP_USER', null),
+        'password' => env('FTP_PASSWORD', null),
+        'server_path' => env('FTP_SERVER_PATH', null)
     ]
 
 ];

@@ -32,7 +32,7 @@
                                 <div class="divider"></div>
                             </div>
                             <div class="row">
-                                <div class="col s12 m6 l6">
+                                <div class="col s12 m4 l4">
                                     <a href="{{route('migracion.proyectos')}}">
                                         <div class="card stats-card green lighten-3" style="cursor:pointer">
                                             <div class="card-content">
@@ -47,7 +47,7 @@
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col s12 m6 l6">
+                                <div class="col s12 m4 l4">
                                     <a href="{{route('migracion.proyectos.caracterizacion')}}">
                                         <div class="card stats-card green lighten-3" style="cursor:pointer">
                                             <div class="card-content">
@@ -60,7 +60,21 @@
                                                 <div class="determinate"></div>
                                             </div>
                                         </div>
-
+                                    </a>
+                                </div>
+                                <div class="col s12 m4 l4">
+                                    <a href="{{route('migracion.form.archivos.xml')}}">
+                                        <div class="card stats-card green lighten-3" style="cursor:pointer">
+                                            <div class="card-content">
+                                                <span class="stats-counter">
+                                                    Generar archivo XML
+                                                </span>
+                                                <br>
+                                            </div>
+                                            <div class="progress stats-card-progress bg-secondary">
+                                                <div class="determinate"></div>
+                                            </div>
+                                        </div>
                                     </a>
                                 </div>
                             </div>
