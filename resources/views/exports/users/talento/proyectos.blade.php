@@ -33,23 +33,24 @@
         <th>Correo Electrónico</th>
         <th>Contacto</th>
         <th>Género</th>
-        <th>Grupo sanguineo</th>
+        {{-- <th>Grupo sanguineo</th> --}}
         <th>Estrato Social</th>
         <th>Ciudad de residencia</th>
-        <th>Dirección</th>
-        <th>Barrio</th>
-        <th>Fecha de Nacimiento</th>
-        <th>Eps</th>
-        <th>Otra eps</th>
+        {{-- <th>Dirección</th> --}}
+        {{-- <th>Barrio</th> --}}
+        {{-- <th>Fecha de Nacimiento</th> --}}
+        {{-- <th>Eps</th> --}}
+        {{-- <th>Otra eps</th> --}}
         <th>Etnia a la que pertenece</th>
         <th>¿Tiene algún grado de discapacidad?</th>
         <th>¿Cuál es el grado de discapacidad?</th>
         <th>¿Es madre cabeza de familia?</th>
         <th>¿Desplazado por la violencia?</th>
         <th>Grado de escolaridad</th>
-        <th>Institución</th>
-        <th>Título obtenido</th>
-        <th>Fecha de terminación</th>
+        {{-- <th>Institución</th> --}}
+        {{-- <th>Título obtenido</th> --}}
+        {{-- <th>Fecha de terminación</th> --}}
+        <th>Ocupacion/es</th>
         <th>Tipo Talento</th>
         <th>Información Talento</th>
     </tr>
@@ -100,23 +101,24 @@
             <td>{{ $user->email }}</td>
             <td>{{ $user->celular }} / {{ $user->telefono }}</td>
             <td>{{ $user->genero }}</td>
-            <td>{{ $user->nombre_gruposanguineo }}</td>
+            {{-- <td>{{ $user->nombre_gruposanguineo }}</td> --}}
             <td>{{ $user->estrato }}</td>
             <td>{{ $user->ciudad_residencia }}</td>
-            <td>{{ $user->direccion }}</td>
-            <td>{{ $user->barrio }}</td>
-            <td>{{ $user->fechanacimiento }}</td>
-            <td>{{ $user->nombre_eps }}</td>
-            <td>{{ $user->otra_eps }}</td>
+            {{-- <td>{{ $user->direccion }}</td> --}}
+            {{-- <td>{{ $user->barrio }}</td> --}}
+            {{-- <td>{{ $user->fechanacimiento }}</td> --}}
+            {{-- <td>{{ $user->nombre_eps }}</td> --}}
+            {{-- <td>{{ $user->otra_eps }}</td> --}}
             <td>{{ $user->etnia }}</td>
             <td>{{ $user->grado_discapacidad }}</td>
             <td>{{ $user->descripcion_grado_discapacidad }}</td>
             <td>{{ $user->mujerCabezaFamilia }}</td>
             <td>{{ $user->desplazadoPorViolencia }}</td>
             <td>{{ $user->grado_escolaridad }}</td>
-            <td>{{ $user->institucion }}</td>
-            <td>{{ $user->titulo_obtenido }}</td>
-            <td>{{ $user->fecha_terminacion }}</td>
+            {{-- <td>{{ $user->institucion }}</td> --}}
+            {{-- <td>{{ $user->titulo_obtenido }}</td> --}}
+            {{-- <td>{{ $user->fecha_terminacion }}</td> --}}
+            <td>{{ $user->ocupaciones }}</td>
             <td>{{ $user->tipo_talento }}</td>
             <td>{{ $user->detalle_talento }}</td>
         </tr>
