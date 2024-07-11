@@ -15,7 +15,7 @@ class TalentoUserExport extends FatherExport
         $this->setTitle($title);
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:AW1');
+        $this->setRangeHeadingCell('A1:AP1');
     }
 
     public function registerEvents(): array
