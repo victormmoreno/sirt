@@ -322,9 +322,9 @@ class ProyectoRepository extends Repository
         $user = User::class;
         $grupo = GrupoInvestigacion::class;
         $proyecto = Proyecto::class;
-        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('GROUP_CONCAT(empresas.nit, " - ", empresas.nombre, ";") AS empresas')
-        ->selectRaw('GROUP_CONCAT(up.nombres, " ",up.apellidos,";") AS personas')
-        ->selectRaw('GROUP_CONCAT(gruposinvestigacion.codigo_grupo, " ", eg.nombre, ";") AS grupos')
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('GROUP_CONCAT(DISTINCT empresas.nit, " - ", empresas.nombre SEPARATOR ";") AS empresas')
+        ->selectRaw('GROUP_CONCAT(DISTINCT up.nombres, " ",up.apellidos SEPARATOR ";") AS personas')
+        ->selectRaw('GROUP_CONCAT(DISTINCT gruposinvestigacion.codigo_grupo, " ", eg.nombre SEPARATOR ";") AS grupos')
         ->selectRaw('GROUP_CONCAT(DISTINCT tag.name SEPARATOR ";") AS caracterizacion')
         ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
         ->leftJoin('sedes', function($q) use ($sede) {$q->on('sedes.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$sede");})
@@ -442,6 +442,7 @@ class ProyectoRepository extends Repository
             IF(up.mujerCabezaFamilia=1,"Si","No") AS mujerCabezaFamilia, IF(up.desplazadoPorViolencia=1,"Si","No") AS desplazadoPorViolencia, up.institucion,
             up.titulo_obtenido, up.fecha_terminacion, gradosescolaridad.nombre as grado_escolaridad
         ')
+        ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR ";") AS ocupaciones')
         ->selectRaw(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.tipo_talento')) as tipo_talento"))
         ->selectRaw(DB::raw(
             "CASE
@@ -464,6 +465,8 @@ class ProyectoRepository extends Repository
         ->leftjoin('eps', 'eps.id', '=', 'up.eps_id')
         ->leftjoin('etnias', 'etnias.id', '=', 'up.etnia_id')
         ->leftjoin('gradosescolaridad', 'gradosescolaridad.id', '=', 'up.gradoescolaridad_id')
+        ->leftJoin('ocupaciones_users', 'ocupaciones_users.user_id', '=', 'up.id')
+        ->leftJoin('ocupaciones', 'ocupaciones.id', '=', 'ocupaciones_users.ocupacion_id')
         ->groupBy('proyectos.id', 'up.id');
     }
 
@@ -483,6 +486,7 @@ class ProyectoRepository extends Repository
             IF(ue.mujerCabezaFamilia=1,"Si","No") AS mujerCabezaFamilia, IF(ue.desplazadoPorViolencia=1,"Si","No") AS desplazadoPorViolencia, ue.institucion,
             ue.titulo_obtenido, ue.fecha_terminacion, gradosescolaridad.nombre as grado_escolaridad
         ')
+        ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR ";") AS ocupaciones')
         ->selectRaw(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.tipo_talento')) as tipo_talento"))
         ->selectRaw(DB::raw(
             "CASE
@@ -505,6 +509,8 @@ class ProyectoRepository extends Repository
         ->leftjoin('eps', 'eps.id', '=', 'ue.eps_id')
         ->leftjoin('etnias', 'etnias.id', '=', 'ue.etnia_id')
         ->leftjoin('gradosescolaridad', 'gradosescolaridad.id', '=', 'ue.gradoescolaridad_id')
+        ->leftJoin('ocupaciones_users', 'ocupaciones_users.user_id', '=', 'ue.id')
+        ->leftJoin('ocupaciones', 'ocupaciones.id', '=', 'ocupaciones_users.ocupacion_id')
         ->groupBy('proyectos.id', 'ue.id');
     }
 
