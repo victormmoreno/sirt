@@ -93,6 +93,22 @@
                     </div>
                 </li>
             @endcan
+            @can('temporal_policy', [$proyecto, 'Inicio'])
+            <li>
+                <a href="{{route('proyecto.entregables.inicio', $proyecto->id)}}" class="collection-item">
+                    <i class="material-icons left">library_books</i>
+                    Adjuntar entregables de la fase de inicio.
+                </a>
+            </li>
+            @endcan
+            @can('temporal_policy', [$proyecto, 'Cierre'])
+                <li>
+                    <a class="collection-item" href="{{route('proyecto.entregables.cierre', $proyecto->id)}}">
+                        <i class="material-icons left">library_books</i>
+                        Adjuntar entregables de la fase de cierre.
+                    </a>
+                </li>
+            @endcan
         @else
             <li>
                 <div class="collapsible-header"><i class="material-icons"></i>No tienes opciones disponibles</div>
