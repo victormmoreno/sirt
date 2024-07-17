@@ -591,12 +591,12 @@ class SeguimientoController extends Controller
 
       $datos = [
         // 'nodo' => $row->first()->nombre,
-        'Inicio' => $cnt_inicio,
-        'Planeacion' => $cnt_planeacion,
-        'Ejecucion' => $cnt_ejecucion,
-        'Cierre' => $cnt_cierre,
-        'Finalizado' => $cnt_fin,
-        'Suspendido' => $cnt_suspendido,
+        'Inicio' => (int)$cnt_inicio,
+        'Planeacion' => (int)$cnt_planeacion,
+        'Ejecucion' => (int)$cnt_ejecucion,
+        'Cierre' => (int)$cnt_cierre,
+        'Finalizado' => (int)$cnt_fin,
+        'Suspendido' => (int)$cnt_suspendido,
         'Total' => $cnt_inicio + $cnt_planeacion + $cnt_ejecucion + $cnt_cierre + $cnt_fin + $cnt_suspendido
       ];
     // }

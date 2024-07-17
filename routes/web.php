@@ -1,5 +1,9 @@
 <?php
-
+use Illuminate\Support\Facades\DB;
+// DB::listen(function($sql) {
+//     var_dump($sql->sql);
+//     var_dump($sql->time);
+// });
 //costos administrativos
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
 
@@ -440,6 +444,8 @@ Route::group([
     Route::get('/', 'MigracionController@index')->name('migracion.index');
     Route::get('/proyectos', 'MigracionController@proyectos')->name('migracion.proyectos');
     Route::get('/proyectos/caracterizacion', 'MigracionController@caracterizacion_proyectos')->name('migracion.proyectos.caracterizacion');
+    Route::get('migracion/archivos/xml', 'MigracionController@migrate_files')->name('migracion.form.archivos.xml')->middleware('role_session:Desarrollador');
+    Route::post('/archivos/xml', 'MigracionController@generate_xml_file')->name('migracion.archivos.xml')->middleware('role_session:Desarrollador');
     Route::post('/importar', 'MigracionController@import')->name('migracion.proyectos.store');
 });
 

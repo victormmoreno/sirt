@@ -73,27 +73,42 @@ class UserController extends Controller
                             User::IsInfocenter(),
                             User::IsIngreso(),
                             User::IsApoyoTecnico(),
-                            User::IsTalento(),
-                            User::IsUsuario()
+                            // User::IsTalento(),
+                            // User::IsUsuario()
                         ];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
             case User::IsArticulador():
-                $role = [User::IsExperto(), User::IsUsuario(), User::IsTalento()];
+                $role = [
+                    User::IsExperto(), 
+                    // User::IsUsuario(), 
+                    // User::IsTalento()
+                ];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
             case User::IsExperto():
-                $role = [User::IsUsuario(), User::IsTalento()];
+                $role = [
+                    User::IsUsuario(), 
+                    // User::IsTalento()
+                ];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
             case User::IsInfocenter():
-                $role = [User::IsExperto(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsApoyoTecnico(), User::IsUsuario()];
+                $role = [
+                    User::IsExperto(), 
+                    User::IsArticulador(), 
+                    User::IsInfocenter(), 
+                    // User::IsTalento(), 
+                    User::IsIngreso(), 
+                    User::IsApoyoTecnico(), 
+                    // User::IsUsuario()
+                ];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);

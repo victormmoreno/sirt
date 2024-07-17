@@ -13,6 +13,20 @@ class ProyectoPolicy
     use HandlesAuthorization;
 
     /**
+     * Determina que usuarios pueden ver información sensible de un proyecto
+     *
+     * @param User $user
+     * @return bool
+     * @author dum
+     **/
+    public function showConfInformation(User $user)
+    {
+        if (Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsUsuario()]))
+            return false;
+        return true;
+    }
+
+    /**
      * Determina quien y cuando se puede establecer una fecha para finalizar la ejecución de un 
      * proyecto cuando no se ha alcanzado la fecha estimada 
      *
@@ -46,6 +60,22 @@ class ProyectoPolicy
     }
 
     /**
+     * Política temporal para subir archivos de un proyecto ya finalizado
+     *
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyectos
+     * @return bool
+     * @author dum
+     **/
+    public function temporal_policy($user, $proyecto, $fase)
+    {
+        if ( $proyecto->fase->nombre == $proyecto->IsFinalizado() && session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == request()->user()->id && ($fase == $proyecto->IsInicio() || $fase == $proyecto->IsCierre()) ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Determina quienes y cuando pueden subir entregables de una fase de proyecto
      *
      * @param App\User $user
@@ -56,6 +86,10 @@ class ProyectoPolicy
      **/
     public function adjuntar_entregables(User $user, Proyecto $proyecto, string $fase)
     {
+        // Política extra
+        if($this->temporal_policy($user, $proyecto, $fase))
+            return true;
+        
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
@@ -135,7 +169,7 @@ class ProyectoPolicy
     public function delete_files(User $user, Proyecto $proyecto, string $fase)
     {
         if ((session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == request()->user()->id)) {
-            if ($proyecto->fase->nombre == $fase || $proyecto->fase->nombre == $proyecto->IsFinalizado()) {
+            if ($proyecto->fase->nombre == $fase) {
                 return true;
             } else {
                 return false;

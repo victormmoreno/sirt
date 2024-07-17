@@ -32,11 +32,6 @@
                                                 <span class="card-title center-align primary-text">Proyectos de {{ session()->get('login_role') == App\User::IsExperto() ? auth()->user()->nombres .' '. auth()->user()->apellidos : 'Tecnoparque' }} </span>
                                             </div>
                                         </div>
-                                        {{-- @can('create', App\Models\Tag::class)
-                                            <div class="col s12 m4 l4 ">
-                                                <a  href="{{route('tag.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Agregar etiqueta</a>
-                                            </div>
-                                        @endcan --}}
                                         @can('create', App\Models\Proyecto::class)
                                             <div class="col s12 m4 l4 ">
                                                 <a  href="{{route('proyecto.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Proyecto</a>
