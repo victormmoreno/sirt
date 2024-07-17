@@ -6,8 +6,8 @@ use App\Models\Articulation;
 use App\Models\ControlNotificaciones;
 use App\Models\Fase;
 use App\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\ArticulationStage;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ArticulationPolicy
 {
@@ -28,9 +28,13 @@ class ArticulationPolicy
             && session()->get('login_role') == User::IsAdministrador()
             && (
                 $ability != 'create' &&
-                $ability != 'showButtonAprobacion' &&
+                $ability != 'showButtonAprobacion'&&
                 $ability != 'delete' &&
-                $ability != 'requestApproval'
+                // $ability != 'cancel' &&
+                $ability != 'requestApproval' &&
+                $ability != 'approvalCancel'
+                // $ability != 'requestCancel'
+                // $ability != 'uploadFiles'
             )) {
             return true;
         }
@@ -265,11 +269,11 @@ class ArticulationPolicy
      * @return bool
      * @author dum
      **/
-    public function showButtonAprobacion(User $user, Articulation $articulation)
+    public function showButtonAprobacion(User $user, Articulation $articulation, string $fase = nulL)
     {
-        //$ult_notificacion = $articulationStage->notifications()->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
+
         $ult_notificacion = $articulation->notifications()->get()->last();
-        if ($ult_notificacion != null && $articulation->phase_id == Fase::IsCierre()) {
+        if ($ult_notificacion != null && $articulation->phase_id == Fase::IsCierre() && $fase != Articulation::IsCancelado() && !is_null($fase)) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
                     if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
@@ -282,6 +286,21 @@ class ArticulationPolicy
                 }
             }
         }
+
+        if ($ult_notificacion != null  && $fase == Articulation::IsCancelado() && !is_null($fase)) {
+            if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
+                if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
+                    if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
+                        return true;
+                    } else {
+                        if ($ult_notificacion->receptor->id == auth()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role') && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     /**
@@ -395,4 +414,90 @@ class ArticulationPolicy
         && (isset($user->articulador->nodo_id) && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
         && ($articulation->phase->nombre == Articulation::IsInicio());
     }
+
+    /**
+     * Determine if the given articulations can be canceled by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ArticulationStage  $articulationStage
+     * @return bool
+     */
+    public function cancel(User $user, Articulation $articulation)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsDinamizador()])
+        && (session()->has('login_role') && (session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsDinamizador()))
+        && ((isset($user->articulador->nodo_id) && $user->articulador->nodo_id == $articulation->articulationstage->node_id) || (isset($user->dinamizador->nodo_id) && $user->dinamizador->nodo_id == $articulation->articulationstage->node_id))
+
+        && ($articulation->phase->nombre != Articulation::IsFinalizado() || $articulation->phase->nombre != Articulation::IsCancelado());
+    }
+
+    /**
+     * Determine if the given articulations can be change talent by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\$articulation  $articulation
+     * @return bool
+     */
+    public function requestCancel(User $user, Articulation $articulation):bool
+    {
+        // dd($articulation->phase->nombre);
+        return (bool) $user->hasAnyRole([
+                User::IsArticulador()
+            ])
+            && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsArticulador()
+                && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                )
+            )
+            && ($articulation->phase->nombre != Articulation::IsFinalizado() && $articulation->phase->nombre != Articulation::IsCancelado())
+        && (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE);
+    }
+
+    public function approvalCancel(User $user, Articulation $articulation):bool
+    {
+
+        return (bool) $user->hasAnyRole([
+                User::IsDinamizador()
+            ])
+            && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsDinamizador()
+                && (isset($user->dinamizador) && isset($articulation->articulationstage)  && $user->dinamizador->nodo_id == $articulation->articulationstage->node_id)
+                )
+            )
+            && $articulation->phase->nombre != Articulation::IsFinalizado()
+        && (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE);
+    }
+
+    public function uploadFiles(User $user, Articulation $articulation): bool
+    {
+        return (bool) $user->hasAnyRole([
+            User::IsArticulador()
+        ])
+        && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsArticulador()
+                && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE
+                )
+            )
+        && $articulation->phase->nombre != Articulation::IsCancelado();
+    }
+
+    public function deleteFiles(User $user, Articulation $articulation): bool
+    {
+        return (bool) $user->hasAnyRole([
+            User::IsArticulador()
+        ])
+        && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsArticulador()
+                && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE
+                )
+            )
+        && $articulation->phase->nombre != Articulation::IsCancelado();
+    }
+
 }
