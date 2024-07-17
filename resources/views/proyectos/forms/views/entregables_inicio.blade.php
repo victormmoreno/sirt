@@ -21,9 +21,7 @@
                     @include('proyectos.archivos_table_fase', ['fase' => 'inicio'])
                     <div class="divider"></div>
                     <div class="center">
-                        @if ($proyecto->present()->proyectoFase() == 'Inicio')
                         <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons right">send</i>Modificar</button>
-                        @endif
                         <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect bg-danger btn center-align"><i class="material-icons left">backspace</i>Cancelar</a>
                     </div>
                 </form>
