@@ -8,6 +8,7 @@ use App\Models\Fase;
 use App\User;
 use App\Models\ArticulationStage;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Str;
 
 class ArticulationPolicy
 {
@@ -273,7 +274,8 @@ class ArticulationPolicy
     {
 
         $ult_notificacion = $articulation->notifications()->get()->last();
-        if ($ult_notificacion != null && $articulation->phase_id == Fase::IsCierre() && $fase != Articulation::IsCancelado() && !is_null($fase)) {
+
+        if ($ult_notificacion != null && $articulation->phase_id == Fase::IsCierre() && $fase != Articulation::IsCancelado() && !is_null($fase) && $fase == Articulation::IsFinalizado() && Str::contains($ult_notificacion->descripcion, 'finalización')) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
                     if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
@@ -287,7 +289,7 @@ class ArticulationPolicy
             }
         }
 
-        if ($ult_notificacion != null  && $fase == Articulation::IsCancelado() && !is_null($fase)) {
+        if ($ult_notificacion != null  && $fase == Articulation::IsCancelado() && !is_null($fase) && $fase == Articulation::IsCancelado() && Str::contains($ult_notificacion->descripcion, 'cancelación')) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
                     if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
@@ -428,7 +430,7 @@ class ArticulationPolicy
         && (session()->has('login_role') && (session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsDinamizador()))
         && ((isset($user->articulador->nodo_id) && $user->articulador->nodo_id == $articulation->articulationstage->node_id) || (isset($user->dinamizador->nodo_id) && $user->dinamizador->nodo_id == $articulation->articulationstage->node_id))
 
-        && ($articulation->phase->nombre != Articulation::IsFinalizado() || $articulation->phase->nombre != Articulation::IsCancelado());
+        && ($articulation->phase->nombre != Articulation::IsFinalizado() && $articulation->phase->nombre != Articulation::IsCancelado());
     }
 
     /**
