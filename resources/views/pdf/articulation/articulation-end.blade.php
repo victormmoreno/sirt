@@ -111,13 +111,13 @@
             <td colspan="6" class="h-70p"></td>
         </tr>
         <tr>
-            <td colspan="6" >{{$articulation->documento}} - {{$articulation->nombres}} {{$articulation->apellidos}} - Talento Interlocutor</td>
+            <td colspan="6" class="left">{{$articulation->documento}} - {{$articulation->nombres}} {{$articulation->apellidos}} - Talento Interlocutor</td>
         </tr>
         <tr>
             <td colspan="6" class="h-70p"></td>
         </tr>
         <tr>
-            <td colspan="6" >{{$asesor->documento}} -  {{$asesor->nombres}} {{$asesor->apellidos}} - Asesor</td>
+            <td colspan="6" class="left">{{$asesor->documento}} -  {{$asesor->nombres}} {{$asesor->apellidos}} - Asesor</td>
         </tr>
     </table>
 </main>
