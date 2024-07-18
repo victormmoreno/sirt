@@ -175,7 +175,6 @@ class AsesoriePolicy
             && ( 
                 (
                     session()->get('login_role') == User::IsDinamizador()
-                    && $asesorie->fecha->format('Y') > $date
                     && (
                         (isset($asesorie->asesorable->articulationstage) &&  $asesorie->asesorable->articulationstage->node_id == $user->dinamizador->nodo_id)
                         || (isset($asesorie->asesorable->nodo_id) && $asesorie->asesorable->nodo_id == $user->dinamizador->nodo_id)
@@ -184,14 +183,12 @@ class AsesoriePolicy
                 || (
                     session()->get('login_role') == User::IsExperto()
                     && $asesorie->asesorable->fase_id != \App\Models\Fase::IsFinalizado()
-                    && $asesorie->fecha->format('Y') > $date
                     && (isset($asesorie->asesorable->nodo_id) &&  $asesorie->asesorable->nodo_id == $user->experto->nodo_id)
                     && (isset($asesorie->asesorable->experto_id) &&  $asesorie->asesorable->experto_id == $user->id)
                 )
                 || (
                     session()->get('login_role') == User::IsArticulador()
                     && $asesorie->asesorable->phase_id != \App\Models\Fase::IsFinalizado()
-                    && $asesorie->fecha->format('Y') > $date
                     && ((isset($asesorie->asesorable->articulationstage) &&  $asesorie->asesorable->articulationstage->node_id == $user->articulador->nodo_id)
                     || (isset($asesorie->asesorable->nodo_id) &&  $asesorie->asesorable->nodo_id == $user->articulador->nodo_id))
                 )
@@ -201,7 +198,6 @@ class AsesoriePolicy
                         class_basename($asesorie->asesorable) === class_basename(\App\Models\Proyecto::class)
                         && $asesorie->asesorable->fase_id != \App\Models\Fase::IsFinalizado()
                     )
-                    && $asesorie->fecha->format('Y') > $date
                     && (isset($asesorie->asesorable->nodo_id) &&  $asesorie->asesorable->nodo_id == $user->apoyotecnico->nodo_id)
                     && (isset($asesorie->asesores)
                     && $asesorie->asesores->contains('documento', $user->documento)
@@ -215,7 +211,6 @@ class AsesoriePolicy
                         (class_basename($asesorie->asesorable) === class_basename(\App\Models\Articulation::class)
                         && $asesorie->asesorable->phase_id != \App\Models\Fase::IsFinalizado())
                     )
-                    && $asesorie->fecha->format('Y') > $date
                     && (isset($asesorie->asesores) && $asesorie->asesores->count() == 0)
                     && (isset($asesorie->participantes) &&
                         $asesorie->participantes->contains('documento', $user->documento)

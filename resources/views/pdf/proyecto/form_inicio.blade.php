@@ -75,6 +75,9 @@
         .centered {
             text-align: center;
         }
+        .left {
+            text-align: left;
+        }
     @media only screen and (max-width: 992px) {
         table.responsive-table thead {
             border: 0;
@@ -317,10 +320,10 @@
                 <td colspan="6" ><b>ASISTENTES<b></td>
             </tr>
             <tr>
-                <td colspan="6" >{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
+                <td colspan="6" class="left">{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
             </tr>
             <tr>
-                <td colspan="6" >{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
+                <td colspan="6" class="left">{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
             </tr>
         </table>
     </div>
