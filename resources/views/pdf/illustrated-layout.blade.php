@@ -30,6 +30,9 @@
             .centered {
                 text-align: center;
             }
+            .left {
+                text-align: left;
+            }
 
             .font-bold {
                 font-weight: bold;
