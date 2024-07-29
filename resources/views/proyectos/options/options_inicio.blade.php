@@ -1,4 +1,4 @@
-<a href="{{route('pdf.proyecto.inicio', $proyecto->id)}}" target="_blank" class="collection-item">
+<a href="{{route('pdf.form.doc', [Proyecto::class, 'inicio', $proyecto->id])}}" target="_blank" class="collection-item">
     <i class="material-icons left">file_download</i>Generar acta de inicio.
 </a>
 <a href="{{route('pdf.proyecto.acta.inicio', $proyecto->id)}}" target="_blank" class="collection-item">

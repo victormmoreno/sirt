@@ -71,7 +71,7 @@
                 <li>
                     <div class="collapsible-header"><i class="material-icons">file_download</i>Generar documentos</div>
                     <div class="collapsible-body">
-                        <a href="{{route('pdf.proyecto.inicio', $proyecto->id)}}" target="_blank" class="collection-item">
+                        <a href="{{route('pdf.form.doc', [Proyecto::class, 'inicio', $proyecto->id])}}" target="_blank" class="collection-item">
                             <i class="material-icons left">file_download</i>Generar acta de inicio.
                         </a>
                         <a href="{{route('pdf.proyecto.acta.inicio', $proyecto->id)}}" target="_blank" class="collection-item">
@@ -82,7 +82,7 @@
                             <i class="material-icons left">file_download</i>
                             Descargar resumen de asesorias y usos de infraestructura.
                         </a>
-                        <a class="collection-item" href="{{route('pdf.proyecto.cierre', $proyecto->id)}}" target="_blank">
+                        <a class="collection-item" href="{{route('pdf.form.doc', [Proyecto::class, 'cierre', $proyecto->id])}}" target="_blank">
                             <i class="material-icons left">file_download</i>
                             Generar acta de cierre.
                         </a>

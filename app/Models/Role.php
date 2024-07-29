@@ -34,9 +34,4 @@ class Role extends RoleSpatie
     ->withTimestamps();
   }
 
-  public function actividades_movimientos()
-  {
-    return $this->belongsToMany(Actividad::class, 'movimientos_actividades_users_roles')
-    ->withTimestamps();
-  }
 }

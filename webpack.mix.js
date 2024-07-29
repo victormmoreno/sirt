@@ -32,6 +32,8 @@ mix.styles([
         'resources/assets/css/custom.css',
 	],'public/css/libs.css');
 
+    // mix.sass('resources/assets/sass/darkmode.scss', 'public/scss/darkmode.scss');
+
 mix.minify('public/css/libs.css')
     mix.version();
 

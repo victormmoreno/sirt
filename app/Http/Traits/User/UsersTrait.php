@@ -91,12 +91,6 @@ trait UsersTrait
         return $this->hasMany(\App\Models\ArticulationStage::class, 'created_by', 'id');
     }
 
-    public function actividades_movimientos()
-    {
-        return $this->belongsToMany(Actividad::class, 'movimientos_actividades_users_roles')
-            ->withTimestamps();
-    }
-
     /**
      * Define an inverse one-to-one or many relationship between users and ciudad for ciudad_id.
      * @return BelongsTo

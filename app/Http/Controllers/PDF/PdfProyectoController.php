@@ -18,6 +18,18 @@ class PdfProyectoController extends Controller
         $this->costoController = $costoController;
     }
 
+    public function formularioDocumento($model, $type, $id) {
+        $proyecto = Proyecto::findOrFail($id);
+        if(!request()->user()->can('generar_docs', $proyecto)) {
+            alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('pdf.formulario_actas', [
+            'tipo' => $type,
+            'model' => $model
+        ]);
+    }
+
     public function printFormularioCierre($id)
     {
         $proyecto = Proyecto::findOrFail($id);
@@ -26,7 +38,7 @@ class PdfProyectoController extends Controller
             return back();
         }
         $costo = $this->costoController->costoProject($proyecto->id);
-        $pdf = PDF::loadView('pdf.proyecto.form_cierre', ['proyecto' => $proyecto, 'costo' => $costo]);
+        $pdf = PDF::loadView('pdf.proyecto.compromiso_cierre', ['proyecto' => $proyecto, 'costo' => $costo]);
         return $pdf->stream();
     }
 
@@ -37,7 +49,7 @@ class PdfProyectoController extends Controller
             alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $pdf = PDF::loadView('pdf.proyecto.form_inicio', ['proyecto' => $proyecto]);
+        $pdf = PDF::loadView('pdf.proyecto.compromiso_inicio', ['proyecto' => $proyecto]);
         return $pdf->stream();
     }
 

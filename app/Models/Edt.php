@@ -51,11 +51,6 @@ class Edt extends Model
         'informe_final',
     ];
 
-    public function actividad()
-    {
-        return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
-    }
-
     /**
      * Define an inverse one-to-one or many relationship between edts and users
      * @author devjul

@@ -252,7 +252,7 @@
                 <td colspan="6" ><b>TALENTOS QUE PARTICIPAN EN EL PROYECTO<b></td>
             </tr>
             <tr>
-                <td colspan="1"><b> Interlocutor</b></td>
+                <td colspan="1"><b>Interlocutor</b></td>
                 <td colspan="5"><b>Talento</b></td>
             </tr>
             @forelse ($proyecto->talentos as $talento)

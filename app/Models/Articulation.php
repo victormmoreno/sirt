@@ -177,6 +177,42 @@ class Articulation extends Model
     }
 
     /**
+     * Retorna el query que muestra la información de la articulación
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function scopeFindById($query, $id)
+    {
+        $query->select(
+            'articulations.*', 'articulation_stages.code as articulation_stage_code',
+            'articulation_stages.id as articulation_stages_id','articulation_stages.start_date as articulation_stages_start_date','articulation_stages.end_date as articulation_stages_end_date','articulation_stages.name as articulation_stages_name','articulation_stages.description as articulation_stages_description', 'articulation_stages.scope as articulation_stages_scope', 'articulation_stages.expected_results as articulation_stages_expected_results','fases.nombre as fase',
+            'entidades.nombre as nodo', 'proyectos.codigo_proyecto', 'ciudades.nombre AS node_city', 'departamentos.nombre AS node_province',
+            'nodos.direccion AS node_addresss', 'regionales.nombre AS node_province_name', 'entidad_centro.nombre AS node_center',
+            'proyectos.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
+            'interlocutor.apellidos', 'interlocutor.email'
+        )
+        ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, if(articulation_stages.status = 1,'Abierta', 'Cerrada') as articulation_stages_status")
+        ->leftJoin('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->join('centros','centros.id', '=', 'nodos.centro_id')
+        ->join('entidades AS entidad_centro', 'entidad_centro.id', '=', 'centros.entidad_id')
+        ->join('regionales','regionales.id', '=', 'centros.regional_id')
+        ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
+        ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+        ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->leftJoin('articulationables', function($q) {
+            $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+            $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
+        })
+        ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+        ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+        ->where('articulations.id', $id);
+    }
+
+    /**
      * The query scope status
      *
      * @return void
