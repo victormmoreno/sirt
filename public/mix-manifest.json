@@ -1,3 +1,12 @@
 {
-    "/js/app.js": "/js/app.js"
+    "/js/app.js": "/js/app.js?id=0ec22e9fb24a47d754a5",
+    "/scss/darkmode.scss": "/scss/darkmode.scss?id=c603cc774956567e8ef2",
+    "/js/app.min.js": "/js/app.min.js?id=0ec22e9fb24a47d754a5",
+    "/css/libs.css": "/css/libs.css?id=72a96e667b0d46fd3997",
+    "/css/libs.min.css": "/css/libs.min.css?id=72a96e667b0d46fd3997",
+    "/js/libs.js": "/js/libs.js?id=1781d0c723533bd57b80",
+    "/js/libs.min.js": "/js/libs.min.js?id=1781d0c723533bd57b80",
+    "/js/app2.js": "/js/app2.js?id=7f9da72bbae5f334ad35",
+    "/js/app2.min.js": "/js/app2.min.js?id=7f9da72bbae5f334ad35",
+    "/js/web.js": "/js/web.js?id=37e8f224ececc33dc4c2"
 }

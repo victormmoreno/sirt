@@ -47,7 +47,7 @@
                                 </div>
                             @endcan
                         </div>
-                        <table class="display responsive-table datatable-example dataTable" id="nodos_table" style="width: 100%">
+                        <table class="display dark_mode responsive-table datatable-example dataTable" id="nodos_table" style="width: 100%">
                             <thead class="bg-primary white-text">
                                 <th >Centro de Formación</th>
                                 <th >Nombre</th>

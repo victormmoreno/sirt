@@ -8,6 +8,7 @@
         </title>
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('scss/darkmode.scss') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.svg') }}" rel="shortcut icon" type="image/x-icon"/>
         <meta name="theme-color" content="#39A900" />
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
@@ -75,11 +76,28 @@
         @stack('script')
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129874326-1"></script>
         <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
+            // SIDENAV
+            $(document).ready(function(){
+                // applyDarkMode();
+                // $('.sidebar-menu').sidenav();
+                
+                // SWAP ICON ON CLICK
+                // Source: https://stackoverflow.com/a/34254979/751570
+                // $('#darkModeBtn').on('click',function(){
+                //     if ($(this).find('i').text() == 'brightness_4'){
+                //             $(this).find('i').text('brightness_high');
+                //     } else {
+                //             $(this).find('i').text('brightness_4');
+                //     }
+                // });
+                
+                
+            });
+            // window.dataLayer = window.dataLayer || [];
+            // function gtag(){dataLayer.push(arguments);}
+            // gtag('js', new Date());
 
-            gtag('config', 'UA-129874326-1');
+            // gtag('config', 'UA-129874326-1');
         </script>
     </body>
 </html>

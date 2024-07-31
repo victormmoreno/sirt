@@ -42,6 +42,9 @@
                 <p>
                     Veces que se solicitó el cambio de fase de proyecto: <b>{{$historico->whereIn('movimiento', ['solicitó al talento', 'solicitó al dinamizador'])->get()->count()}}</b>
                 </p>
+                <p>
+                    Veces que se envió la encuesta de percepción: <b>{{$proyecto->EncuestasEnviadas()->get()->count()}}</b>
+                </p>
                 @if ( $proyecto->fase->nombre != $proyecto->IsFinalizado() && $proyecto->fase->nombre != $proyecto->IsSuspendido() )
                     <p>
                         Duración de la ejecución del proyecto hasta el momento: <b>{{ $proyecto->fecha_inicio->diffInDays(Carbon\Carbon::now()) }}</b> días.

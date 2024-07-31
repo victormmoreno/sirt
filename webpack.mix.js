@@ -21,7 +21,7 @@ mix.styles([
 		'resources/assets/plugins/materialize/css/material-icons.css',
 		'resources/assets/plugins/material-preloader/css/materialPreloader.min.css',
 		'resources/assets/plugins/font-awesome/css/all.css',
-		'resources/assets/plugins/datatables/css/jquery.dataTables.min.css',
+		'resources/assets/plugins/datatables/css/jquery.dataTables.css',
 		'resources/assets/plugins/select2/css/select2.css',
 		'resources/assets/plugins/materialize-clockpicker-master/dist/css/materialize.clockpicker.css',
 		'resources/assets/plugins/bootstrap-datapicker/css/bootstrap-material-datetimepicker.css',
@@ -31,6 +31,8 @@ mix.styles([
         'resources/assets/css/responsive.css',
         'resources/assets/css/custom.css',
 	],'public/css/libs.css');
+
+// mix.sass('resources/assets/sass/darkmode.scss', 'public/scss/darkmode.scss');
 
 mix.minify('public/css/libs.css')
     mix.version();

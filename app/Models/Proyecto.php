@@ -435,6 +435,14 @@ class Proyecto extends Model
         ->orderBy('movimientos_actividades_users_roles.created_at');
     }
 
+    public function scopeEncuestasEnviadas($query) {
+        return $query->select('*')
+        ->join('movimientos_actividades_users_roles', 'movimientos_actividades_users_roles.proyecto_id', 'proyectos.id')
+        ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
+        ->where('movimiento', Movimiento::IsEnviarEncuestaSatisfaccion())
+        ->where('proyectos.id', $this->id);
+    }
+
     public function movimientos()
     {
         return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')

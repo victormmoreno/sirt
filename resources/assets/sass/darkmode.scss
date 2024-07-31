@@ -1,0 +1,109 @@
+$transition-effects: color 1s ease, background-color 1s ease;
+
+body {
+	background-color: #eee;
+	transition: $transition-effects;
+	&.dark {
+		background-color: #202123;
+		// background-color: #202123;
+		color: #fff;
+		/*#region Tables*/
+        table {
+			background-color: #202123;
+			// background-color: #fd0000;
+			thead {
+				background-color: #1b5e20;
+			}
+			
+			// td {
+			// 	&:hover {
+			// 		background-color: #3B4043;
+			// 	}
+			// }
+        }
+		tr {
+			&:hover {
+				background-color: #009dff;
+			}
+		}
+		// .dataTable {
+		// 	td {
+		// 		&:hover {
+		// 			// background-color: #3B4043;
+		// 			background-color: transparent;
+		// 		}
+		// 	}
+		// }
+		.dataTables_info {
+			color: #fff;
+		}
+		.dataTables_wrapper, .dataTables_paginate, .paginate_button.disabled {
+			color: #fff;
+		}
+		/*#endregion*/
+
+		.primary-text {
+			// background-color: #ff0000;
+			color: #fff;
+		}
+
+		/*#region Footer*/
+		.footer {
+			background-color: #202123;
+			color: #fff;
+		}
+		.page-footer{
+			background-color: #202123;
+			.footer-text {
+				color: #fff;
+			}
+		}
+
+		/*#endregion */
+		
+		.bg-primary { 
+			color: #1b5e20;
+		}
+
+
+		// .paging_simple_numbers {
+		// 	color: #fff;
+		// }
+		.card {
+			background-color: rgba(255,255,255,0.2);
+		}
+		.divider {
+			opacity: 0.2;
+		}
+		a {
+			color: #ffffff;
+		}
+		.sidebar-menu {
+            color: #fff;
+			background-color: #2D2D31;
+			li {
+				a {
+					&:not(.subheader){
+						color: #ffffff;
+						&:hover {
+							background-color: #3B4043;
+						}
+					}
+					&.subheader {
+						color:#9AA0A6; 
+					}
+					.material-icons {
+						color: #9AA0A6;
+					}
+				}
+			}
+		}
+		.collection {
+			border: 1px solid rgba(255,255,255,0.2);
+			.collection-item {
+				background-color: rgba(255,255,255,0.2);
+				border-bottom: 1px solid rgba(255,255,255,0.2);;
+			}
+		}
+	}
+}

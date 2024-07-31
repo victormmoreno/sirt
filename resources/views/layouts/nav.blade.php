@@ -39,10 +39,9 @@
                         @endauth
                     </a>
                 </li>
-                <li class="hide-on-med-and-down">
-                    {{-- <clock>
-                    </clock> --}}
-                </li>
+                {{-- <li>
+                    <a class="btn dark-toggle" id="darkModeBtn" href="#" onclick="setDarkMode();" title="Dark/light"><i class="material-icons left">brightness_4</i></a>
+                </li> --}}
                 @can('dejar_control', App\User::class)
                     <li class="hide-on-med-and-down">
                         <a href="{{route('usuario.dejar.control')}}" class="btn light-green lighten-1 m-t-xs">Dejar de controlar</a>

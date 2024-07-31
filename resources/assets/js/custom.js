@@ -15,6 +15,15 @@ $('label.btn').on('click','input', function(e){
     $(e.target).closest('label').toggleClass('btn-flat');
 });
 
+// function setDarkMode() {
+//     localStorage.setItem('mode', (localStorage.getItem('mode') || 'dark') === 'dark' ? 'light' : 'dark');
+//     localStorage.getItem('mode') === 'dark' ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
+// }
+
+// function applyDarkMode() {
+//     localStorage.getItem('mode') === 'dark' ? document.querySelector('body').classList.add('dark') : document.querySelector('body').classList.remove('dark');
+// }
+
 // function selectTag(e) {
 //     e.stopPropagation();
 //     $(this).attr('checked', !$(this).attr('checked'));
@@ -116,7 +125,7 @@ const configbootstrapMaterialDatePickerMinDate = {
     okText: 'Guardar'
 };
 
-const configbootstrapMaterialDatePickerRangeDate = {
+var configbootstrapMaterialDatePickerRangeDate = {
     monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
     monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
     weekStart: 0,
