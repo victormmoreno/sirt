@@ -43,7 +43,8 @@
     <tr>
         <td colspan="100">
             <b class="title">Agenda o puntos para desarrollar: </b>
-            Elaborar acta de inicio y recolectar documentos de soporte del proyecto: {{$data->nombre}}
+            1. Caracterización del proyecto de acuerdo con los objetivos y alcance propuestos.
+            2. Documentación que soportan el inicio del proyecto.
         </td>
     </tr>
     <tr>

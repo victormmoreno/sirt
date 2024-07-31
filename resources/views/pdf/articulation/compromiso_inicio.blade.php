@@ -2,7 +2,7 @@
 @php
     $asesor = auth()->user();
 @endphp
-@section('title-file', 'Acta de inicio de proyecto')
+@section('title-file', 'Acta de inicio de articulación')
 @section('content-pdf')
 <table>
     <tr>
@@ -46,7 +46,8 @@
     <tr>
         <td colspan="10">
             <b class="title">Agenda o puntos para desarrollar: </b>
-            Elaborar acta de inicio y recolectar documentos de soporte de la articulación: {{$data->name}}
+            1. Caracterización de la articulación de acuerdo con los objetivos propuestos.
+            2. Documentación que soportan el inicio de la articulación.
         </td>
     </tr>
     <tr>

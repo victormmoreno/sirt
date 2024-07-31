@@ -21,7 +21,7 @@
                             <div class="card-content bg-info white-text">
                                 <p>
                                     <i class="material-icons left">info_outline</i>
-                                    Para generar este documento es necesario ingresar la fecha y la hora a la que se realizó la reunión
+                                    Para generar este documento es necesario ingresar la fecha y la hora a la que se realiza la reunión.
                                 </p>
                             </div>
                         </div>

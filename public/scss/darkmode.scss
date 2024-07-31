@@ -6,26 +6,65 @@ body {
 body.dark {
   background-color: #202123;
   color: #fff;
+  /*#region Tables*/
+  /*#endregion*/
+  /*#region Footer*/
+  /*#endregion */
 }
 
 body.dark table {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #202123;
 }
 
-body.dark nav {
-  background-color: #26A69A;
+body.dark table thead {
+  background-color: #1b5e20;
+}
+
+body.dark tr:hover {
+  background-color: #009dff;
+}
+
+body.dark .dataTables_info {
+  color: #fff;
+}
+
+body.dark .dataTables_wrapper,
+body.dark .dataTables_paginate,
+body.dark .paginate_button.disabled {
+  color: #fff;
+}
+
+body.dark .primary-text {
+  color: #fff;
+}
+
+body.dark .footer {
+  background-color: #202123;
+  color: #fff;
+}
+
+body.dark .page-footer {
+  background-color: #202123;
+}
+
+body.dark .page-footer .footer-text {
+  color: #fff;
+}
+
+body.dark .bg-primary {
+  color: #1b5e20;
 }
 
 body.dark .card {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-body.dark .btn {
-  background-color: #EE6F73;
-}
-
 body.dark .divider {
   opacity: 0.2;
+}
+
+body.dark a {
+  color: #ffffff;
 }
 
 body.dark .sidebar-menu {
@@ -34,7 +73,7 @@ body.dark .sidebar-menu {
 }
 
 body.dark .sidebar-menu li a:not(.subheader) {
-  color: #89B2F5;
+  color: #ffffff;
 }
 
 body.dark .sidebar-menu li a:not(.subheader):hover {

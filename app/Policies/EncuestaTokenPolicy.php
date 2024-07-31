@@ -29,6 +29,9 @@ class EncuestaTokenPolicy
                 if (isset($model->resultadosEncuesta)) {
                     return false;
                 } else {
+                    if ($model->fase->nombre != Proyecto::IsEjecucion()) {
+                        return false;
+                    }
                     if (isset($model->encuestaToken)) {
                         if ($model->encuestaToken->created_at->diffInDays(Carbon::now()) >= 2) {
                             return true;
@@ -37,7 +40,11 @@ class EncuestaTokenPolicy
                         }
                     }
                 }
+            } else {
+                return false;
             }
+        } else {
+            return false;
         }
         return true;
         // return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador(), $user->IsExperto()]) && 

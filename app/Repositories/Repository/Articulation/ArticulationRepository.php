@@ -5,6 +5,7 @@ namespace App\Repositories\Repository\Articulation;
 use App\Models\ControlNotificaciones;
 use App\Models\Movimiento;
 use App\Notifications\Articulation\RequestFinalizeArticulation;
+use App\Notifications\Articulation\RequestCancelArticulation;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ArticulationStage;
@@ -436,9 +437,16 @@ class ArticulationRepository extends Repository
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
                 $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario, $phase);
 
-                if ($articulation->phase_id == Fase::IsCierre()) {
+                if ($articulation->phase_id == Fase::IsCierre() && $phase != Articulation::IsCancelado()) {
                     $articulation->update([
                         'phase_id' => Fase::IsFinalizado(),
+                        'end_date' => Carbon::now()
+                    ]);
+                }
+
+                if ($articulation->phase_id != Fase::IsCancelado() && $phase == Articulation::IsCancelado()) {
+                    $articulation->update([
+                        'phase_id' => Fase::IsCancelado(),
                         'end_date' => Carbon::now()
                     ]);
                 }
@@ -453,7 +461,7 @@ class ArticulationRepository extends Repository
             DB::rollBack();
             return [
                 'state' => false,
-                'mensaje' => 'No se ha aprobado la finalización de la articulación',
+                'mensaje' => 'No se ha aprobado la articulación',
                 'title' => 'Aprobación errónea'
             ];
         }
@@ -536,5 +544,83 @@ class ArticulationRepository extends Repository
         ->whereIn('fases.nombre', [Articulation::IsFinalizado()])
         ->groupBy("mes", "nombre_mes")
         ->orderBy("mes");
+    }
+
+    /**
+     * @param Articulation $articulation
+     * @return array
+     */
+    public function notifyCancel(Articulation $articulation)
+    {
+        DB::beginTransaction();
+        try {
+            $movimiento = null;
+            $comentario = "";
+            $phase = $articulation->phase_id;
+            $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($articulation);
+            $ult_traceability = Articulation::getTraceability($articulation)->get()->last();
+
+            $msg = 'No se ha podido enviar la solicitud de cancelación, inténtalo nuevamente';
+            $conf_envios = false;
+            if ($notificacion_fase_actual == null) {
+                $conf_envios = $this->settingsNotificationDynamizer($articulation);
+                $movimiento = Movimiento::IsSolicitarDinamizador();
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la cancelación de la articulación';
+            } else {
+                $conf_envios = $this->settingsNotificationDynamizer($articulation);
+                $movimiento = Movimiento::IsSolicitarDinamizador();
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la cancelación de la articulación';
+            }
+
+            $notificacion = $articulation->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], $phase, $msg);
+            if ($conf_envios != false) {
+                Notification::send($notificacion->receptor, new RequestCancelArticulation($articulation, $notificacion));
+                $articulation->createTraceability($movimiento, Session::get('login_role'), $movimiento, 'cancelar');
+            }
+            DB::commit();
+            return [
+                'notificacion' => true,
+                'msg' => $msg,
+                'notify' => $notificacion
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'notificacion' => false,
+                'msg' => 'Ha ocurrido un error ' . $th->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Cambia el estado de la articulacion a cancelado
+     *
+     * @param $request
+     * @param $id Id
+     */
+    public function changeToCanceled($articulation, string $phase)
+    {
+        DB::beginTransaction();
+        try {
+            if ($articulation->phase_id != Fase::IsCancelado() && $phase == Articulation::IsCancelado()) {
+                $articulation->update([
+                    'phase_id' => Fase::IsCancelado(),
+                    'end_date' => Carbon::now()
+                ]);
+            }
+            DB::commit();
+            return [
+                'notificacion' => true,
+                'msg' => 'Acción de articulación cancelada',
+                'notify' => 'Acción exitosa'
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'notificacion' => false,
+                'msg' => 'Acción de articulación ya cancelada',
+                'notify' => 'Acción errónea'
+            ];
+        }
     }
 }

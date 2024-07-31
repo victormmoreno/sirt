@@ -1,9 +1,9 @@
 <div class="row">
-    @canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents'],
-        $articulation)
+    {{-- @canany([],
+        $articulation) --}}
         <div class="collection with-header col s12 m4 l3">
             <h5 href="!#" class="collection-header">Opciones</h5>
-            @can('showButtonAprobacion', $articulation)
+            @can('showButtonAprobacion', [$articulation, 'Finalizado'])
                 @include('articulation.form.approval-articulation-form')
             @endcan
             @can('requestApproval', $articulation)
@@ -24,9 +24,9 @@
             @endcan
             @include('articulation.options.articulation-options-menu-left')
         </div>
-    @endcanany
+    {{-- @endcanany --}}
     <div
-        class="@canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents', 'changePhase'], $articulation)col s12 m8 l9 @else col s12 m12 l12  @endcanany">
+        class="col s12 m8 l9">
         <div class="row">
             <div class="col s12 m12 l6">
                 <ul class="collection">

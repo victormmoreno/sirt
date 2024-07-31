@@ -1,4 +1,5 @@
 <div class="mailbox-view-header">
+
     <div class="left">
         <div class="left">
             <span class="mailbox-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}

@@ -1,11 +1,12 @@
 {
-    "/js/app.js": "/js/app.js?id=7f885737be29053ecf4e",
-    "/js/app.min.js": "/js/app.min.js?id=7f885737be29053ecf4e",
-    "/css/libs.css": "/css/libs.css?id=706eea7626267c3aabb6",
-    "/css/libs.min.css": "/css/libs.min.css?id=706eea7626267c3aabb6",
-    "/js/libs.js": "/js/libs.js?id=1214e879e5082a685559",
-    "/js/libs.min.js": "/js/libs.min.js?id=1214e879e5082a685559",
-    "/js/app2.js": "/js/app2.js?id=98e7254c0d4da8fecf87",
-    "/js/app2.min.js": "/js/app2.min.js?id=98e7254c0d4da8fecf87",
+    "/js/app.js": "/js/app.js?id=0ec22e9fb24a47d754a5",
+    "/scss/darkmode.scss": "/scss/darkmode.scss?id=c603cc774956567e8ef2",
+    "/js/app.min.js": "/js/app.min.js?id=0ec22e9fb24a47d754a5",
+    "/css/libs.css": "/css/libs.css?id=72a96e667b0d46fd3997",
+    "/css/libs.min.css": "/css/libs.min.css?id=72a96e667b0d46fd3997",
+    "/js/libs.js": "/js/libs.js?id=1781d0c723533bd57b80",
+    "/js/libs.min.js": "/js/libs.min.js?id=1781d0c723533bd57b80",
+    "/js/app2.js": "/js/app2.js?id=7f9da72bbae5f334ad35",
+    "/js/app2.min.js": "/js/app2.min.js?id=7f9da72bbae5f334ad35",
     "/js/web.js": "/js/web.js?id=37e8f224ececc33dc4c2"
 }

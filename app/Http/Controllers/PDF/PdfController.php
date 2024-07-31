@@ -47,7 +47,6 @@ class PdfController extends Controller
             
             case basename(Articulation::class):
                 $data = Articulation::query()->FindById($id)->first();
-                // dd($data);
                 if(!request()->user()->can('downloadCertificateStart', $data)) {
                     alert('No autorizado', 'No puedes generar documentos de esta articulación', 'error')->showConfirmButton('Ok', '#3085d6');
                     return back();
@@ -113,12 +112,11 @@ class PdfController extends Controller
                 ]);
             break;
             case 'cierre':
-                // $costo = $this->costoController->costoProject($data->id);
-                // return PDF::loadView('pdf.proyecto.compromiso_cierre', [
-                //     'data' => $data,
-                //     'request' => $request,
-                //     'costo' => $costo
-                // ]);
+                // $data = Proyecto::find(15121);
+                return PDF::loadView('pdf.articulation.compromiso_cierre', [
+                    'data' => $data,
+                    'request' => $request
+                ]);
             break;
             
             default:
