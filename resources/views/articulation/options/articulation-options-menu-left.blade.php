@@ -39,24 +39,26 @@
 </a>
 @endcan
 @can('downloadCertificateEnd', $articulation)
-<a target="_blank" href="{{ route('articulations.download-certificate', [ 'cierre',$articulation]) }}"
+<a target="_blank" href="{{ route('pdf.form.doc', [Articulation::class, 'cierre', $articulation->id]) }}"
     class="collection-item">
     <i class="material-icons left">cloud_download</i>
     Descargar acta cierre
 </a>
 @endcan
 @can('downloadCertificateStart', $articulation)
-<a target="_blank" href="{{ route('articulations.download-certificate', ['inicio',$articulation]) }}"
-    class="collection-item">
-    <i class="material-icons left">cloud_download</i>
-    Descargar acta inicio
-</a>
+    <a target="_blank"
+        href="{{route('pdf.form.doc', [Articulation::class, 'inicio', $articulation->id])}}"
+        class="collection-item">
+        <i class="material-icons left">cloud_download</i>
+        Descargar acta inicio
+    </a>
 @endcan
-@can('uploadEvidences', [$articulation, $articulation->phase->nombre])
-<a href="{{ route('articulations.evidences', [$articulation]) }}" class="collection-item">
-    <i class="material-icons left">cloud_upload</i>
-    Cargar evidencias
-</a>
+@can('uploadEvidences', [$articulation, 'Inicio'])
+    <a href="{{ route('articulations.evidences', [$articulation]) }}"
+        class="collection-item">
+        <i class="material-icons left">cloud_upload</i>
+        Cargar evidencias
+    </a>
 @endcan
 @can('cancel', $articulation)
     <a href="{{route('articulations.cancel', [$articulation])}}" class="collection-item">

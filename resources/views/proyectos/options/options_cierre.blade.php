@@ -1,4 +1,4 @@
-<a class="collection-item" href="{{route('pdf.proyecto.cierre', $proyecto->id)}}" target="_blank">
+<a class="collection-item" href="{{route('pdf.form.doc', [Proyecto::class, 'cierre', $proyecto->id])}}" target="_blank">
     <i class="material-icons left">file_download</i>
     Generar acta de cierre.
 </a>

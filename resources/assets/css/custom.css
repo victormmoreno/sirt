@@ -51,42 +51,42 @@ p {
 }
 
 .bg-primary {
-    background-color: var(--primary) !important;
+    background-color: var(--primary) ;
 }
 
 .bg-primary-lighten {
-    background-color: var(--primary-lighten) !important;
+    background-color: var(--primary-lighten) ;
 }
 
 .bg-secondary {
-    background-color: var(--secondary) !important;
+    background-color: var(--secondary) ;
 }
 
 .bg-secondary-lighten {
-    background-color: var(--secondary-lighten) !important;
+    background-color: var(--secondary-lighten) ;
 }
 
 .bg-secondary-darken {
-    background-color: var(--secondary-darken) !important;
+    background-color: var(--secondary-darken) ;
 }
 
 .bg-tertiary {
-    background-color: var(--tertiary) !important;
+    background-color: var(--tertiary) ;
 }
 
 .bg-info {
-    background-color: var(--info) !important;
+    background-color: var(--info) ;
 }
 
 .bg-danger {
-    background-color: var(--danger) !important;
+    background-color: var(--danger) ;
 }
 
 .bg-success {
-    background-color: var(--success) !important;
+    background-color: var(--success) ;
 }
 .bg-warning {
-    background-color: var(--warning) !important;
+    background-color: var(--warning) ;
 }
 
 .btn-flat.waves-red {
@@ -94,7 +94,7 @@ p {
 }
 
 .primary-text {
-    color: var(--primary) !important;
+    color: var(--primary);
 }
 
 .justify-text{
@@ -103,39 +103,39 @@ p {
 }
 
 .secondary-text {
-    color: var(--secondary) !important;
+    color: var(--secondary) ;
 }
 
 .success-text {
-    color: var(--success) !important;
+    color: var(--success) ;
 }
 
 .info-text {
-    color: var(--info) !important;
+    color: var(--info) ;
 }
 
 .warning-text {
-    color: var(--warning) !important;
+    color: var(--warning) ;
 }
 
 .danger-text {
-    color: var(--danger) !important;
+    color: var(--danger) ;
 }
 
 .btn-flat.waves-primary {
-    color: var(--primary) !important;
+    color: var(--primary) ;
 }
 .btn-flat.waves-success {
-    color: var(--success) !important;
+    color: var(--success) ;
 }
 .btn-flat.waves-danger {
-    color: var(--danger) !important;
+    color: var(--danger) ;
 }
 .btn-flat.waves-warning {
-    color: var(--warning) !important;
+    color: var(--warning) ;
 }
 .btn-flat.waves-info {
-    color: var(--info) !important;
+    color: var(--info) ;
 }
 .h-12{
     height: 3rem;
@@ -246,11 +246,11 @@ h5.breadcrumbs-header {
 
 
 .green-complement {
-  background-color: #59b548 !important;
+  background-color: #59b548 ;
 }
 
 .green-complement-text {
-  color: #59b548 !important;
+  color: #59b548 ;
 }
 
 .zurich-bt-fonts .green-complement-text {

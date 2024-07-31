@@ -271,6 +271,9 @@ class ProyectoPolicy
             }
             if ( (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == auth()->user()->id) || session()->get('login_role') == $user->IsAdministrador() ) {
                 if ($proyecto->fase->nombre == $proyecto->IsEjecucion() && !isset($proyecto->resultadosEncuesta)) {
+                    if ($proyecto->EncuestasEnviadas()->get()->count() >= 3) {
+                        return true;
+                    }
                     return false;
                 }
                 return true;

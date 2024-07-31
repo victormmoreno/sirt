@@ -86,16 +86,6 @@ class Gestor extends Model
     }
 
     /**
-     * Define a one-to-many relationship between gestores and actividades.
-     * @author devjul
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function actividades()
-    {
-        return $this->hasMany(Actividad::class, 'gestor_id', 'id');
-    }
-
-    /**
      * Define a many-to-many relationship gestores and comites.
      * @author dum
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
