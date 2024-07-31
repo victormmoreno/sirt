@@ -6,8 +6,6 @@
             @yield('title-file', config('app.name'))
         </title>
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-        {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> --}}
-        <meta content="@yield('meta-content', config('app.name'))" name="description"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
         @yield('styles')
         <style>

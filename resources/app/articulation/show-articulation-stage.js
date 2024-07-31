@@ -111,7 +111,7 @@ function endorsementQuestionArticulation(e) {
 function endorsementQuestionArticulationCancel(e) {
     e.preventDefault();
     Swal.fire({
-        title: '¿Está seguro(a) de canclear?',
+        title: '¿Está seguro(a) de cancelar?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta acción de articulación  y los documento adjuntos.',
         type: 'warning',
         showCancelButton: true,

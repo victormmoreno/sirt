@@ -502,4 +502,20 @@ class ArticulationPolicy
         && $articulation->phase->nombre != Articulation::IsCancelado();
     }
 
+    /**
+     * Determina quienes pueden generar documentos de un proyecto
+     *
+     * @param App\User $user
+     * @param App\Models\Articulation $articulation
+     * @return bool
+    */
+    public function generar_docs(User $user, Articulation $articulation)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador())
+            return true;
+        if (session()->get('login_role') == $user->IsArticulador() && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+            return true;
+        return false;
+    }
+
 }

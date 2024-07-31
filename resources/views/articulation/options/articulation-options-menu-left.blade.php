@@ -60,6 +60,13 @@
         Cargar evidencias
     </a>
 @endcan
+@can('uploadEvidences', [$articulation, 'Cierre'])
+    <a href="{{ route('articulations.evidences', [$articulation]) }}"
+        class="collection-item">
+        <i class="material-icons left">cloud_upload</i>
+        Cargar evidencias
+    </a>
+@endcan
 @can('cancel', $articulation)
     <a href="{{route('articulations.cancel', [$articulation])}}" class="collection-item">
         <i class="material-icons left">priority_high</i>
