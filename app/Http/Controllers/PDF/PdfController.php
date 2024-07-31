@@ -13,22 +13,31 @@ use App\Models\Articulation;
 class PdfController extends Controller
 {
     public $costoController;
-    
+
     public function __construct(CostoController $costoController)
     {
         $this->costoController = $costoController;
     }
 
     public function formularioDocumento($model, $type, $id) {
-        $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('generar_docs', $proyecto)) {
-            alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+        if($model == class_basename(Proyecto::class)){
+            $data = Proyecto::findOrFail($id);
+        }elseif($model == class_basename(Articulation::class)){
+            $data = Articulation::findOrFail($id);
+        }
+        else{
+            alert('No autorizado', 'No puedes generar documentos', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+
+        if(!request()->user()->can('generar_docs', $data)) {
+            alert('No autorizado', 'No puedes generar documentos', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
         return view('pdf.formulario_actas', [
             'tipo' => $type,
             'model' => $model,
-            'data' => $proyecto
+            'data' => $data
         ]);
     }
 
@@ -44,10 +53,10 @@ class PdfController extends Controller
                 }
                 $pdf = $this->pdfParaProyectos($request, $data);
                 break;
-            
+
             case class_basename(Articulation::class):
                 $data = Articulation::query()->FindById($id)->first();
-                if(!request()->user()->can('downloadCertificateStart', $data)) {
+                if(!request()->user()->can('generar_docs', $data)) {
                     alert('No autorizado', 'No puedes generar documentos de esta articulación', 'error')->showConfirmButton('Ok', '#3085d6');
                     return back();
                 }
@@ -58,7 +67,7 @@ class PdfController extends Controller
                 break;
 
         }
-        
+
         return $pdf->stream();
     }
 
@@ -87,7 +96,7 @@ class PdfController extends Controller
                     'costo' => $costo
                 ]);
             break;
-            
+
             default:
                 abort('404');
             break;
@@ -112,13 +121,12 @@ class PdfController extends Controller
                 ]);
             break;
             case 'cierre':
-                // $data = Proyecto::find(15121);
                 return PDF::loadView('pdf.articulation.compromiso_cierre', [
                     'data' => $data,
                     'request' => $request
                 ]);
             break;
-            
+
             default:
                 abort('404');
             break;
