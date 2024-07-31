@@ -36,7 +36,7 @@ class PdfController extends Controller
     {
         $data = null;
         switch ($request->hddmodel) {
-            case basename(Proyecto::class):
+            case class_basename(Proyecto::class):
                 $data = Proyecto::findOrFail($id);
                 if(!request()->user()->can('generar_docs', $data)) {
                     alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
@@ -45,7 +45,7 @@ class PdfController extends Controller
                 $pdf = $this->pdfParaProyectos($request, $data);
                 break;
             
-            case basename(Articulation::class):
+            case class_basename(Articulation::class):
                 $data = Articulation::query()->FindById($id)->first();
                 if(!request()->user()->can('downloadCertificateStart', $data)) {
                     alert('No autorizado', 'No puedes generar documentos de esta articulación', 'error')->showConfirmButton('Ok', '#3085d6');
@@ -58,8 +58,8 @@ class PdfController extends Controller
                 break;
 
         }
+        
         return $pdf->stream();
-
     }
 
     /**
