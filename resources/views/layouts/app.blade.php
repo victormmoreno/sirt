@@ -76,8 +76,12 @@
         @stack('script')
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129874326-1"></script>
         <script>
+            $('form').submit(function(){
+                $(this).children('input[type=submit]').prop('disabled', true);
+            });
             // SIDENAV
             $(document).ready(function(){
+                
                 // applyDarkMode();
                 // $('.sidebar-menu').sidenav();
                 
