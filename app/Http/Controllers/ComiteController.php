@@ -249,6 +249,7 @@ class ComiteController extends Controller
   */
   public function updateAgendamiento(Request $request, $id)
   {
+    // dd($request->input('gestores'));
     $req = new ComiteAgendamientoFormRequest;
     $validator = Validator::make($request->all(), $req->rules(), $req->messages());
     if ($validator->fails()) {
