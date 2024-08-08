@@ -48,6 +48,7 @@ Route::group(
         Route::get('/limite-inicio/{nodo}/{experto}', 'ProyectoController@proyectosLimiteInicio')->name('proyecto.limite.inicio');
         Route::get('/limite-planeacion/{nodo}/{experto}', 'ProyectoController@proyectosLimitePlaneacion')->name('proyecto.limite.planeacion');
         Route::get('/limite-ejecucion/{nodo}/{experto}', 'ProyectoController@proyectosLimiteEjecucion')->name('proyecto.limite.ejecucion');
+        Route::get('/download_actas_inicio_finalizadas/{nodos}/{desde}/{hasta}', 'ArchivoController@downloadMultipleFiles');
 
         Route::put('/suspendido/{id}', 'ProyectoController@updateSuspendido')->name('proyecto.update.suspendido')->middleware('role_session:Experto|Dinamizador');
         Route::put('/inicio/{id}', 'ProyectoController@updateInicio')->name('proyecto.update.inicio')->middleware('role_session:Experto');

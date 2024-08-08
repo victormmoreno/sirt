@@ -23,10 +23,11 @@ use App\Repositories\Repository\{Articulation\ArticulationStageRepository, Archi
 use Illuminate\Support\Facades\{Storage, Session};
 use App\User;
 use Carbon\Carbon;
+use App\Http\Traits\Archivo\DownloadMultipleFiles;
 
 class ArchivoController extends Controller
 {
-
+    use DownloadMultipleFiles;
     private $articulacionStateRepository;
     private $archivoRepository;
     private $proyectoRepository;
