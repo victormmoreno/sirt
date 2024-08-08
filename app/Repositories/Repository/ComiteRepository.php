@@ -522,11 +522,14 @@ class ComiteRepository
      **/
     private function arraySyncGestoresAgendamiento($request)
     {
-        $syncData = array();
-        foreach ($request->get('gestores') as $id => $value) {
-            $syncData[$id] = array('hora_inicio' => $request->horas_inicio[$id], 'hora_fin' => $request->horas_fin[$id], 'evaluador_id' => $value);
-        }
-        return $syncData;
+        return collect($request->input('gestores'))->mapWithKeys(function ($user) {
+            return [
+                $user['id'] => [
+                    'hora_inicio' => $user['hora_inicio'],
+                    'hora_fin' => $user['hora_fin'],
+                ],
+            ];
+        })->toArray();
     }
 
     // Modifica las evidencias del comité
