@@ -93,7 +93,7 @@ class ModelPolicy
     }
 
     public function gestion_documental(User $user) {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsActivador(), $user->IsAdministrador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador()]);
     }
 
     // /**
