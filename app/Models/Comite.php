@@ -18,9 +18,9 @@ class Comite extends Model
 
     /**
      * The attributes that are mass assignable.
-    *
-    * @var array
-    */
+     *
+     * @var array
+     */
     protected $fillable = [
         'codigo',
         'fechacomite',
@@ -53,7 +53,7 @@ class Comite extends Model
             'role_id' => Role::where('name', $role)->first()->id,
             'comentarios' => $comentario,
             'descripcion' => $descripcion
-            ]);
+        ]);
     }
 
     public function setCodigoAttribute($codigo)
@@ -89,15 +89,15 @@ class Comite extends Model
     public function ideas()
     {
         return $this->belongsToMany(Idea::class, 'comite_idea')
-        ->withTimestamps()
-        ->withPivot(['id', 'hora', 'admitido', 'asistencia', 'observaciones', 'direccion', 'notificado']);
+            ->withTimestamps()
+            ->withPivot(['id', 'hora', 'admitido', 'asistencia', 'observaciones', 'direccion', 'notificado']);
     }
 
     public function evaluadores()
     {
         return $this->belongsToMany(User::class, 'comite_gestor', 'comite_id', 'evaluador_id')
-        ->withTimestamps()
-        ->withTrashed()
-        ->withPivot(['hora_inicio', 'hora_fin']);
+            ->withPivot('hora_inicio', 'hora_fin')
+            ->withTimestamps()
+            ->withTrashed(); // Incluir usuarios eliminados
     }
 }

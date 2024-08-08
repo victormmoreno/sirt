@@ -156,7 +156,7 @@
                     </thead>
                     <tbody id="tblGestoresComiteCreate">
                         @if ($existe)
-                            @foreach($gestores as $gestor)
+                            @foreach ($gestores as $gestor)
                                 @foreach ($comite->evaluadores as $gcomite)
                                     @php
                                         if ($gcomite->id == $gestor->id) {
@@ -167,51 +167,75 @@
                                         }
                                     @endphp
                                 @endforeach
-                                <tr id="gestorFila{{$gestor->id}}">
+                                <tr id="gestorFila{{ $gestor->id }}">
                                     <td>
                                         <p class="p-v-xs">
                                             @if (isset($gexistente[$gestor->id]))
-                                            <input class="filled-in" type="checkbox" name="gestores[]" checked value="{{$gestor->id}}" id="gestor-{{$gestor->id}}" onchange="addGestorComite2(this.value)">
+                                                <input class="filled-in" type="checkbox"
+                                                    name="gestores[{{ $gestor->id }}][id]" checked
+                                                    value="{{ $gestor->id }}" id="gestor-{{ $gestor->id }}"
+                                                    onchange="addGestorComite2(this.value)">
                                             @else
-                                            <input class="filled-in" type="checkbox" name="gestores[]" value="{{$gestor->id}}" id="gestor-{{$gestor->id}}" onchange="addGestorComite2(this.value)">
+                                                <input class="filled-in" type="checkbox"
+                                                    name="gestores[{{ $gestor->id }}][id]"
+                                                    value="{{ $gestor->id }}" id="gestor-{{ $gestor->id }}"
+                                                    onchange="addGestorComite2(this.value)">
                                             @endif
-                                            <label for="gestor-{{$gestor->id}}">{{$gestor->nombres}} {{$gestor->apellidos}}</label>
+                                            <label for="gestor-{{ $gestor->id }}">{{ $gestor->nombres }}
+                                                {{ $gestor->apellidos }}</label>
                                         </p>
                                     </td>
                                     <td>
                                         @if (isset($gexistente[$gestor->id]))
-                                        <input value="{{$gexistente[$gestor->id]['inicio']}}" id="txthorainiciogestor-{{$gestor->id}}" type="time" name="horas_inicio[]" placeholder="Desde">
+                                            <input value="{{ $gexistente[$gestor->id]['inicio'] }}"
+                                                id="txthorainiciogestor-{{ $gestor->id }}" type="time"
+                                                name="gestores[{{ $gestor->id }}][hora_inicio]"
+                                                placeholder="Desde">
                                         @else
-                                        <input disabled id="txthorainiciogestor-{{$gestor->id}}" type="time" name="horas_inicio[]" placeholder="Desde">
+                                            <input disabled id="txthorainiciogestor-{{ $gestor->id }}"
+                                                type="time" name="gestores[{{ $gestor->id }}][hora_inicio]"
+                                                placeholder="Desde">
                                         @endif
-                                        <small id="txthorainiciogestor-{{$gestor->id}}-error" class="error red-text"></small>
+                                        <small id="txthorainiciogestor-{{ $gestor->id }}-error"
+                                            class="error red-text"></small>
                                     </td>
                                     <td>
                                         @if (isset($gexistente[$gestor->id]))
-                                        <input value="{{$gexistente[$gestor->id]['fin']}}" id="txthorafingestor-{{$gestor->id}}" type="time" name="horas_fin[]" placeholder="Hasta">
+                                            <input value="{{ $gexistente[$gestor->id]['fin'] }}"
+                                                id="txthorafingestor-{{ $gestor->id }}" type="time"
+                                                name="gestores[{{ $gestor->id }}][hora_fin]" placeholder="Hasta">
                                         @else
-                                        <input disabled id="txthorafingestor-{{$gestor->id}}" type="time" name="horas_fin[]" placeholder="Hasta">
+                                            <input disabled id="txthorafingestor-{{ $gestor->id }}" type="time"
+                                                name="gestores[{{ $gestor->id }}][hora_fin]" placeholder="Hasta">
                                         @endif
-                                        <small id="txthorafingestor-{{$gestor->id}}-error" class="error red-text"></small>
+                                        <small id="txthorafingestor-{{ $gestor->id }}-error"
+                                            class="error red-text"></small>
                                     </td>
                                 </tr>
                             @endforeach
                         @else
-                            @foreach($gestores as $gestor)
-                                <tr id="gestorFila{{$gestor->id}}">
+                            @foreach ($gestores as $gestor)
+                                <tr id="gestorFila{{ $gestor->id }}">
                                     <td>
                                         <p class="p-v-xs">
-                                            <input class="filled-in" type="checkbox" name="gestores[]" value="{{$gestor->id}}" id="gestor-{{$gestor->id}}" onchange="addGestorComite2(this.value)">
-                                            <label for="gestor-{{$gestor->id}}">{{$gestor->nombres}} {{$gestor->apellidos}}</label>
+                                            <input class="filled-in" type="checkbox" name="gestores[{{ $gestor->id }}][id]"
+                                                value="{{ $gestor->id }}" id="gestor-{{ $gestor->id }}"
+                                                onchange="addGestorComite2(this.value)">
+                                            <label for="gestor-{{ $gestor->id }}">{{ $gestor->nombres }}
+                                                {{ $gestor->apellidos }}</label>
                                         </p>
                                     </td>
                                     <td>
-                                        <input disabled id="txthorainiciogestor-{{$gestor->id}}" type="time" name="horas_inicio[]" placeholder="Desde">
-                                        <small id="txthorainiciogestor-{{$gestor->id}}-error" class="error red-text"></small>
+                                        <input disabled id="txthorainiciogestor-{{ $gestor->id }}" type="time"
+                                            name="gestores[{{ $gestor->id }}][hora_inicio]" placeholder="Desde">
+                                        <small id="txthorainiciogestor-{{ $gestor->id }}-error"
+                                            class="error red-text"></small>
                                     </td>
                                     <td>
-                                        <input disabled id="txthorafingestor-{{$gestor->id}}" type="time" name="horas_fin[]" placeholder="Hasta">
-                                        <small id="txthorafingestor-{{$gestor->id}}-error" class="error red-text"></small>
+                                        <input disabled id="txthorafingestor-{{ $gestor->id }}" type="time"
+                                            name="gestores[{{ $gestor->id }}][hora_fin]" placeholder="Hasta">
+                                        <small id="txthorafingestor-{{ $gestor->id }}-error"
+                                            class="error red-text"></small>
                                     </td>
                                 </tr>
                             @endforeach
