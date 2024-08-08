@@ -48,6 +48,9 @@
                                 <ul class="tabs">
                                     <li class="tab col s3"><a href="#files">Archivos planos</a></li>
                                     <li class="tab col s3"><a href="#graphs">Gráficos</a></li>
+                                    @can('gestion_documental', Illuminate\Database\Eloquent\Model::class)
+                                      <li class="tab col s3"><a href="#gestion_docs">Gestion documental</a></li>
+                                    @endcan
                                 </ul>
                             </div>
                         </div>
@@ -57,6 +60,11 @@
                         <div id="graphs">
                             @include('indicadores.graficas')
                         </div>
+                        @can('gestion_documental', Illuminate\Database\Eloquent\Model::class)
+                          <div id="gestion_docs">
+                              @include('indicadores.gestion_documental')
+                          </div>
+                        @endcan
                         <div class="divider"></div>
                         </div>
                     </div>
@@ -277,6 +285,14 @@
                 alert("Error: " + errorThrown);
             },
         });
+      }
+      
+      function generarComprimidoConActasInicio(e) {
+        let idnodo = $("#selectNodos_actas_inicio_finalizados").val();
+        let desde = $('#txtacta_inicio_desde_finalizados').val();
+        let hasta = $('#txtacta_inicio_hasta_finalizados').val();
+        e.preventDefault();
+        location.href = `${host_url}/proyecto/download_actas_inicio_finalizadas/`+idnodo+'/'+desde+'/'+hasta;
       }
     </script>
 @endpush

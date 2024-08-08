@@ -92,6 +92,10 @@ class ModelPolicy
         return false;
     }
 
+    public function gestion_documental(User $user) {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsActivador(), $user->IsAdministrador()]);
+    }
+
     // /**
     //  * Determina si el usuario puede ver la gráfica que muestra los proyectos inscritos por un experto en el año actual
     //  *
