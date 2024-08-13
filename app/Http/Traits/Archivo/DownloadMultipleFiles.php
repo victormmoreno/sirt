@@ -22,7 +22,7 @@ trait DownloadMultipleFiles
         $files = $this->getFilesToDownload($query, $request);
         $files = $this->palabrasClaves($request, $files)->get();
         if ($files->count() == 0) {
-            alert('!', 'No se encontraron archivos para descargar', 'warning')->showConfirmButton('Ok', '#3085d6');
+            alert('Error!', 'No se encontraron archivos para descargar', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
         $zipFileName = $this->getZipName($request);
