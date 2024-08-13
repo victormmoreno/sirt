@@ -11,11 +11,21 @@
     <tbody>
         @foreach($reporte as $key => $item)
         <tr>
-            <td>{{ $item['nodo'] }}</td>
-            <td>{{ $item['linea'] }}</td>
-            <td>{{ $item['codigo'] }}</td>
-            <td>{{ $item['cantidad_archivos'] }}</td>
-            <td>{{ $item['nombre_archivos'] }}</td>
+            @php
+                $color = null;
+                if ($item['cantidad_archivos'] == 0) {
+                    $color = '#ff0000';
+                } else if ($item['cantidad_archivos'] == 1) {
+                    $color = '';
+                } else {
+                    $color = '#ffca28';
+                }
+            @endphp
+            <td style="background-color: {{$color}}">{{ $item['nodo'] }}</td>
+            <td style="background-color: {{$color}}">{{ $item['linea'] }}</td>
+            <td style="background-color: {{$color}}">{{ $item['codigo'] }}</td>
+            <td style="background-color: {{$color}}">{{ $item['cantidad_archivos'] }}</td>
+            <td style="background-color: {{$color}}">{{ $item['nombre_archivos'] }}</td>
         </tr>
         @endforeach
     </tbody>
