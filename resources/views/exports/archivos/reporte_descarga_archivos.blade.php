@@ -14,7 +14,7 @@
             @php
                 $color = null;
                 if ($item['cantidad_archivos'] == 0) {
-                    $color = '#ff0000';
+                    $color = '#da9694';
                 } else if ($item['cantidad_archivos'] == 1) {
                     $color = '';
                 } else {

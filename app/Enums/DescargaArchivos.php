@@ -11,10 +11,10 @@ class DescargaArchivos extends Enum {
         const MANUAL_INF = 'manual_infraestructura';
 }
 
-$inicio = DescargaArchivos::INICIO;
-$compromiso = DescargaArchivos::COMPROMISO;
-$cierre = DescargaArchivos::CIERRE;
-$manual = DescargaArchivos::MANUAL_INF;
+// $inicio = DescargaArchivos::INICIO;
+// $compromiso = DescargaArchivos::COMPROMISO;
+// $cierre = DescargaArchivos::CIERRE;
+// $manual = DescargaArchivos::MANUAL_INF;
 
 abstract class Enum
 {
@@ -144,4 +144,3 @@ abstract class Enum
         return $result;
     }
 }
-?>
