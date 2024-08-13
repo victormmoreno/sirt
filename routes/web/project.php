@@ -48,7 +48,6 @@ Route::group(
         Route::get('/limite-inicio/{nodo}/{experto}', 'ProyectoController@proyectosLimiteInicio')->name('proyecto.limite.inicio');
         Route::get('/limite-planeacion/{nodo}/{experto}', 'ProyectoController@proyectosLimitePlaneacion')->name('proyecto.limite.planeacion');
         Route::get('/limite-ejecucion/{nodo}/{experto}', 'ProyectoController@proyectosLimiteEjecucion')->name('proyecto.limite.ejecucion');
-        Route::get('/download_actas_inicio_finalizadas/{nodos}/{desde}/{hasta}', 'ArchivoController@downloadMultipleFiles');
 
         Route::put('/suspendido/{id}', 'ProyectoController@updateSuspendido')->name('proyecto.update.suspendido')->middleware('role_session:Experto|Dinamizador');
         Route::put('/inicio/{id}', 'ProyectoController@updateInicio')->name('proyecto.update.inicio')->middleware('role_session:Experto');
@@ -61,7 +60,8 @@ Route::group(
         Route::put('/updateEntregables_Cierre/{id}', 'ProyectoController@updateEntregables_Cierre')->name('proyecto.update.entregables.cierre')->middleware('role_session:Experto');
         Route::put('/update_gestor/{id}', 'ProyectoController@updateGestor')->name('proyecto.update.gestor')->middleware('role_session:Dinamizador');
         Route::put('/update_talents/{id}', 'ProyectoController@updateTalentos')->name('proyecto.update.talentos')->middleware('role_session:Experto');
-
+        
+        Route::post('/download_zip', 'ArchivoController@downloadMultipleFiles')->name('files.zip.download');
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Experto');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Experto');
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy');

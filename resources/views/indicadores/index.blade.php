@@ -286,13 +286,5 @@
             },
         });
       }
-      
-      function generarComprimidoConActasInicio(e) {
-        let idnodo = $("#selectNodos_actas_inicio_finalizados").val();
-        let desde = $('#txtacta_inicio_desde_finalizados').val();
-        let hasta = $('#txtacta_inicio_hasta_finalizados').val();
-        e.preventDefault();
-        location.href = `${host_url}/proyecto/download_actas_inicio_finalizadas/`+idnodo+'/'+desde+'/'+hasta;
-      }
     </script>
 @endpush
