@@ -83,6 +83,19 @@ trait SearchUsers
 
     }
 
+    public function findFuncionariosByNodo($nodo = null)
+    {
+        $experts = User::ConsultarFuncionarios($nodo, User::IsExperto())->get();
+        $apoyos = User::ConsultarFuncionarios($nodo, User::IsApoyoTecnico())->get();
+        $articuladores = User::ConsultarFuncionarios($nodo, User::IsArticulador())->get();
+        return response()->json([
+            'expertos' => $experts,
+            'apoyos' => $apoyos,
+            'articuladores' => $articuladores
+        ]);
+
+    }
+
     /**
      * Display the specified resource of talents.
      * todo

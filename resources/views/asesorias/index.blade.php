@@ -33,14 +33,17 @@
                                         <span class="card-title primary-text center center-aligm">
                                             Asesorias y usos de Infraestructura
                                         </span>
-                                        @canany(['search', 'create'], \App\Models\UsoInfraestructura::class)
+                                        @canany(['search', 'create', 'indicadores'], \App\Models\UsoInfraestructura::class)
                                         <div class="right mailbox-buttons">
                                             <div class=" show-on-large hide-on-med-and-down">
                                                 @can('create', App\Models\UsoInfraestructura::class)
-                                                <a  href="{{route('asesorias.create')}}" class="waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
+                                                    <a href="{{route('asesorias.create')}}" class="waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
                                                 @endcan
                                                 @can('search', App\Models\UsoInfraestructura::class)
-                                                <a  href="{{route('asesorias.search')}}" class="waves-effect bg-info white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Asesoria</a>
+                                                    <a href="{{route('asesorias.search')}}" class="waves-effect bg-info white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Asesoria</a>
+                                                @endcan
+                                                @can('indicadores', App\Models\UsoInfraestructura::class)
+                                                    <a href="{{route('asesorias.indicadores')}}" class="waves-effect bg-tertiary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Indicadores</a>
                                                 @endcan
                                             </div>
                                         </div>

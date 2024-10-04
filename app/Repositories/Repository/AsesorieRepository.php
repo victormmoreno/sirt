@@ -34,6 +34,42 @@ class AsesorieRepository
         $this->articulationRepository = $articulationRepository;
     }
     /**
+     * method that returns the query with all the materials
+     * @param Request $request
+     */
+
+    public function getListMaterials()
+    {
+        return UsoInfraestructura::query()
+        ->join('material_uso', 'material_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
+        ->join('materiales', 'materiales.id', '=', 'material_uso.material_id')
+        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'materiales.lineatecnologica_id')
+        ->join('medidas', 'medidas.id', '=', 'materiales.medida_id');
+    }
+    /**
+     * method that returns the query with all the devices
+     * @param Request $request
+     */
+
+    public function getListDevices()
+    {
+        return UsoInfraestructura::query()
+        ->join('equipo_uso', 'equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
+        ->join('equipos', 'equipos.id', '=', 'equipo_uso.equipo_id')
+        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'equipos.lineatecnologica_id');
+    }
+    /**
+     * method that returns the query with all the asesories
+     * @param Request $request
+     */
+
+    public function getListAsesoriesIndicators()
+    {
+        return UsoInfraestructura::query()
+            ->leftJoin('gestor_uso', 'gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
+            ->leftJoin('users as asesores', 'asesores.id', '=', 'gestor_uso.asesor_id');
+    }
+    /**
      * method that returns the query with all the asesories
      * @param Request $request
      */
