@@ -25,6 +25,10 @@ class Idea extends Model
         'fecha',
     ];
 
+    protected $casts = [
+        'datos_idea' => 'array',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -36,49 +40,8 @@ class Idea extends Model
         'sede_id',
         'nodo_id',
         'estadoidea_id',
-        'nombres_contacto',
-        'apellidos_contacto',
-        'correo_contacto',
-        'telefono_contacto',
-        'nombre_proyecto',
         'codigo_idea',
-        'aprendiz_sena',
-        'pregunta1',
-        'pregunta2',
-        'pregunta3',
-        'descripcion',
-        'objetivo',
-        'alcance',
-        'viene_convocatoria',
-        'convocatoria',
-        'aval_empresa',
-        'empresa',
-        'tipo_idea',
-        'producto_parecido',
-        'si_producto_parecido',
-        'reemplaza',
-        'si_reemplaza',
-        'problema',
-        'quien_compra',
-        'quien_usa',
-        'necesidades',
-        'distribucion',
-        'quien_entrega',
-        'packing',
-        'tipo_packing',
-        'medio_venta',
-        'valor_clientes',
-        'requisitos_legales',
-        'si_requisitos_legales',
-        'requiere_certificaciones',
-        'si_requiere_certificaciones',
-        'forma_juridica',
-        'version_beta',
-        'cantidad_prototipos',
-        'recursos_necesarios',
-        'si_recursos_necesarios',
-        'acuerdo_no_confidencialidad',
-        'fecha_acuerdo_no_confidencialidad',
+        'datos_idea'
     ];
 
     /**
