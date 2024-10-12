@@ -11,23 +11,10 @@ use Illuminate\Support\Str;
 class AsesoriePolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * Determine whether the user can view the usos infraestructura.
-     *
-     * @param  \App\User  $user
-     * @return bool
-     */
-    public function indicadores(User $user)
+    
+    public function before($user, $ability)
     {
-        return (bool) Str::contains(session()->get('login_role'), [
-            $user->IsAdministrador(),
-            $user->IsActivador(),
-            $user->IsDinamizador(),
-            $user->IsExperto(),
-            $user->IsArticulador(),
-            $user->IsApoyoTecnico()
-        ]);
+         $user->IsAdministrador();
     }
 
     /**
@@ -190,7 +177,7 @@ class AsesoriePolicy
     {
         $date = \Carbon\Carbon::now()->subYear(1)->format('Y');
         return (session()->has('login_role')
-            && ( 
+            && (
                 (
                     session()->get('login_role') == User::IsDinamizador()
                     && (

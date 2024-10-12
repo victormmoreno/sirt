@@ -11,9 +11,9 @@
                 </div>
                 <div class="right right-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
-                        <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                        <li><a href="{{route('asesorias.index')}}">Asesoría y uso</a></li>
-                        <li><a href="{{route('asesorias.show', $asesorie->codigo)}}">{{ $asesorie->codigo }}</a></li>
+                        <li><a href="{{ route('home') }}">{{ __('Home') }}</a></li>
+                        <li><a href="{{ route('asesorias.index') }}">Asesoría y uso</a></li>
+                        <li><a href="{{ route('asesorias.show', $asesorie->codigo) }}">{{ $asesorie->codigo }}</a></li>
                         <li class="active">Editar Asesoría y uso</li>
                     </ol>
                 </div>
@@ -25,15 +25,16 @@
                             <div class="row">
                                 <div class="row">
                                     <center>
-                                    <span class="card-title center-align">Editar asesoria y uso |
-                                        <strong>{{$asesorie->codigo}}</strong>
-                                    </span>
+                                        <span class="card-title center-align">Editar asesoria y uso |
+                                            <strong>{{ $asesorie->codigo }}</strong>
+                                        </span>
                                         <i class="Small material-icons prefix">domain</i>
                                     </center>
                                     <div class="divider">
                                     </div>
-                                    <form action="{{ route('asesorias.update', $asesorie->id)}}" id="formUsoInfraestructuraUpdate" method="POST">
-                                        {!! method_field('PUT')!!}
+                                    <form action="{{ route('asesorias.update', $asesorie->id) }}"
+                                        id="formUsoInfraestructuraUpdate" method="POST">
+                                        {!! method_field('PUT') !!}
                                         @include('asesorias.form', [
                                             'btnText' => 'Modificar',
                                         ])
@@ -52,25 +53,27 @@
     <script>
         $(document).ready(function() {
 
-            @if(isset($asesorie->asesorable) && $asesorie->asesorable_type == App\Models\Proyecto::class)
-            usoInfraestructuraUpdate.getSelectTalentoProyecto({{$asesorie->asesorable->id}});
-            usoInfraestructuraUpdate.removeDisableButtonGestorAsesor();
+            @if (isset($asesorie->asesorable) && $asesorie->asesorable_type == App\Models\Proyecto::class)
+                usoInfraestructuraUpdate.getSelectTalentoProyecto({{ $asesorie->asesorable->id }});
+                usoInfraestructuraUpdate.removeDisableButtonGestorAsesor();
             @endif
-            @if(isset($asesorie->asesorable) && $asesorie->asesorable_type == \App\Models\Articulation::class)
-            usoInfraestructuraUpdate.addDisableButtonEquipos();
-            usoInfraestructuraUpdate.addDisableButtonMaterial();
+            @if (isset($asesorie->asesorable) && $asesorie->asesorable_type == \App\Models\Articulation::class)
+                usoInfraestructuraUpdate.getSelectTalentoArticulacion({{ $asesorie->asesorable->id }});
+                usoInfraestructuraUpdate.addDisableButtonEquipos();
+                usoInfraestructuraUpdate.addDisableButtonMaterial();
             @endif
-            @if(isset($asesorie->asesorable) && $asesorie->asesorable_type == App\Models\Idea::class)
-            usoInfraestructuraUpdate.addDisableButtonEquipos();
-            usoInfraestructuraUpdate.addDisableButtonTalento();
-            usoInfraestructuraUpdate.addDisableButtonMaterial();
+            @if (isset($asesorie->asesorable) && $asesorie->asesorable_type == App\Models\Idea::class)
+                usoInfraestructuraUpdate.getSelectInfoIdea({{ $asesorie->asesorable->id }});
+                usoInfraestructuraUpdate.addDisableButtonEquipos();
+                usoInfraestructuraUpdate.addDisableButtonTalento();
+                usoInfraestructuraUpdate.addDisableButtonMaterial();
             @endif
         });
         const usoInfraestructuraUpdate = {
-            checkTipoUsoInfraestrucuta:function () {
+            checkTipoUsoInfraestrucuta: function() {
 
-                $( "input[name='txttipousoinfraestructura']" ).change(function (){
-                    if ( $("#IsProyecto").is(":checked") ) {
+                $("input[name='txttipousoinfraestructura']").change(function() {
+                    if ($("#IsProyecto").is(":checked")) {
                         Swal.fire({
                             toast: true,
                             position: 'bottom-end',
@@ -95,9 +98,9 @@
                         usoInfraestructuraUpdate.removeDisableButtonTalento();
                         usoInfraestructuraUpdate.removeDisableButtonMaterial();
                         usoInfraestructuraUpdate.DatatableProjectsForUser();
-                    }
-                    else if ( $("#IsArticulacion").is(":checked") ) {
-                        console,log("aqui");
+                    } else if ($("#IsArticulacion").is(":checked")) {
+                        console,
+                        log("aqui");
                         Swal.fire({
                             toast: true,
                             position: 'bottom-end',
@@ -122,7 +125,7 @@
                         usoInfraestructuraUpdate.addDisableButtonMaterial();
                         usoInfraestructuraUpdate.dataTableArtculacionFindByUser();
                     }
-                    else if( $("#IsIdea").is(":checked")) {
+                    else if ($("#IsIdea").is(":checked")) {
                         Swal.fire({
                             toast: true,
                             position: 'bottom-end',
@@ -149,13 +152,13 @@
                     }
                 });
             },
-            removeValueLineaGestor: function(){
+            removeValueLineaGestor: function() {
                 $('#txtlinea').removeAttr('value');
                 $('#txtgestor').removeAttr('value');
-                $('#txtlinea').attr('value','primero seleccione el tipo de uso de infraestructura');
-                $('#txtgestor').attr('value','primero seleccione el tipo de uso de infraestructura');
+                $('#txtlinea').attr('value', 'primero seleccione el tipo de uso de infraestructura');
+                $('#txtgestor').attr('value', 'primero seleccione el tipo de uso de infraestructura');
             },
-            removeOptionsSelect: function () {
+            removeOptionsSelect: function() {
                 $('#txttalento')
                     .empty()
                     .append('<option selected="selected" value="">seleccione el talento</option>').select2();
@@ -163,90 +166,90 @@
                     .empty()
                     .append('<option selected="selected"  value="">seleccione el equipo</option>').select2();
             },
-            disableSelectButtons: function () {
+            disableSelectButtons: function() {
                 $('#txttalento').attr("disabled", true).select2();
                 $(".btnAgregarTalento").attr("disabled", true).removeAttr("onclick");
             },
-            removeDisableSelectButtons: function () {
+            removeDisableSelectButtons: function() {
                 $('#txttalento').attr("disabled", false).select2();
                 $(".btnAgregarTalento").removeAttr("disabled").attr('onclick', 'addTalentoAUso()');
             },
-            removeDisableButtonGestorAsesor: function () {
+            removeDisableButtonGestorAsesor: function() {
                 $(".btnAgregarGestorAsesor").removeAttr("disabled").attr('onclick', 'addGestoresAUso()');
                 $('#txtgestorasesor').attr("disabled", false).select2();
                 $('#txtasesoriadirecta').removeAttr("readonly");
                 $('#txtasesoriaindirecta').removeAttr("readonly");
             },
-            removeDisableButtonEquipos: function () {
+            removeDisableButtonEquipos: function() {
                 $(".btnAgregarEquipo").removeAttr("disabled").attr('onclick', 'agregarEquipoAusoInfraestructura()');
                 $('#txtlineatecnologica').attr("disabled", false).select2();
                 $('#txtequipo').attr("disabled", false).select2();
                 $('#txttiempouso').removeAttr("readonly");
             },
-            removeDisableButtonMaterial: function () {
+            removeDisableButtonMaterial: function() {
                 $(".btnAgregarMaterial").removeAttr("disabled").attr('onclick', 'addMaterialesAUso()');
                 $('#txtmaterial').attr("disabled", false).select2();
                 $('#txtcantidad').removeAttr("readonly");
             },
-            addDisableButtonGestorAsesor: function () {
+            addDisableButtonGestorAsesor: function() {
                 $(".btnAgregarGestorAsesor").removeAttr('onclick', 'addGestoresAUso()').attr("disabled");
                 $('#txtgestorasesor').attr("disabled", true).select2();
                 $('#txtasesoriadirecta').attr("readonly", true);
                 $('#txtasesoriaindirecta').attr("readonly", true);
             },
-            addDisableButtonEquipos: function () {
+            addDisableButtonEquipos: function() {
                 $(".btnAgregarEquipo").removeAttr('onclick', 'agregarEquipoAusoInfraestructura()').attr("disabled");
                 $('#txtlineatecnologica').attr("disabled", true).select2();
                 $('#txtequipo').attr("disabled", true).select2();
                 $('#txttiempouso').attr("readonly", true);
             },
-            addDisableButtonMaterial: function () {
+            addDisableButtonMaterial: function() {
                 $(".btnAgregarMaterial").removeAttr('onclick', 'addMaterialesAUso()').attr("disabled");
                 $('#txtmaterial').attr("disabled", true).select2();
                 $('#txtcantidad').attr("readonly", true);
             },
-            removeDisableButtonTalento: function () {
+            removeDisableButtonTalento: function() {
                 $(".btnAgregarTalento").removeAttr("disabled").attr('onclick', 'addTalentoAUso()');
                 $('#txttalento').attr("disabled", false).select2();
             },
-            addDisableButtonTalento: function () {
+            addDisableButtonTalento: function() {
                 $(".btnAgregarTalento").removeAttr('onclick', 'addTalentoAUso()').attr("disabled");
                 $('#txttalento').attr("disabled", true).select2();
             },
-            eliminarContentTables: function () {
+            eliminarContentTables: function() {
                 $('#detalleTalento').children("tr").remove();
                 $('#detallesUsoInfraestructura').children("tr").remove();
                 $('#detallesGestores').children("tr").remove();
                 $('#detallesGestoresAsesores').children("tr").remove();
                 $('#detalleMaterialUso').children("tr").remove();
             },
-            limpiarInputsActividad: function (){
+            limpiarInputsActividad: function() {
                 $('#txtactividad').val();
             },
-            limpiarInputNodo: function (){
+            limpiarInputNodo: function() {
                 $('#txtnodo').val("");
             },
-            limpiarTipoUsoInfraestructura: function (){
+            limpiarTipoUsoInfraestructura: function() {
                 $('#txttipousoinfraestructura').removeAttr("checked");
             },
-            limpiarListaTalentos: function (){
+            limpiarListaTalentos: function() {
                 $('#detalleTalento').empty();
             },
-            limpiarListaEquipos: function (){
+            limpiarListaEquipos: function() {
                 $('#detallesUsoInfraestructura').empty();
             },
-            limpiarListaMateriales: function (){
+            limpiarListaMateriales: function() {
                 $('#detalleMaterialUso').empty();
             },
-            limpiarListaGestorACargo: function (){
+            limpiarListaGestorACargo: function() {
                 $('#detallesGestores').empty();
                 $('#detallesGestores').children("tr").remove();
             },
-            limpiarListaGestorAsesores: function (){
+            limpiarListaGestorAsesores: function() {
                 $('#detallesGestoresAsesores').empty();
                 $('#detallesGestoresAsesores').children("tr").remove();
             },
-            DatatableProjectsForUser: function () {
+            DatatableProjectsForUser: function() {
                 $('#usoinfraestrucutaProjectsForUserTable').dataTable().fnDestroy();
                 $('#usoinfraestrucutaProjectsForUserTable').DataTable({
                     language: {
@@ -256,14 +259,13 @@
                     serverSide: true,
                     pageLength: 5,
                     "lengthChange": false,
-                    order: [ 0, 'desc' ],
-                    ajax:{
+                    order: [0, 'desc'],
+                    ajax: {
                         url: host_url + "/asesorias/projects",
                         type: "get",
                     },
                     select: true,
-                    columns: [
-                        {
+                    columns: [{
                             title: 'Codigo de proyecto',
                             data: 'codigo_actividad',
                             name: 'codigo_actividad',
@@ -291,12 +293,12 @@
                     dismissible: false,
                 });
             },
-            getSelectTalentoProyecto:function (id){
+            getSelectTalentoProyecto: function(id) {
                 $.ajax({
-                    dataType:'json',
-                    type:'get',
-                    url:'/asesorias/talentosporproyecto/'+id
-                }).done(function(response){
+                    dataType: 'json',
+                    type: 'get',
+                    url: '/asesorias/talentosporproyecto/' + id
+                }).done(function(response) {
                     $('#txttalento').empty();
                     $('#txtequipo').empty();
                     $('#txtlinea').empty();
@@ -305,51 +307,62 @@
                     $('#txtlinea').removeAttr('value');
                     $('#txttalento').append('<option value="">Seleccione el talento</option>');
                     $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-                    $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
-                    $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
+                    $('#txtlineatecnologica').append(
+                        '<option value="">Seleccione la linea tecnológica</option>');
+                    $('#txtmaterial').append(
+                        '<option value="">Seleccione el material de formación</option>');
 
                     if (response.proyecto.length != 0) {
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
-                        $('#txtgestor').val(response.proyecto.documento+ ' - '+ response.proyecto.nombres + ' ' + response.proyecto.apellidos);
-                        $("label[for='txtgestor']").addClass('active');
-                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                        $('#txtgestor').val(response.proyecto.documento+ ' - '+ response.proyecto.nombres + ' ' + response.proyecto.apellidos);
-                        $("label[for='txtgestor']").addClass('active');
+                        @if (session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
+                            $('#txtgestor').val(response.proyecto.documento + ' - ' + response.proyecto
+                                .nombres + ' ' + response.proyecto.apellidos);
+                            $("label[for='txtgestor']").addClass('active');
+                        @elseif (session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                            $('#txtgestor').val(response.proyecto.documento + ' - ' + response.proyecto
+                                .nombres + ' ' + response.proyecto.apellidos);
+                            $("label[for='txtgestor']").addClass('active');
                         @endif
 
-                        $('#txtlinea').val(response.proyecto.abreviatura+ ' - '+ response.proyecto.lineatecnologica_nombre);
+                        $('#txtlinea').val(response.proyecto.abreviatura + ' - ' + response.proyecto
+                            .lineatecnologica_nombre);
                         $('#txtnodo').val(response.proyecto.nodo_id);
                         $("label[for='txtlinea']").addClass('active');
-                    }else{
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
-                        let cont;
-                        let a = document.getElementsByName("gestor[]");
-                        let fila ="";
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>No se encontraron resultados</td><td></td><td></td><td></td></td><td></tr>';
-                        cont++;
-                        $('#detallesGestores').append(fila);
-                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsApoyoTecnico())
-                        let userid = {{auth()->user()->id}}
-                            let userdocument = {{auth()->user()->documento }}
-                            let username = "{{auth()->user()->present()->userFullName()}}";
-                        let cont;
-                        let a = document.getElementsByName("gestor[]");
-                        let fila ="";
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]"  value="'+userid+'">'+userdocument + ' -  ' +username+' - Apoyo Tecnico'+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
-                        cont++;
-                        $('#detallesGestores').append(fila);
-                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                        $('#txtgestor').val("No se encontraron resultados");
-                        $("label[for='txtgestor']").addClass('active');
-                        let userid = {{auth()->user()->id}}
-                            let userdocument = {{auth()->user()->documento }}
-                            let username = "{{auth()->user()->present()->userFullName()}}";
-                        let cont;
-                        let a = document.getElementsByName("talento[]");
-                        let fila ="";
-                        fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+userid+'">'+userdocument+'-'+username+'</td><td>tú</td></tr>';
-                        cont++;
-                        $('#detalleTalento').append(fila);
+                    } else {
+                        @if (session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
+                            let cont;
+                            let a = document.getElementsByName("gestor[]");
+                            let fila = "";
+                            fila = '<tr class="selected" id="filaGestor' + cont +
+                                '"><td>No se encontraron resultados</td><td></td><td></td><td></td></td><td></tr>';
+                            cont++;
+                            $('#detallesGestores').append(fila);
+                        @elseif (session()->has('login_role') && session()->get('login_role') == App\User::IsApoyoTecnico())
+                            let userid = {{ auth()->user()->id }}
+                            let userdocument = {{ auth()->user()->documento }}
+                            let username = "{{ auth()->user()->present()->userFullName() }}";
+                            let cont;
+                            let a = document.getElementsByName("gestor[]");
+                            let fila = "";
+                            fila = '<tr class="selected" id="filaGestor' + cont +
+                                '"><td><input type="hidden" name="gestor[]"  value="' + userid + '">' +
+                                userdocument + ' -  ' + username + ' - Apoyo Tecnico' +
+                                '</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+                            cont++;
+                            $('#detallesGestores').append(fila);
+                        @elseif (session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                            $('#txtgestor').val("No se encontraron resultados");
+                            $("label[for='txtgestor']").addClass('active');
+                            let userid = {{ auth()->user()->id }}
+                            let userdocument = {{ auth()->user()->documento }}
+                            let username = "{{ auth()->user()->present()->userFullName() }}";
+                            let cont;
+                            let a = document.getElementsByName("talento[]");
+                            let fila = "";
+                            fila = '<tr class="selected" id="filaTalento' + cont +
+                                '"><td><input type="hidden" name="talento[]" value="' + userid + '">' +
+                                userdocument + '-' + username + '</td><td>tú</td></tr>';
+                            cont++;
+                            $('#detalleTalento').append(fila);
                         @endif
                         $('#txtlinea').val("No se encontraron resultados");
                         $('#txtnodo').val();
@@ -357,38 +370,54 @@
                     }
                     if (response.talentos.length != 0) {
                         $.each(response.talentos, function(e, talento) {
-                            $('#txttalento').append('<option value="'+talento.id+'">'+ talento.documento +' - '+talento.nombres+' '+ talento.apellidos + '</option>');
+                            $('#txttalento').append('<option value="' + talento.id + '">' + talento
+                                .documento + ' - ' + talento.nombres + ' ' + talento.apellidos +
+                                '</option>');
                         });
-                    }else{
+                    } else {
                         $('#txttalento').append('<option value="">no se encontraron resultados</option>');
                     }
                     if (response.lineastecnologicas.length != 0) {
                         $.each(response.lineastecnologicas, function(e, lineatecnologica) {
-                            $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' ' + lineatecnologica.nombre + '</option>');
+                            $('#txtlineatecnologica').append('<option  value="' + lineatecnologica
+                                .linea_tecnologica_id + '">' + lineatecnologica.abreviatura +
+                                ' ' + lineatecnologica.nombre + '</option>');
                         });
-                    }else{
-                        $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
+                    } else {
+                        $('#txtlineatecnologica').append(
+                            '<option value="">no se encontraron resultados</option>');
                     }
                     if (response.equipos.length != 0) {
                         $.each(response.equipos, function(e, equipo) {
-                            if (equipo.nombre.length > 30){
-                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre.substr(0,30) + '...  / ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
-                            }else{
-                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre+ '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
+                            if (equipo.nombre.length > 30) {
+                                $('#txtequipo').append('<option  value="' + equipo.id + '">' +
+                                    equipo.nombre.substr(0, 30) + '...  / ' + equipo
+                                    .referencia + ' - ' + equipo.marca + '</option>');
+                            } else {
+                                $('#txtequipo').append('<option  value="' + equipo.id + '">' +
+                                    equipo.nombre + '/ ' + equipo.referencia + ' - ' + equipo
+                                    .marca + '</option>');
                             }
                         });
-                    }else{
+                    } else {
                         $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
                     }
                     if (response.materiales.length != 0) {
                         $.each(response.materiales, function(e, material) {
-                            if (material.material_nombre.length > 30){
-                                $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+material.material_nombre.substr(0,30)+ '... x ' +material.medida_nombre  +'</option>');
-                            }else{
-                                $('#txtmaterial').append('<option  value="'+material.material_id+'">'+material.codigo_material + ' - '+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
+                            if (material.material_nombre.length > 30) {
+                                $('#txtmaterial').append('<option  value="' + material.material_id +
+                                    '">' + material.codigo_material + ' - ' + material
+                                    .presentacion_nombre + ' ' + material.material_nombre
+                                    .substr(0, 30) + '... x ' + material.medida_nombre +
+                                    '</option>');
+                            } else {
+                                $('#txtmaterial').append('<option  value="' + material.material_id +
+                                    '">' + material.codigo_material + ' - ' + material
+                                    .presentacion_nombre + ' ' + material.material_nombre +
+                                    ' x ' + material.medida_nombre + '</option>');
                             }
                         });
-                    }else{
+                    } else {
                         $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
                     }
                     $('#txttalento').select2();
@@ -399,7 +428,7 @@
                 });
             },
             //ARTICULACIONES
-            dataTableArtculacionFindByUser: function () {
+            dataTableArtculacionFindByUser: function() {
                 $('#modalUsoIngraestrucuta_modal').dataTable().fnDestroy();
                 $('#modalUsoIngraestrucuta_modal').DataTable({
                     language: {
@@ -409,14 +438,13 @@
                     serverSide: true,
                     "lengthChange": false,
                     pageLength: 5,
-                    order: [ 0, 'desc' ],
-                    ajax:{
+                    order: [0, 'desc'],
+                    ajax: {
                         url: host_url + "/asesorias/articulaciones",
                         type: "get",
                     },
                     select: true,
-                    columns: [
-                        {
+                    columns: [{
                             title: 'Código de Articulación',
                             data: 'codigo',
                             name: 'codigo',
@@ -446,97 +474,127 @@
                     dismissible: false,
                 });
             },
-            getSelectTalentoArticulacion:function (id){
+            getSelectTalentoArticulacion: function(id) {
                 $.ajax({
-                    dataType:'json',
-                    type:'get',
-                    url: host_url + '/asesorias/talentosporarticulacion/'+id
-                }).done(function(response){
+                    dataType: 'json',
+                    type: 'get',
+                    url: host_url + '/asesorias/talentosporarticulacion/' + id
+                }).done(function(response) {
+                    console.log(response);
                     $('#txtequipo').empty();
                     $('#txtlineatecnologica').empty();
                     $('#txtmaterial').empty();
                     $('#txttalento').empty();
                     $('#txttalento').append('<option value="">Seleccione el talento</option>');
                     $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-                    $('#txtlineatecnologica').append('<option value="">Seleccione la linea tecnológica</option>');
-                    $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
+                    $('#txtlineatecnologica').append(
+                        '<option value="">Seleccione la linea tecnológica</option>');
+                    $('#txtmaterial').append(
+                        '<option value="">Seleccione el material de formación</option>');
                     if (response.articulacion.length != 0) {
-                        @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
-                        let cont;
-                        let a = document.getElementsByName("gestor[]");
-                        let fila ="";
-                        @if(!isset($asesorie->actividad))
-                            fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+response.articulacion.actividad.gestor_id+'">'+response.articulacion.actividad.gestor.user.documento + ' - ' +response.articulacion.actividad.gestor.user.nombres+' '+ response.articulacion.actividad.gestor.user.apellidos +'</td><td><input type="number" min="0" maxlength="6" name="asesoriadirecta[]" value="1"></td><td><input type="number" min="0" maxlength="6" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
-                        @endif
+                        @if (session()->has('login_role') && session()->get('login_role') == App\User::IsArticulador())
+                            let cont;
+                            let a = document.getElementsByName("gestor[]");
+                            let fila = "";
+                            @if (!isset($asesorie))
+                                fila = '<tr class="selected" id="filaGestor' + cont +
+                                    '"><td><input type="hidden" name="gestor[]" value="' + response
+                                    .articulacion.articulationstage.created_by.id + '">' + response
+                                    .articulacion.articulationstage.created_by.documento + ' - ' + response
+                                    .articulacion.articulationstage.created_by.nombres + ' ' + response
+                                    .articulacion.articulationstage.created_by.apellidos +
+                                    '</td><td><input type="number" min="0" maxlength="6" name="asesoriadirecta[]" value="1"></td><td><input type="number" min="0" maxlength="6" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
+                            @endif
                             cont++;
-                        $('#detallesGestores').append(fila);
-                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                        $('#txtgestor').attr('value');
-                        $('#txtgestor').val(response.articulacion.actividad.gestor.user.documento+ ' - '+ response.articulacion.actividad.gestor.user.nombres + ' ' + response.articulacion.actividad.gestor.user.user_apellidos);
-                        $("label[for='txtgestor']").addClass('active');
+                            $('#detallesGestores').append(fila);
+                        @elseif (session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                            $('#txtgestor').attr('value');
+                            $('#txtgestor').val(response.articulacion.articulationstage.created_by
+                                .documento +
+                                ' - ' + response.articulacion.articulationstage.created_by.nombres +
+                                ' ' + response.articulacion.articulationstage.created_by.apellidos);
+                            $("label[for='txtgestor']").addClass('active');
                         @endif
-                        $('#txtnodo').val(response.articulacion.actividad.nodo_id);
-                    }else{
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
-                        let cont;
-                        let a = document.getElementsByName("gestor[]");
-                        let fila ="";
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>No se encontraron resultados</td><td></td><td></td><td></td></td><td></tr>';
-                        cont++;
-                        $('#detallesGestores').append(fila);
-                        $('#txtlinea').val("No se encontraron resultados");
-                        $("label[for='txtlinea']").addClass('active');
-                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                        $('#txtgestor').val("No se encontraron resultados");
-                        $("label[for='txtgestor']").addClass('active');
+                        $('#txtnodo').val(response.articulacion.articulationstage.nodo_id);
+                    } else {
+                        @if (session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
+                            let cont;
+                            let a = document.getElementsByName("gestor[]");
+                            let fila = "";
+                            fila = '<tr class="selected" id="filaGestor' + cont +
+                                '"><td>No se encontraron resultados</td><td></td><td></td><td></td></td><td></tr>';
+                            cont++;
+                            $('#detallesGestores').append(fila);
+                            $('#txtlinea').val("No se encontraron resultados");
+                            $("label[for='txtlinea']").addClass('active');
+                        @elseif (session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                            $('#txtgestor').val("No se encontraron resultados");
+                            $("label[for='txtgestor']").addClass('active');
                         @endif
                         $('#txtnodo').val();
                     }
                     if (response.talentos.length != 0) {
                         $.each(response.talentos, function(e, talento) {
-                            $('#txttalento').append('<option value="'+talento.id+'">'+ talento.user.documento +' - '+talento.user.nombres+' '+ talento.user.apellidos + '</option>');
+                            $('#txttalento').append('<option value="' + talento.id + '">' + talento
+                                .documento + ' - ' + talento.nombres + ' ' + talento
+                                .apellidos + '</option>');
                         });
-                    }else{
+                    } else {
                         $('#txttalento').append('<option value="">no se encontraron resultados</option>');
                     }
 
                     if (response.equipos.length != 0) {
                         $.each(response.lineastecnologicas, function(e, lineatecnologica) {
-                            $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
+                            $('#txtlineatecnologica').append('<option  value="' + lineatecnologica
+                                .linea_tecnologica_id + '">' + lineatecnologica.abreviatura +
+                                ' - ' + lineatecnologica.nombre + '</option>');
                         });
-                    }else{
-                        $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
+                    } else {
+                        $('#txtlineatecnologica').append(
+                            '<option value="">no se encontraron resultados</option>');
                     }
 
                     if (response.equipos.length != 0) {
                         $.each(response.lineastecnologicas, function(i, lineatecnologica) {
-                            $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.id+'">'+ lineatecnologica.nombre + '</option>');
+                            $('#txtlineatecnologica').append('<option  value="' + lineatecnologica
+                                .id + '">' + lineatecnologica.nombre + '</option>');
                         });
-                    }else{
-                        $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
+                    } else {
+                        $('#txtlineatecnologica').append(
+                            '<option value="">no se encontraron resultados</option>');
                     }
 
                     if (response.equipos.length != 0) {
                         $.each(response.equipos, function(e, equipo) {
-                            if (equipo.nombre.length > 40){
-                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre.substr(0,50) + '...  / ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
-                            }else{
-                                $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre+ '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
+                            if (equipo.nombre.length > 40) {
+                                $('#txtequipo').append('<option  value="' + equipo.id + '">' +
+                                    equipo.nombre.substr(0, 50) + '...  / ' + equipo
+                                    .referencia + ' - ' + equipo.marca + '</option>');
+                            } else {
+                                $('#txtequipo').append('<option  value="' + equipo.id + '">' +
+                                    equipo.nombre + '/ ' + equipo.referencia + ' - ' + equipo
+                                    .marca + '</option>');
                             }
                         });
-                    }else{
+                    } else {
                         $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
                     }
 
                     if (response.materiales.length != 0) {
                         $.each(response.materiales, function(e, material) {
-                            if (material.material_nombre.length > 40){
-                                $('#txtmaterial').append('<option  value="'+material.material_id+'">'+ material.presentacion_nombre + ' '+material.material_nombre.substr(0,50)+ '... x ' +material.medida_nombre  +'</option>');
-                            }else{
-                                $('#txtmaterial').append('<option  value="'+material.material_id+'">'+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
+                            if (material.material_nombre.length > 40) {
+                                $('#txtmaterial').append('<option  value="' + material.material_id +
+                                    '">' + material.presentacion_nombre + ' ' + material
+                                    .material_nombre.substr(0, 50) + '... x ' + material
+                                    .medida_nombre + '</option>');
+                            } else {
+                                $('#txtmaterial').append('<option  value="' + material.material_id +
+                                    '">' + material.presentacion_nombre + ' ' + material
+                                    .material_nombre + ' x ' + material.medida_nombre +
+                                    '</option>');
                             }
                         });
-                    }else{
+                    } else {
                         $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
                     }
                     $('#txttalento').select2();
@@ -546,7 +604,7 @@
                 });
             },
 
-            dataTableIdeas: function () {
+            dataTableIdeas: function() {
                 $('#usoinfraestrucutaTable').dataTable().fnDestroy();
                 $('#usoinfraestrucutaTable').DataTable({
                     language: {
@@ -556,14 +614,13 @@
                     serverSide: true,
                     "lengthChange": false,
                     pageLength: 5,
-                    order: [ 0, 'desc' ],
-                    ajax:{
+                    order: [0, 'desc'],
+                    ajax: {
                         url: host_url + "/asesorias/ideas",
                         type: "get",
                     },
                     select: true,
-                    columns: [
-                        {
+                    columns: [{
                             title: 'Codigo de idea',
                             data: 'codigo_idea',
                             name: 'codigo_idea',
@@ -594,12 +651,12 @@
                 });
             },
 
-            getSelectInfoIdea:function (id){
+            getSelectInfoIdea: function(id) {
                 $.ajax({
-                    dataType:'json',
-                    type:'get',
-                    url: host_url + '/asesorias/idea/'+id
-                }).done(function(response){
+                    dataType: 'json',
+                    type: 'get',
+                    url: host_url + '/asesorias/idea/' + id
+                }).done(function(response) {
 
                     $('#txttalento').empty();
                     $('#txtequipo').empty();
@@ -612,36 +669,40 @@
 
                     $('#txttalento').append('<option value="">Seleccione el talento</option>');
                     $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-                    $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
+                    $('#txtmaterial').append(
+                        '<option value="">Seleccione el material de formación</option>');
 
                     if (response.idea.length != 0) {
-                        @if(session()->has('login_role') && ( session()->get('login_role') == App\User::IsArticulador()))
-                        let userid = {{auth()->user()->id}}
-                            let userdocument = {{auth()->user()->documento }}
-                            let username = "{{auth()->user()->present()->userFullName()}}";
-                        let cont;
-                        let a = document.getElementsByName("gestor[]");
-                        let fila ="";
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]"  value="'+userid+'">'+userdocument + ' -  ' +username+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
-                        cont++;
-                        $('#detallesGestores').append(fila);
+                        @if (session()->has('login_role') && session()->get('login_role') == App\User::IsArticulador())
+                            let userid = {{ auth()->user()->id }}
+                            let userdocument = {{ auth()->user()->documento }}
+                            let username = "{{ auth()->user()->present()->userFullName() }}";
+                            let cont;
+                            let a = document.getElementsByName("gestor[]");
+                            let fila = "";
+                            fila = '<tr class="selected" id="filaGestor' + cont +
+                                '"><td><input type="hidden" name="gestor[]"  value="' + userid + '">' +
+                                userdocument + ' -  ' + username +
+                                '</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+                            cont++;
+                            $('#detallesGestores').append(fila);
                         @endif
 
 
                         $('#txtnodo').val(response.idea.nodo_id);
                         $("label[for='txtlinea']").addClass('active');
-                    }else{
+                    } else {
                         $('#txtnodo').val();
                     }
                 });
             },
 
-            noRepeatTalento: function (id) {
+            noRepeatTalento: function(id) {
                 let idtalento = $("#txttalento").val();
                 let a = document.getElementsByName("talento[]");
                 validacion = true;
                 if (a.length >= 1) {
-                    for (x=0;x<a.length;x++){
+                    for (x = 0; x < a.length; x++) {
                         if (a[x].value == idtalento) {
                             validacion = false;
                         }
@@ -649,21 +710,21 @@
                 }
                 return validacion;
             },
-            validateTiempoUso: function (){
+            validateTiempoUso: function() {
                 let tiempouso = $("#txttiempouso").val();
                 let re = new RegExp("^[0-9]{1,2}(?:.[0-9]{1})?$");
                 if (re.test(tiempouso) == true) {
                     return true;
-                }else{
+                } else {
                     return false;
                 };
             },
-            noRepeatEquipo: function () {
+            noRepeatEquipo: function() {
                 let idequipo = $("#txtequipo").val();
                 let a = document.getElementsByName("equipo[]");
                 validacion = true;
                 if (a.length >= 1) {
-                    for (x=0;x<a.length;x++){
+                    for (x = 0; x < a.length; x++) {
                         if (a[x].value == idequipo) {
                             validacion = false;
                         }
@@ -671,12 +732,12 @@
                 }
                 return validacion;
             },
-            noRepeatGestor: function () {
+            noRepeatGestor: function() {
                 let idequipo = $("#txtgestorasesor").val();
                 let a = document.getElementsByName("gestor[]");
                 validacion = true;
                 if (a.length >= 1) {
-                    for (x=0;x<a.length;x++){
+                    for (x = 0; x < a.length; x++) {
                         if (a[x].value == idequipo) {
                             validacion = false;
                         }
@@ -684,12 +745,12 @@
                 }
                 return validacion;
             },
-            noRepeatMaterial: function () {
+            noRepeatMaterial: function() {
                 let idmaterial = $("#txtmaterial").val();
                 let a = document.getElementsByName("material[]");
                 validacion = true;
                 if (a.length >= 1) {
-                    for (x=0;x<a.length;x++){
+                    for (x = 0; x < a.length; x++) {
                         if (a[x].value == idmaterial) {
                             validacion = false;
                         }
@@ -699,55 +760,62 @@
             },
         }
 
-        function getEquipoPorLinea(){
+        function getEquipoPorLinea() {
             let lineatecnologica = $('#txtlineatecnologica').val();
             let nodo = $('#txtnodo').val();
-            if(nodo != '' && lineatecnologica !=''){
+            if (nodo != '' && lineatecnologica != '') {
                 $.ajax({
-                    dataType:'json',
-                    type:'get',
-                    url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
-                }).done(function(response){
+                    dataType: 'json',
+                    type: 'get',
+                    url: host_url + '/equipos/getequiposporlinea/' + nodo + '/' + lineatecnologica
+                }).done(function(response) {
                     $('#txtequipo').empty();
                     if (response.equipos == '' && response.equipos.length == 0) {
                         $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
-                    }else{
+                    } else {
                         $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-                        @if($errors->any())
-                        $.each(response.equipos, function(i, equipo) {
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
-                        });
+                        @if ($errors->any())
+                            $.each(response.equipos, function(i, equipo) {
+                                $('#txtequipo').append('<option  value="' + equipo.id + '">' + equipo
+                                    .nombre + '/ ' + equipo.referencia + ' - ' + equipo.marca +
+                                    '</option>');
+                            });
                         @else
-                        $.each(response.equipos, function(i, equipo) {
-                            $('#txtequipo').append('<option  value="'+equipo.id+'">'+ equipo.nombre + '/ ' + equipo.referencia + ' - '+ equipo.marca +'</option>');
-                        });
+                            $.each(response.equipos, function(i, equipo) {
+                                $('#txtequipo').append('<option  value="' + equipo.id + '">' + equipo
+                                    .nombre + '/ ' + equipo.referencia + ' - ' + equipo.marca +
+                                    '</option>');
+                            });
                         @endif
                     }
-                    @if($errors->any())
-                    $('#txtequipo').val("{{old('txtequipo')}}");
+                    @if ($errors->any())
+                        $('#txtequipo').val("{{ old('txtequipo') }}");
                     @endif
                     $('#txtequipo').select2();
                 });
-            }else{
+            } else {
                 $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
             }
         }
-        function getSelectMaterial(){
+
+        function getSelectMaterial() {
             let material = $("#txtmaterial").val();
-            if(material != ''){
+            if (material != '') {
                 $.ajax({
-                    dataType:'json',
-                    type:'get',
-                    url: host_url + '/materiales/getmaterial/'+ material
-                }).done(function(response){
+                    dataType: 'json',
+                    type: 'get',
+                    url: host_url + '/materiales/getmaterial/' + material
+                }).done(function(response) {
                     $("label[for='txtcantidad']").empty();
-                    $("label[for='txtcantidad']").text('cantidad a gastar ('+response.material.medida.nombre+ ')');
+                    $("label[for='txtcantidad']").text('cantidad a gastar (' + response.material.medida.nombre +
+                        ')');
                 });
-            }else{
+            } else {
                 $("label[for='txtcantidad']").empty();
                 $('#txtcantidad').text('Cantidad a gastar');
             }
         }
+
         function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre) {
             $('#modalUsoIngraestrucuta_modal').closeModal();
             Swal.fire({
@@ -756,14 +824,16 @@
                 showConfirmButton: false,
                 timer: 1500,
                 type: 'success',
-                title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+                title: 'El proyecto  ' + codigo_actividad + ' - ' + nombre +
+                    ' se ha asociado  al uso de infraestructua'
             });
-            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+            $('#txtactividad').val(codigo_actividad + ' - ' + nombre);
             $("label[for='txtactividad']").addClass('active');
             $("label[for='txtactividad']").text("Proyecto");
             usoInfraestructuraUpdate.getSelectTalentoProyecto(id);
         }
-        function volverModalusoInfrestructura(){
+
+        function volverModalusoInfrestructura() {
             $('#txtactividad').val('');
             $("label[for='txtactividad']").removeClass('active');
             $("label[for='txtactividad']").text("seleccione un tipo de uso de infraestructura");
@@ -775,12 +845,13 @@
             usoInfraestructuraUpdate.limpiarInputNodo();
             usoInfraestructuraUpdate.limpiarTipoUsoInfraestructura();
         }
-        function agregarEquipoAusoInfraestructura(){
-            let  cont = 0;
+
+        function agregarEquipoAusoInfraestructura() {
+            let cont = 0;
             let idequipo = $("#txtequipo").val();
             let tiempouso = $("#txttiempouso").val();
             let nombreEquipo = $('#txtequipo option:selected').text();
-            if ($("#txtequipo").val() == ""){
+            if ($("#txtequipo").val() == "") {
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -789,7 +860,7 @@
                     type: 'warning',
                     title: 'Debe seleccionar un equipo.'
                 });
-            }else  if ($("#txttiempouso").val() == ""){
+            } else if ($("#txttiempouso").val() == "") {
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -798,7 +869,7 @@
                     type: 'warning',
                     title: 'Debe ingresa el tiempo de uso'
                 });
-            }else if($("#txttiempouso").val() <= 0){
+            } else if ($("#txttiempouso").val() <= 0) {
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -807,7 +878,7 @@
                     type: 'warning',
                     title: 'el tiempo de uso debe ser mayor o igual a 1.'
                 });
-            }else if(usoInfraestructuraUpdate.validateTiempoUso() != true){
+            } else if (usoInfraestructuraUpdate.validateTiempoUso() != true) {
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -816,7 +887,7 @@
                     type: 'error',
                     title: 'El tiempo de uso debe ser un valor numerico entre 0 y 99.9.'
                 });
-            }else{
+            } else {
                 if (usoInfraestructuraUpdate.noRepeatEquipo() == true) {
                     Swal.fire({
                         toast: true,
@@ -827,11 +898,15 @@
                         title: 'Equipo ' + nombreEquipo + ' agregado.'
                     });
                     var a = document.getElementsByName("equipo[]");
-                    let fila ="";
-                    fila = '<tr class="selected" id="filaEquipo'+cont+'"><td><input type="hidden" name="equipo[]" value="'+idequipo+'">'+nombreEquipo+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarEquipo('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    let fila = "";
+                    fila = '<tr class="selected" id="filaEquipo' + cont +
+                        '"><td><input type="hidden" name="equipo[]" value="' + idequipo + '">' + nombreEquipo +
+                        '</td><td><input type="hidden" name="tiempouso[]" value="' + tiempouso + '">' + tiempouso +
+                        '</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarEquipo(' + cont +
+                        ');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detallesUsoInfraestructura').append(fila);
-                }else{
+                } else {
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -855,9 +930,10 @@
                 showConfirmButton: false,
                 timer: 1500,
                 type: 'success',
-                title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+                title: 'La articulacion  ' + codigo_actividad + ' - ' + nombre +
+                    ' se ha asociado  al uso de infraestructua'
             });
-            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+            $('#txtactividad').val(codigo_actividad + ' - ' + nombre);
             $("label[for='txtactividad']").addClass('active');
             $("label[for='txtactividad']").text("Articulación");
             usoInfraestructuraUpdate.getSelectTalentoArticulacion(id);
@@ -871,9 +947,9 @@
                 showConfirmButton: false,
                 timer: 1500,
                 type: 'success',
-                title: 'La edt ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+                title: 'La edt ' + codigo_actividad + ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
             });
-            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+            $('#txtactividad').val(codigo_actividad + ' - ' + nombre);
             $("label[for='txtactividad']").addClass('active');
             $("label[for='txtactividad']").text("Edt");
         }
@@ -882,7 +958,7 @@
             let cont = 0;
             let idtalento = $("#txttalento").val();
             let nombreTalento = $('#txttalento option:selected').text();
-            if ($("#txttalento").val() == ""){
+            if ($("#txttalento").val() == "") {
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -891,7 +967,7 @@
                     type: 'warning',
                     title: 'Debe seleccionar un talento'
                 });
-            }else{
+            } else {
                 if (usoInfraestructuraUpdate.noRepeatTalento(idtalento) == false) {
                     Swal.fire({
                         toast: true,
@@ -902,7 +978,7 @@
                         title: 'El Talento ' + nombreTalento + ' ya esta listado.'
                     });
                     $("#txttalento").val();
-                }else{
+                } else {
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -912,8 +988,11 @@
                         title: 'el Talento ' + nombreTalento + ' agregado.'
                     });
                     let a = document.getElementsByName("talento[]");
-                    let fila ="";
-                    fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    let fila = "";
+                    fila = '<tr class="selected" id="filaTalento' + cont +
+                        '"><td><input type="hidden" name="talento[]" value="' + idtalento + '">' + nombreTalento +
+                        '</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarTalento(' + cont +
+                        ');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detalleTalento').append(fila);
                 }
@@ -922,8 +1001,8 @@
             $('#txttalento').select2();
         }
 
-        function eliminarTalento(index){
-            $('#filaTalento'+ index).remove();
+        function eliminarTalento(index) {
+            $('#filaTalento' + index).remove();
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -934,8 +1013,8 @@
             });
         }
 
-        function eliminarEquipo(index){
-            $('#filaEquipo'+ index).remove();
+        function eliminarEquipo(index) {
+            $('#filaEquipo' + index).remove();
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -952,7 +1031,7 @@
             let asesoriadirecta = $("#txtasesoriadirecta").val();
             let asesoriaindirecta = $("#txtasesoriaindirecta").val();
             let nombreGestor = $('#txtgestorasesor option:selected').text();
-            if ($("#txtgestorasesor").val() == ""){
+            if ($("#txtgestorasesor").val() == "") {
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -961,7 +1040,7 @@
                     type: 'warning',
                     title: 'Debe seleccionar un Gestor'
                 });
-            }else{
+            } else {
                 if (usoInfraestructuraUpdate.noRepeatGestor(idgestor) == false) {
                     Swal.fire({
                         toast: true,
@@ -972,7 +1051,8 @@
                         title: 'El Gestor ' + nombreGestor + ' ya esta listado.'
                     });
                     $("#txtgestorasesor").val();
-                }else if($("#txtasesoriadirecta").val() == '' ||  (!/^([0-9])\d*(\.\d+)?$/.test($("#txtasesoriadirecta").val()))){
+                } else if ($("#txtasesoriadirecta").val() == '' || (!/^([0-9])\d*(\.\d+)?$/.test($("#txtasesoriadirecta")
+                        .val()))) {
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -983,7 +1063,9 @@
                     });
                     $("#txtasesoriadirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
-                }else if($("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() < 1 || $("#txtasesoriadirecta").val() < 1 && $("#txtasesoriaindirecta").val() == 0 || $("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() == 0){
+                } else if ($("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() < 1 || $(
+                        "#txtasesoriadirecta").val() < 1 && $("#txtasesoriaindirecta").val() == 0 || $(
+                        "#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() == 0) {
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -996,8 +1078,8 @@
                     $("label[for='txtasesoriadirecta']").addClass('active');
                     $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
-                }
-                else if($("#txtasesoriaindirecta").val() == '' ||  (!/^([0-9])\d*(\.\d+)?$/.test($("#txtasesoriaindirecta").val()))){
+                } else if ($("#txtasesoriaindirecta").val() == '' || (!/^([0-9])\d*(\.\d+)?$/.test($(
+                        "#txtasesoriaindirecta").val()))) {
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1008,7 +1090,7 @@
                     });
                     $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriaindirecta']").addClass('active');
-                }else{
+                } else {
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1018,8 +1100,14 @@
                         title: 'El Gestor ' + nombreGestor + ' agregado.'
                     });
                     let a = document.getElementsByName("gestor[]");
-                    let fila ="";
-                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" name="asesoriadirecta[]" value="'+asesoriadirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    let fila = "";
+                    fila = '<tr class="selected" id="filaGestorAsesor' + cont +
+                        '"><td><input type="hidden" name="gestor[]" value="' + idgestor + '">' + nombreGestor +
+                        '</td><td><input type="hidden" name="asesoriadirecta[]" value="' + asesoriadirecta + '">' +
+                        asesoriadirecta + '</td><td><input type="hidden" name="asesoriaindirecta[]" value="' +
+                        asesoriaindirecta + '">' + asesoriaindirecta +
+                        '</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarGestorAsesor(' + cont +
+                        ');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detallesGestoresAsesores').append(fila);
                     $("#txtasesoriadirecta").val(0);
@@ -1032,8 +1120,8 @@
             $('#txtgestorasesor').select2();
         }
 
-        function eliminarGestorAsesor(index){
-            $('#filaGestorAsesor'+ index).remove();
+        function eliminarGestorAsesor(index) {
+            $('#filaGestorAsesor' + index).remove();
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -1044,8 +1132,8 @@
             });
         }
 
-        function eliminarMaterial(index){
-            $('#filaMaterial'+ index).remove();
+        function eliminarMaterial(index) {
+            $('#filaMaterial' + index).remove();
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -1061,7 +1149,7 @@
             let idmaterial = $("#txtmaterial").val();
             let cantidad = $("#txtcantidad").val();
             let nombreMaterial = $('#txtmaterial option:selected').text();
-            if ($("#txtmaterial").val() == ""){
+            if ($("#txtmaterial").val() == "") {
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -1070,7 +1158,7 @@
                     type: 'warning',
                     title: 'Debe seleccionar un Material de Formación.'
                 });
-            }else{
+            } else {
                 if (usoInfraestructuraUpdate.noRepeatMaterial(idmaterial) == false) {
                     Swal.fire({
                         toast: true,
@@ -1081,7 +1169,8 @@
                         title: 'El Material ' + nombreMaterial + ' ya esta listado.'
                     });
                     $("#txtmaterial").val();
-                }else if($("#txtcantidad").val() == '' || $("#txtcantidad").val() <= 0 || (!/^([0-9])\d*(\.\d+)?$/.test($("#txtcantidad").val()))){
+                } else if ($("#txtcantidad").val() == '' || $("#txtcantidad").val() <= 0 || (!/^([0-9])\d*(\.\d+)?$/.test($(
+                        "#txtcantidad").val()))) {
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1092,7 +1181,7 @@
                     });
                     $("#txtcantidad").val(1);
                     $("label[for='txtcantidad']").addClass('active');
-                }else{
+                } else {
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1102,8 +1191,12 @@
                         title: 'Material ' + nombreMaterial + ' agregado.'
                     });
                     let a = document.getElementsByName("material[]");
-                    let fila ="";
-                    fila = '<tr class="selected" id="filaMaterial'+cont+'"><td><input type="hidden" name="material[]" value="'+idmaterial+'">'+nombreMaterial+'</td><td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarMaterial('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    let fila = "";
+                    fila = '<tr class="selected" id="filaMaterial' + cont +
+                        '"><td><input type="hidden" name="material[]" value="' + idmaterial + '">' + nombreMaterial +
+                        '</td><td><input type="hidden" name="cantidad[]" value="' + cantidad + '">' + cantidad +
+                        '</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarMaterial(' + cont +
+                        ');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detalleMaterialUso').append(fila);
                     $("#txtcantidad").val(1);
@@ -1114,7 +1207,7 @@
         }
 
         //Enviar formulario
-        $(document).on('submit', 'form#formUsoInfraestructuraUpdate', function (event) {
+        $(document).on('submit', 'form#formUsoInfraestructuraUpdate', function(event) {
             $('button[type="submit"]').attr('disabled', 'disabled');
             event.preventDefault();
             var form = $(this);
@@ -1129,11 +1222,11 @@
                 dataType: 'json',
                 contentType: false,
                 processData: false,
-                success: function (data) {
+                success: function(data) {
                     $('button[type="submit"]').removeAttr('disabled');
                     let errores = "";
                     for (control in data.errors) {
-                        errores += '<br/><b>'+data.errors[control]+'</b>';
+                        errores += '<br/><b>' + data.errors[control] + '</b>';
                         $('#' + control + '-error').html(data.errors[control]);
                         $('#' + control + '-error').show();
                     }
@@ -1141,7 +1234,7 @@
                     if (data.fail) {
                         let errores = "";
                         for (control in data.errors) {
-                            errores += '<br/><b>'+ data.errors[control]+'</b>';
+                            errores += '<br/><b>' + data.errors[control] + '</b>';
                             $('#' + control + '-error').html(data.errors[control]);
                             $('#' + control + '-error').show();
                         }
@@ -1173,8 +1266,8 @@
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'
                         });
-                        setTimeout(function(){
-                            window.location.replace("{{route('asesorias.index')}}");
+                        setTimeout(function() {
+                            window.location.replace("{{ route('asesorias.index') }}");
                         }, 1000);
                     }
                 }
