@@ -129,8 +129,9 @@ mix.scripts([
     'resources/app/support/form.js',
     'resources/app/support/index.js',
     'resources/app/tag/index.js',
-    'resources/app/tag/form.js'
-	],'public/js/app2.js');
+    'resources/app/tag/form.js',
+    'resources/app/asesoria/indicadores.js',
+],'public/js/app2.js');
 
 mix.minify('public/js/app2.js')
     mix.version();

@@ -176,7 +176,7 @@
                         <td>{{$value->pivot->talento_lider == 1 ? 'SI' : 'NO'}}</td>
                         <td>
                             <a target="_blank" href="{{route("usuario.show", $value->documento)}}" class="info-text">
-                                {{$value->documento}} - {{$value->nombres}} {{$value->apellidos}}
+                                {{$value->nombres}} {{$value->apellidos}}
                             </a>
                         </td>
                         </tr>
@@ -212,7 +212,7 @@
                     @if ($proyecto->users_propietarios->count() > 0)
                     @foreach ($proyecto->users_propietarios as $key => $value)
                     <li class="collection-item">
-                        {{$value->documento}} - {{$value->nombres}} {{$value->apellidos}}
+                        {{$value->nombres}} {{$value->apellidos}}
                     </li>
                     @endforeach
                     @else

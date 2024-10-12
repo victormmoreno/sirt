@@ -31,6 +31,7 @@ Route::group(
         Route::get('/dejar-control', 'RolesPermissions@dejar_control')->name('usuario.dejar.control');
 
         Route::get('/expertos/nodo/{id}', ['uses' => 'SearchUserController@findExpertsByNodo','as'   => 'usuario.gestores.nodo']);
+        Route::get('/funcionarios/nodo/{id}', ['uses' => 'SearchUserController@findFuncionariosByNodo','as'   => 'usuario.funcionarios.nodo']);
         Route::get('/{documento}/acceso', 'UserController@access')->name('usuario.acceso')->where('documento', '[0-9]+');
         Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.updateaccount')->middleware('disablepreventback');
         Route::put('{documento}/acceso', 'UserController@updateAccess')->name('usuario.access')->middleware('disablepreventback');
