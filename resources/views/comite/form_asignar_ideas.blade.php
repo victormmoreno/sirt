@@ -87,7 +87,7 @@
                                     @if ($value->pivot->admitido == 1)
                                         <option value="">Seleccione el experto a cargo de la idea de proyecto</option>
                                         @foreach($gestores as $id => $gestor)
-                                            <option value="{{$gestor->id}}">{{$gestor->documento}} - {{$gestor->nombres}} {{$gestor->apellidos}}</option>
+                                            <option value="{{$gestor->id}}">{{$gestor->nombres}} {{$gestor->apellidos}}</option>
                                         @endforeach
                                     @else
                                         <option value="-1">Esta idea de proyecto no fue admitida.</option>

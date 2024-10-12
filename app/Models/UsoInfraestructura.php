@@ -129,6 +129,19 @@ class UsoInfraestructura extends Model
     }
 
     /**
+     * The query scope participants
+     *
+     * @return void
+     */
+    public function scopeOnlyAsesor($query, $asesor = null)
+    {
+        if (!empty($asesor) && $asesor != null && $asesor != 'all') {
+            return $query->where('gestor_uso.asesor_id', $asesor);
+        }
+        return $query;
+    }
+
+    /**
      * The query scope BetweenDate
      *
      * @return void
@@ -167,6 +180,35 @@ class UsoInfraestructura extends Model
             }
             return $query;
         }
+        return $query;
+    }
+
+    public function scopeGroupedBy($query, $field_group) {
+        if ($field_group == null || $field_group == '') {
+            return $query->groupBy($field_group);
+        }
+        return $query;
+    }
+
+    /**
+     * The query scope node
+     *
+     * @return void
+     */
+    public function scopeOnlyNode($query, $nodo, $bandera = true)
+    {
+        if (isset($nodo) && ($nodo != 'all' && $nodo != null && $nodo != 0)) {
+            if ($bandera) {
+                return $query->where('proyectos.nodo_id', $nodo);
+            }
+            return $query;
+        }
+        // if (isset($nodes) && (!collect($nodes)->contains('all'))) {
+        //     return $query->whereIn('proyectos.nodo_id', $nodes);
+        // }
+        // if (request()->user()->getNodoUser() == null) {
+        //     return $query->where('proyectos.nodo_id', $nodes);
+        // }
         return $query;
     }
 
