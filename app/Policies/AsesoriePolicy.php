@@ -17,6 +17,25 @@ class AsesoriePolicy
          $user->IsAdministrador();
     }
 
+        /**
+     * Determine whether the user can view the usos infraestructura.
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function indicadores(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [
+            $user->IsAdministrador(),
+            $user->IsActivador(),
+            $user->IsDinamizador(),
+            $user->IsExperto(),
+            $user->IsArticulador(),
+            $user->IsApoyoTecnico()
+        ]);
+    }
+
+
     /**
      * Determine whether the user can view the usos infraestructura.
      *
