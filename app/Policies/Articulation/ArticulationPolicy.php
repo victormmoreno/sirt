@@ -430,7 +430,7 @@ class ArticulationPolicy
         && (session()->has('login_role') && (session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsDinamizador()))
         && ((isset($user->articulador->nodo_id) && $user->articulador->nodo_id == $articulation->articulationstage->node_id) || (isset($user->dinamizador->nodo_id) && $user->dinamizador->nodo_id == $articulation->articulationstage->node_id))
 
-        && ($articulation->phase->nombre != Articulation::IsFinalizado() && $articulation->phase->nombre != Articulation::IsCancelado());
+        && ($articulation->phase->nombre != Articulation::IsFinalizado());
     }
 
     /**
