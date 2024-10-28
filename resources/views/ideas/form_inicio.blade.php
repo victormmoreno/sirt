@@ -81,12 +81,12 @@ $existe = isset($idea) ? true : false;
                 No
                 @if ($existe)
                     @if ($idea->sede_id != null)
-                    <input type="checkbox" name="txtidea_empresa" id="txtidea_empresa" checked value="1" onchange="showInput_BuscarEmpresa()">
+                    <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" checked value="1" onchange="showInput_BuscarEmpresa()">
                     @else
-                    <input type="checkbox" name="txtidea_empresa" id="txtidea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
+                    <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
                     @endif
                 @else
-                <input type="checkbox" name="txtidea_empresa" id="txtidea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
+                <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
                 @endif
                 <span class="lever"></span>
                 Si
@@ -138,17 +138,17 @@ $existe = isset($idea) ? true : false;
     @if ($existe)
         @if ($idea->sede_id != null)
         <input type="text" disabled name="txtnombre_sede_disabled" id="txtnombre_sede_disabled" value="{{$idea->sede->nombre_sede}} - {{$idea->sede->direccion}} {{$idea->sede->ciudad->nombre}} ({{$idea->sede->ciudad->departamento->nombre}})">
-        <input type="hidden" name="txtsede_id" id="txtsede_id" value="{{$idea->sede_id}}">
+        <input type="hidden" name="txt_sede_id" id="txt_sede_id" value="{{$idea->sede_id}}">
         @else
         <input type="text" disabled name="txtnombre_sede_disabled" id="txtnombre_sede_disabled" value="Primero debes seleccionar una sede">
-        <input type="hidden" name="txtsede_id" id="txtsede_id">
+        <input type="hidden" name="txt_sede_id" id="txt_sede_id">
         @endif
     @else
     <input type="text" disabled name="txtnombre_sede_disabled" id="txtnombre_sede_disabled" value="Primero debes seleccionar una sede">
-    <input type="hidden" name="txtsede_id" id="txtsede_id">
+    <input type="hidden" name="txt_sede_id" id="txt_sede_id">
     @endif
     <label for="txtnombre_sede_disabled">Sede a la que se asociará la idea de proyecto <span class="red-text">*</span></label>
-    <small id="txtsede_id-error" class="error red-text"></small>
+    <small id="txt_sede_id-error" class="error red-text"></small>
 </div>
 <div class="divider"></div>
 <div class="row">
@@ -759,15 +759,15 @@ $existe = isset($idea) ? true : false;
             <p class="p-v-xs">
                 @if ($existe)
                     @if ($idea->apoyo_requerido == 5)
-                    <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="4" checked/>
+                    <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="5" checked/>
                     @else
-                    <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="4"/>
+                    <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="5"/>
                     @endif
                 @else
-                <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="4"/>
+                <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="5"/>
                 @endif
                 <label align="justify" for="rad5_apoyo_requerido" class="black-text">
-                    5. No requiero ningún tipo de recurso para escalar mi idea. 
+                    5. No requiero ningún tipo de recurso para escalar mi idea.
                 </label>
             </p>
         {{-- </div> --}}
@@ -938,16 +938,27 @@ $existe = isset($idea) ? true : false;
                 No
                 @if ($existe)
                     @if ($idea->forma_juridica == 1)
-                    <input type="checkbox" name="check_forma_juridica" id="check_forma_juridica" checked value="1">
+                    <input type="checkbox" name="check_forma_juridica" id="check_forma_juridica" checked value="1" onclick="hideAndShowDiv($(this), $('#constiturseEmpresa_content'))">
                     @else
-                    <input type="checkbox" name="check_forma_juridica" id="check_forma_juridica" value="1">
+                    <input type="checkbox" name="check_forma_juridica" id="check_forma_juridica" value="1" onclick="hideAndShowDiv($(this), $('#constiturseEmpresa_content'))">
                     @endif
                 @else
-                <input type="checkbox" name="check_forma_juridica" id="check_forma_juridica" value="1">
+                <input type="checkbox" name="check_forma_juridica" id="check_forma_juridica" value="1" onclick="hideAndShowDiv($(this), $('#constiturseEmpresa_content'))">
                 @endif
                 <span class="lever"></span>
                 Si
             </label>
+        </div>
+    </div>
+    <div class="row hiden" id="constiturseEmpresa_content" style="display: none;">
+        <div class="input-field col s12 m12 l12">
+            @if ($existe)
+            <input id="txt_forma_juridica" name="txt_forma_juridica" type="text" value="{{ $idea->datos_idea->pretende_forma_juridica->answer }}">
+            @else
+            <input id="txt_forma_juridica" name="txt_forma_juridica" type="text">
+            @endif
+            <label for="txt_forma_juridica">Indique el tipo de empresa con el que está interesado constituirse <span class="red-text">*</span></label>
+            <small id="txt_forma_juridica-error" class="error red-text"></small>
         </div>
     </div>
 </div>
@@ -1169,12 +1180,12 @@ $existe = isset($idea) ? true : false;
                     No
                     @if ($existe)
                         @if ($idea->viene_convocatoria == 1)
-                        <input type="checkbox" name="check_viene_convocatoria" id="check_viene_convocatoria" checked value="1" onchange="showInput_Convocatoria()">
+                        <input type="checkbox" name="check_viene_convocatoria" id="check_viene_convocatoria" checked value="1" onchange="hideAndShowDiv($(this), $('#convocatoria_content'))">
                         @else
-                        <input type="checkbox" name="check_viene_convocatoria" id="check_viene_convocatoria" value="1" onchange="showInput_Convocatoria()">
+                        <input type="checkbox" name="check_viene_convocatoria" id="check_viene_convocatoria" value="1" onchange="hideAndShowDiv($(this), $('#convocatoria_content'))">
                         @endif
                     @else
-                    <input type="checkbox" name="check_viene_convocatoria" id="check_viene_convocatoria" value="1" onchange="showInput_Convocatoria()">
+                    <input type="checkbox" name="check_viene_convocatoria" id="check_viene_convocatoria" value="1" onchange="hideAndShowDiv($(this), $('#convocatoria_content'))">
                     @endif
                     <span class="lever"></span>
                     Si
@@ -1203,12 +1214,12 @@ $existe = isset($idea) ? true : false;
                     No
                     @if ($existe)
                         @if ($idea->aval_empresa == 1)
-                        <input type="checkbox" name="check_aval_empresa" id="check_aval_empresa" checked value="1" onchange="showInput_AvalEmpresa()">
+                        <input type="checkbox" name="check_aval_empresa" id="check_aval_empresa" checked value="1" onchange="hideAndShowDiv($(this), $('#avalEmpresa_content'))">
                         @else
-                        <input type="checkbox" name="check_aval_empresa" id="check_aval_empresa" value="1" onchange="showInput_AvalEmpresa()">
+                        <input type="checkbox" name="check_aval_empresa" id="check_aval_empresa" value="1" onchange="hideAndShowDiv($(this), $('#avalEmpresa_content'))">
                         @endif
                     @else
-                    <input type="checkbox" name="check_aval_empresa" id="check_aval_empresa" value="1" onchange="showInput_AvalEmpresa()">
+                    <input type="checkbox" name="check_aval_empresa" id="check_aval_empresa" value="1" onchange="hideAndShowDiv($(this), $('#avalEmpresa_content'))">
                     @endif
                     <span class="lever"></span>
                     Si

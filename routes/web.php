@@ -133,6 +133,7 @@ Route::group(
         Route::get('/sin-registro/{nodo}/{user}', 'IdeaController@consultarIdeasSinRegistro')->name('idea.sin-registrar');
         Route::get('/registradas/{nodo}/{desde}/{hasta}', 'IdeaController@consultar_ideas_registradas')->name('idea.registradas');
         Route::get('/buscar', 'IdeaController@search')->name('idea.buscar');
+        // Route::put('user/complete', 'User\CompletationInformationTalentController@complete')->name('informationtalent.complete');
         Route::put('/asignar/{idea}', 'IdeaController@asignar')->name('idea.asignar.experto')->middleware('role_session:Dinamizador');
         Route::put('/update_nodo/{idea}', 'IdeaController@updateNodoIdea')->name('idea.update.nodo')->middleware('role_session:Articulador');
         Route::put('/aceptar_postulacion/{idea}', 'IdeaController@aceptarPostulacionIdea')->name('idea.aceptar.postulacion')->middleware('role_session:Articulador');
@@ -141,7 +142,7 @@ Route::group(
         Route::put('/duplicar_idea/{id}', 'IdeaController@duplicarIdea')->name('idea.duplicar');
         Route::put('/inhabilitar_idea/{id}', 'IdeaController@inhabilitarIdea')->name('idea.inhabilitar');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
-        Route::post('/', 'IdeaController@store')->name('idea.store');
+        Route::post('/', 'Idea\StoreIdeaController@store')->name('idea.store');
         Route::post('/buscar_ideas', 'IdeaController@search_idea')->name('idea.search.rq');
     }
 );

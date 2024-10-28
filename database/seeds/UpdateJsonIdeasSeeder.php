@@ -136,7 +136,7 @@ class UpdateJsonIdeasSeeder extends Seeder
                 ],
                 'ha_realizado_pruebas' => [
                     'answer' => 'No hay información disponible',
-                    'label' => '¿Ha realizado pruebas del producto o servicio con posibles clientes? '
+                    'label' => '¿Ha realizado pruebas del producto o servicio con posibles clientes?'
                 ],
                 'ha_generado_ventas' => [
                     'answer' => 'No hay información disponible',
@@ -155,6 +155,8 @@ class UpdateJsonIdeasSeeder extends Seeder
                     'label' => 'Cuenta con una estrategia para fijar el precio de su producto o servicio?'
                 ],
             ];
+
+            // Actualizar el json para que se guarde el link del video en la tabla ideas y no en la tabla de ruta_model
 
             // Actualizar la fila con el nuevo campo JSON
             DB::table('ideas')

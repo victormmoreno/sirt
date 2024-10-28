@@ -26,7 +26,7 @@ class Idea extends Model
     ];
 
     protected $casts = [
-        'datos_idea' => 'array',
+        'datos_idea' => 'array'
     ];
 
     /**
@@ -202,7 +202,8 @@ class Idea extends Model
             } else {
                 $viene_convocatoria = 0;
             }
-            return $query->where('viene_convocatoria', $viene_convocatoria);
+            return $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(datos_idea,  '$.convocatoria')) = '.$viene_convocatoria.'");
+            // return $query->whereRaw('viene_convocatoria', $viene_convocatoria);
         }
         return $query;
     }
@@ -242,7 +243,7 @@ class Idea extends Model
     public function scopeConvocatoria($query, $convocatoria)
     {
         if (!empty($convocatoria) && $convocatoria != '' && $convocatoria != null) {
-            return $query->where('convocatoria', 'LIKE', "%$convocatoria%");
+            return $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(datos_idea,  '$.convocatoria')) like (%'.$convocatoria.'%)");
         }
         return $query;
     }

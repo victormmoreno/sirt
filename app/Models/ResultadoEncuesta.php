@@ -57,12 +57,14 @@ class ResultadoEncuesta extends Model
             'fecha_respuesta',
             'proyectos.codigo_proyecto',
             'proyectos.nombre AS nombre_proyecto',
-            'entidades.nombre AS nodo'
+            'entidades.nombre AS nodo',
+            'fases.nombre AS fase_proyecto'
         )
         ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(resultados,  '$.resultados')) as resultados")
         ->join('proyectos', 'proyectos.id', '=', 'resultados_encuesta.proyecto_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->where('resultados_encuesta.estado', $this->IsRespondida());
     }
 }

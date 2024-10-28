@@ -347,6 +347,7 @@ class IdeaController extends Controller
             }
 
         }
+        // dd($ideas);
         return $this->datatableIdeas($ideas);
     }
 
@@ -466,6 +467,8 @@ class IdeaController extends Controller
             }
         })->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
+        })->editColumn('nombre_proyecto', function ($data) {
+            return $data->datos_idea->nombre_proyecto->answer;
         })->editColumn('nombre_talento', function ($data) {
             if (isset($data->user->nombres)) {
                 return $data->user->nombres . " " . $data->user->apellidos;
@@ -638,6 +641,8 @@ class IdeaController extends Controller
             alert('No autorizado', 'No tienes permisos para ver la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($idea->datos_idea->nombre_proyecto->answer);
+        // dd($idea->datos_idea['nombre_proyecto']['answer']);
         $estadosIdea = EstadoIdea::all();
         return view('ideas.show', [
             'idea' => $idea,
