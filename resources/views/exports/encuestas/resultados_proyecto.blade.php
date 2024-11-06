@@ -4,6 +4,7 @@
         <th>Nodo</th>
         <th>Código de proyecto</th>
         <th>Nombre del proyecto</th>
+        <th>Fase actual del proyecto</th>
         <th>Fecha de envío de encuesta</th>
         <th>Fecha de respuesta de la encuesta</th>
         <th>Estado del proyecto</th>
@@ -58,6 +59,7 @@
             <td>{{ $resultado->nodo }}</td>
             <td>{{ $resultado->codigo_proyecto }}</td>
             <td>{{ $resultado->nombre_proyecto }}</td>
+            <td>{{ $resultado->fase_proyecto }}</td>
             <td>{{ $resultado->fecha_envio }}</td>
             <td>{{ $resultado->fecha_respuesta }}</td>
             <td>{{ $resultado->resultados['estado_proyecto'] }}</td>

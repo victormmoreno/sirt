@@ -69,7 +69,8 @@ class IdeaRepository
      */
     public function consultarIdeaEnComite($id)
     {
-        return Idea::select('ideas.id', 'ideas.nombre_proyecto', 'ideas.codigo_idea')
+        return Idea::select('ideas.id', 'ideas.codigo_idea')
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer")) as nombre_proyecto')
             ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
             ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
             ->where('ideas.id', $id)
@@ -609,13 +610,14 @@ class IdeaRepository
             // Cambia el estado de la idea
             $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsPostulado())->first()->id]);
             //Enviar correo al talento que inscribió la idea de proyecto
-            event(new IdeaHasReceived($idea));
+            // event(new IdeaHasReceived($idea));
             // Busca los articuladores del nodo
             $users = User::ConsultarFuncionarios($idea->nodo_id, User::IsArticulador())->get();
             // Envia un correo a los articuladores del nodo
             if (!$users->isEmpty()) {
                 Notification::send($users, new IdeaReceived($idea));
             }
+
             $idea->registrarHistorialIdea(Movimiento::IsPostular(), Session::get('login_role'), null, 'al nodo ' . $idea->nodo->entidad->nombre);
             DB::commit();
             return [
@@ -689,8 +691,8 @@ class IdeaRepository
     public function registrarEmpresaConIdea($request)
     {
         $sede_id = null;
-        if ($request->input('txtidea_empresa') == 1) {
-            $sede_detalle = Sede::find($request->input('txtsede_id'));
+        if ($request->input('check_idea_empresa') == 1) {
+            $sede_detalle = Sede::find($request->input('txt_sede_id'));
             // $sede_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
             if ($sede_detalle == null) {
                 // Registro de una nueva empresa

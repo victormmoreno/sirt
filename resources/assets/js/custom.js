@@ -30,6 +30,19 @@ $('label.btn').on('click','input', function(e){
 //     $(e.target).closest('label').toggleClass('btn-flat');
 // }
 
+/**
+ * Método para mostrar u ocultar elementos html
+ * @param {Element} input_condicional - Input por el que se evaluará el estado
+ * @param {Element} div_to_hide_and_show Div que se mostrará u ocultará
+ */
+function hideAndShowDiv(input_condicional, div_to_hide_and_show) {
+    if (input_condicional.is(':checked')) {
+        div_to_hide_and_show.show();
+    } else {
+        div_to_hide_and_show.hide();
+    }
+  }
+
 function printErroresFormulario(data) {
     if (data.state == 'error_form') {
         let errores = "";
