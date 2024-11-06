@@ -1,21 +1,23 @@
 <?php
 
 namespace App\Http\Traits\Archivo;
-use ZipArchive;
-use App\Models\ArchivoModel;
-use App\Models\Proyecto;
-use Storage;
-use Illuminate\Http\Request;
+
 use App\Enums\DescargaArchivos;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Builder;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\Archivos\ReporteDescargaArchivos;
+use App\Models\Articulation;
+use App\Models\Proyecto;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Storage;
+use ZipArchive;
 
 
 trait DownloadMultipleFiles
 {
-    public function downloadMultipleFiles(Request $request) {
+    public function downloadMultipleFiles(Request $request)
+    {
         $zip = new ZipArchive;
         $query = $this->getQueryActividades($request);
         $actividades = $query->get();
@@ -29,6 +31,7 @@ trait DownloadMultipleFiles
         if ($zip->open($zipFileName, ZipArchive::CREATE) === true) {
             $filesToZip = $this->getFilesToZip($files);
             $fileZip = $this->addFilesToZip($zip, $filesToZip);
+            // dd($fileZip);
             $archivo_reporte = $this->generarReporteDeDescarga($actividades, $fileZip['files']);
             $archivo_reporte = Excel::raw(new ReporteDescargaArchivos($archivo_reporte), \Maatwebsite\Excel\Excel::XLSX);
             $zip = $fileZip['zip'];
@@ -46,22 +49,22 @@ trait DownloadMultipleFiles
      * @author dum
      **/
     private function getZipName($request)
-    {   
+    {
         switch ($request->archivos) {
             case DescargaArchivos::INICIO:
-                return 'Actas de inicio finalizados entre '.$request->txtdesde.' y '.$request->txthasta.'.zip';
+                return 'Actas de inicio finalizados entre ' . $request->txtdesde . ' y ' . $request->txthasta . '.zip';
                 break;
             case DescargaArchivos::CIERRE:
-                return 'Actas de cierre finalizados entre '.$request->txtdesde.' y '.$request->txthasta.'.zip';
+                return 'Actas de cierre finalizados entre ' . $request->txtdesde . ' y ' . $request->txthasta . '.zip';
                 break;
             case DescargaArchivos::COMPROMISO:
-                return 'Acuerdos de confidencialidad y compromiso finalizados entre '.$request->txtdesde.' y '.$request->txthasta.'.zip';
+                return 'Acuerdos de confidencialidad y compromiso finalizados entre ' . $request->txtdesde . ' y ' . $request->txthasta . '.zip';
                 break;
-            
+
             default:
                 # code...
                 break;
-            }
+        }
     }
 
     /**
@@ -77,9 +80,10 @@ trait DownloadMultipleFiles
             case class_basename(Proyecto::class):
                 return $this->getProyectosFinalizados($request);
                 break;
-            
+            case class_basename(Articulation::class):
+                return $this->getAccionesArticulacionFinalizadas($request);
+                break;
             default:
-                
                 break;
         }
     }
@@ -96,17 +100,26 @@ trait DownloadMultipleFiles
     {
         $reporte = new Collection();
         $files = $this->convertArrayToCollection($files);
+
         foreach ($actividades as $key => $actividad) {
             $files_temp = $files->where('codigo', $actividad->codigo);
             $archivos_descargados = $this->getArchivosDescargados($files_temp);
-            $reporte->push([
-                'nodo' => $actividad->nombre_nodo,
-                'linea' => $actividad->nombre_linea,
-                'codigo' => $actividad->codigo,
-                'cantidad_archivos' => $archivos_descargados->count(),
-                'nombre_archivos' => $archivos_descargados->count() == 0 ? 'No se encontraron documentos' : $this->getNombreArchivosDescargados($archivos_descargados)
-            ]);
-
+            if (isset($actividad->nombre_linea)) {
+                $reporte->push([
+                    'nodo' => $actividad->nombre_nodo,
+                    'linea' => $actividad->nombre_linea,
+                    'codigo' => $actividad->codigo,
+                    'cantidad_archivos' => $archivos_descargados->count(),
+                    'nombre_archivos' => $archivos_descargados->count() == 0 ? 'No se encontraron documentos' : $this->getNombreArchivosDescargados($archivos_descargados)
+                ]);
+            } else {
+                $reporte->push([
+                    'nodo' => $actividad->nombre_nodo,
+                    'codigo' => $actividad->codigo,
+                    'cantidad_archivos' => $archivos_descargados->count(),
+                    'nombre_archivos' => $archivos_descargados->count() == 0 ? 'No se encontraron documentos' : $this->getNombreArchivosDescargados($archivos_descargados)
+                ]);
+            }
         }
         return $reporte;
     }
@@ -134,7 +147,7 @@ trait DownloadMultipleFiles
     {
         return $archivos_actividad->where('estado');
     }
-    
+
 
     /**
      * Convierte el array de los archivos descargados en una Collection
@@ -172,14 +185,24 @@ trait DownloadMultipleFiles
             case class_basename(Proyecto::class):
                 $proyecto_class = Proyecto::class;
                 $files = $query->addSelect('archivo_model.ruta', 'proyectos.codigo_proyecto AS codigo')
-                ->leftJoin('archivo_model', function($q) use ($proyecto_class) {$q->on('archivo_model.model_id', '=', 'proyectos.id')->where('archivo_model.model_type', "$proyecto_class");})
-                ->join('fases as fase_archivo', 'fase_archivo.id', '=', 'archivo_model.fase_id')
-                // ->where('proyectos.id', 14347)
-                // ->where('proyectos.id', 13051)
-                // ->where('fase_archivo.nombre', Proyecto::IsInicio())
-                ->groupBy('archivo_model.ruta');
+                    ->leftJoin('archivo_model', function ($q) use ($proyecto_class) {
+                        $q->on('archivo_model.model_id', '=', 'proyectos.id')->where('archivo_model.model_type', "$proyecto_class");
+                    })
+                    ->join('fases as fase_archivo', 'fase_archivo.id', '=', 'archivo_model.fase_id')
+                    // ->where('proyectos.id', 14347)
+                    // ->where('proyectos.id', 13051)
+                    // ->where('fase_archivo.nombre', Proyecto::IsInicio())
+                    ->groupBy('archivo_model.ruta');
                 break;
-            
+            case class_basename(Articulation::class):
+                $articulacion_class = Articulation::class;
+                $files = $query->addSelect('archivo_model.ruta', 'articulations.code AS codigo')
+                    ->leftJoin('archivo_model', function ($q) use ($articulacion_class) {
+                        $q->on('archivo_model.model_id', '=', 'articulations.id')->where('archivo_model.model_type', "$articulacion_class");
+                    })
+                    ->join('fases as fase_archivo', 'fase_archivo.id', '=', 'archivo_model.fase_id')
+                    ->groupBy('archivo_model.ruta');
+                break;
             default:
                 # code...
                 break;
@@ -201,22 +224,20 @@ trait DownloadMultipleFiles
         switch ($request->archivos) {
             case DescargaArchivos::INICIO:
                 return $files->whereRaw("SUBSTRING_INDEX(ruta, '/', -1) like('%acta%') and SUBSTRING_INDEX(ruta, '/', -1) like('%inicio%')")
-                ->where('fase_archivo.nombre', Proyecto::IsInicio());
+                    ->where('fase_archivo.nombre', Proyecto::IsInicio());
                 break;
             case DescargaArchivos::CIERRE:
                 return $files->whereRaw("SUBSTRING_INDEX(ruta, '/', -1) like('%acta%') and SUBSTRING_INDEX(ruta, '/', -1) like('%cierre%')")
-                ->where('fase_archivo.nombre', Proyecto::IsCierre());
+                    ->where('fase_archivo.nombre', Proyecto::IsCierre());
                 break;
             case DescargaArchivos::COMPROMISO:
                 return $files->whereRaw("( SUBSTRING_INDEX(ruta, '/', -1) like('%conf%') or SUBSTRING_INDEX(ruta, '/', -1) like('%comp%') )")
-                ->where('fase_archivo.nombre', Proyecto::IsInicio());
+                    ->where('fase_archivo.nombre', Proyecto::IsInicio());
                 break;
             default:
-                
+
                 break;
         }
-        
-
     }
 
     /**
@@ -233,8 +254,26 @@ trait DownloadMultipleFiles
         $query = null;
         $query = $this->proyectoRepository->indicadoresProyectos()->addSelect('proyectos.codigo_proyecto AS codigo');
         $query = $this->nodos($query, $request)
-        ->whereBetween('fecha_cierre', [$request->txtdesde, $request->txthasta])
-        ->whereIn('fases.nombre', [Proyecto::IsFinalizado()]);
+            ->whereBetween('fecha_cierre', [$request->txtdesde, $request->txthasta])
+            ->whereIn('fases.nombre', [Proyecto::IsFinalizado()]);
+        return $query;
+    }
+
+    /**
+     * Retornar los proyectos finalizados
+     *
+     * @param $nodos
+     * @param $desde
+     * @param $hasta
+     * @return Builder
+     **/
+    private function getAccionesArticulacionFinalizadas($request)
+    {
+        $query = null;
+        $query = $this->articulacionRepository->indicadoresAccionesArticulaciones()->addSelect('articulations.code AS codigo');
+        $query = $this->nodos($query, $request)
+            ->whereBetween('articulations.end_date', [$request->txtdesde, $request->txthasta])
+            ->whereIn('fases.nombre', [Articulation::IsFinalizado()]);
         return $query;
     }
 
@@ -250,7 +289,7 @@ trait DownloadMultipleFiles
     {
         foreach ($routes as $key => $file) {
             if (Storage::exists(str_replace('storage', 'public', $file['route']))) {
-                $zip->addFile(substr($file['route'], 1), $file['codigo'].'/' . basename(substr($file['route'], 1)));
+                $zip->addFile(substr($file['route'], 1), $file['codigo'] . '/' . basename(substr($file['route'], 1)));
                 $routes[$key]['estado'] = true;
             } else {
                 $routes[$key]['estado'] = false;

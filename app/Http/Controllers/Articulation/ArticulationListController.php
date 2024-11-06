@@ -424,7 +424,7 @@ class ArticulationListController extends Controller
         $ult_traceability = Articulation::getTraceability($articulation)->get()->last();
         $ult_notificacion = $this->articulationRespository->retornarUltimaNotificacionPendiente($articulation);
         $rol_destinatario = $this->articulationRespository->verifyRecipientNotification($ult_notificacion);
-        return view('articulation.cancel-articulacion', compact('articulation', 'traceability', 'ult_traceability', 'ult_notificacion', 'rol_destinatario'));
+        return view('articulation.show-articulation', compact('articulation', 'traceability', 'ult_traceability', 'ult_notificacion', 'rol_destinatario'));
     }
 
     /**
