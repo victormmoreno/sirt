@@ -22,13 +22,13 @@ class IdeaPresenter extends Presenter
 
     public function ideaName(){
         if (isset($this->idea)) {
-            return $this->idea->nombre_proyecto;
+            return $this->idea->datos_idea->nombre_proyecto;
         }
         return "No registra";
     }
 
     public function isVieneConvocatoriaIdea(){
-        if ($this->idea->viene_convocatoria == 1)
+        if ($this->idea->datos_idea->viene_convocatoria == 1)
         {
             return 1;
         }
@@ -36,11 +36,11 @@ class IdeaPresenter extends Presenter
     }
 
     public function ideaVieneConvocatoria(){
-        return $this->idea->viene_convocatoria == 1 ? 'Si': 'No';
+        return $this->idea->datos_idea->viene_convocatoria == 1 ? 'Si': 'No';
     }
 
     public function ideaNombreConvocatoria(){
-        return $this->idea->viene_convocatoria == 1 ? $this->idea->convocatoria: 'No Aplica';
+        return $this->idea->datos_idea->viene_convocatoria == 1 ? $this->idea->convocatoria: 'No Aplica';
     }
 
     public function ideastartDate(){

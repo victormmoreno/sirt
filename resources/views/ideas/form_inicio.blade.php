@@ -53,7 +53,7 @@ $existe = isset($idea) ? true : false;
 <div class="row center">
     <div class="form-check">
         @if ($existe)
-            @if ($idea->acuerdo_no_confidencialidad == 1)
+            @if (!Str::contains($idea->datos_idea->fecha_acuerdo_no_confidencialidad->answer, ['No', 'No hay información disponible']))
             <input class="form-check-input" type="checkbox" name="check_acuerdo_no_confidencialidad" id="check_acuerdo_no_confidencialidad" checked value="1">
             @else
             <input class="form-check-input" type="checkbox" name="check_acuerdo_no_confidencialidad" id="check_acuerdo_no_confidencialidad" value="1">
@@ -81,12 +81,12 @@ $existe = isset($idea) ? true : false;
                 No
                 @if ($existe)
                     @if ($idea->sede_id != null)
-                    <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" checked value="1" onchange="showInput_BuscarEmpresa()">
+                    <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" checked value="1" onchange="hideAndShowDiv($(this), $('#buscarEmpresa_content'))">
                     @else
-                    <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
+                    <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" value="1" onchange="hideAndShowDiv($(this), $('#buscarEmpresa_content'))">
                     @endif
                 @else
-                <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
+                <input type="checkbox" name="check_idea_empresa" id="check_idea_empresa" value="1" onchange="hideAndShowDiv($(this), $('#buscarEmpresa_content'))">
                 @endif
                 <span class="lever"></span>
                 Si
@@ -162,11 +162,11 @@ $existe = isset($idea) ? true : false;
             library_books
         </i>
         @if ($existe)
-        <input type="text" id="txt_nombre_proyecto" name="txt_nombre_proyecto" value="{{ $idea->nombre_proyecto }}">
+        <input type="text" id="txt_nombre_proyecto" name="txt_nombre_proyecto" value="{{ $idea->datos_idea->nombre_proyecto->answer }}">
         @else
         <input type="text" id="txt_nombre_proyecto" name="txt_nombre_proyecto" value="">
         @endif
-        <label for="txt_nombre_proyecto">Nombre de la idea de proyecto <span class="red-text">*</span></label>
+        <label for="txt_nombre_proyecto">Nombre de la idea <span class="red-text">*</span></label>
         <small id="txt_nombre_proyecto-error" class="error red-text"></small>
     </div>
     <div class="input-field col s12 m6 l6">
@@ -174,7 +174,7 @@ $existe = isset($idea) ? true : false;
             create
         </i>
         @if ($existe)
-        <textarea class="materialize-textarea" id="txt_descripcion" length="3400" name="txt_descripcion">{{ $idea->descripcion }}</textarea>
+        <textarea class="materialize-textarea" id="txt_descripcion" length="3400" name="txt_descripcion">{{ $idea->datos_idea->descripcion->answer == 'No hay información disponible' ? '' : $idea->datos_idea->descripcion->answer }}</textarea>
         @else
         <textarea class="materialize-textarea" id="txt_descripcion" length="3400" name="txt_descripcion"></textarea>
         @endif
@@ -192,7 +192,7 @@ $existe = isset($idea) ? true : false;
                 <label>
                     No
                     @if ($existe)
-                        @if ($idea->producto_parecido == 1)
+                        @if (!Str::contains($idea->datos_idea->producto_parecido->answer, ['No', 'No hay información disponible']))
                         <input type="checkbox" name="check_producto_parecido" id="check_producto_parecido" checked value="1" onchange="hideAndShowDiv($(this), $('#productoParecido_content'))">
                         @else
                         <input type="checkbox" name="check_producto_parecido" id="check_producto_parecido" value="1" onchange="hideAndShowDiv($(this), $('#productoParecido_content'))">
@@ -208,7 +208,7 @@ $existe = isset($idea) ? true : false;
         <div class="row" id="productoParecido_content">
             <div class="input-field col s12 m12 l12">
                 @if ($existe)
-                <textarea class="materialize-textarea" id="txt_si_producto_parecido" length="2100" name="txt_si_producto_parecido">{{ $idea->si_producto_parecido }}</textarea>
+                <textarea class="materialize-textarea" id="txt_si_producto_parecido" length="2100" name="txt_si_producto_parecido">{{ $idea->datos_idea->producto_parecido->answer == 'No hay información disponible' ? '' : $idea->datos_idea->producto_parecido->answer }}</textarea>
                 @else
                 <textarea class="materialize-textarea" id="txt_si_producto_parecido" length="2100" name="txt_si_producto_parecido"></textarea>
                 @endif
@@ -224,7 +224,7 @@ $existe = isset($idea) ? true : false;
                 <label>
                     No
                     @if ($existe)
-                        @if ($idea->reemplaza == 1)
+                        @if (!Str::contains($idea->datos_idea->reemplaza->answer, ['No', 'No hay información disponible']))
                         <input type="checkbox" name="check_reemplaza" id="check_reemplaza" checked value="1" onchange="hideAndShowDiv($(this), $('#reemplaza_content'))">
                         @else
                         <input type="checkbox" name="check_reemplaza" id="check_reemplaza" value="1" onchange="hideAndShowDiv($(this), $('#reemplaza_content'))">
@@ -240,7 +240,7 @@ $existe = isset($idea) ? true : false;
         <div class="row" id="reemplaza_content">
             <div class="input-field col s12 m12 l12">
                 @if ($existe)
-                <textarea class="materialize-textarea" id="txt_si_reemplaza" length="2100" name="txt_si_reemplaza">{{ $idea->si_reemplaza }}</textarea>
+                <textarea class="materialize-textarea" id="txt_si_reemplaza" length="2100" name="txt_si_reemplaza">{{ $idea->datos_idea->reemplaza->answer == 'No hay información disponible' ? '' : $idea->datos_idea->reemplaza->answer }}</textarea>
                 @else
                 <textarea class="materialize-textarea" id="txt_si_reemplaza" length="2100" name="txt_si_reemplaza"></textarea>
                 @endif
@@ -257,7 +257,7 @@ $existe = isset($idea) ? true : false;
             <label class="tooltipped" data-position="bottom" data-tooltip="Entendiendo que, producto mínimo viable es aquel producto, servicio o experiencia que cumple funciones mínimas y es validado en un mercado real">
                 No
                 @if ($existe)
-                    @if ($idea->producto_minimo_viable == 1)
+                    @if (!Str::contains($idea->datos_idea->producto_minimo_viable->answer, ['No', 'No hay información disponible']))
                     <input type="checkbox" name="check_producto_minimo_viable" id="check_producto_minimo_viable" checked value="1">
                     @else
                     <input type="checkbox" name="check_producto_minimo_viable" id="check_producto_minimo_viable" value="1">
@@ -276,7 +276,7 @@ $existe = isset($idea) ? true : false;
             <label>
                 No
                 @if ($existe)
-                    @if ($idea->ha_realizado_pruebas == 1)
+                    @if (!Str::contains($idea->datos_idea->ha_realizado_pruebas->answer, ['No', 'No hay información disponible']))
                     <input type="checkbox" name="check_ha_realizado_pruebas" id="check_ha_realizado_pruebas" checked value="1">
                     @else
                     <input type="checkbox" name="check_ha_realizado_pruebas" id="check_ha_realizado_pruebas" value="1">
@@ -301,7 +301,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 1)
+                    @if ($idea->datos_idea->pregunta1->answer == 'Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo')
                     <input class="pregunta1" id="radio1" name="radio_pregunta1" type="radio" value="1" checked/>
                     @else
                     <input class="pregunta1" id="radio1" name="radio_pregunta1" type="radio" value="1"/>
@@ -310,7 +310,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio1" name="radio_pregunta1" type="radio" value="1"/>
                 @endif
                 <label for="radio1" class="black-text">
-                    1. Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo.
+                    Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo
                 </label>
             </p>
         </div>
@@ -319,7 +319,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 2)
+                    @if ($idea->datos_idea->pregunta1->answer == 'Tengo la idea del producto que quiero desarrollar pero no sé cómo hacerlo.')
                     <input class="pregunta1" id="radio2" name="radio_pregunta1" type="radio" value="2" checked/>
                     @else
                     <input class="pregunta1" id="radio2" name="radio_pregunta1" type="radio" value="2"/>
@@ -328,7 +328,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio2" name="radio_pregunta1" type="radio" value="2"/>
                 @endif
                 <label for="radio2" class="black-text">
-                    2. Tengo la idea del producto que quiero desarrollar pero no sé cómo hacerlo.
+                    Tengo la idea del producto que quiero desarrollar pero no sé cómo hacerlo.
                 </label>
             </p>
         </div>
@@ -337,7 +337,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 3)
+                    @if ($idea->datos_idea->pregunta1->answer == 'Tengo la idea del producto que quiero desarrollar, tengo los conocimientos para hacerlo, pero no se qué pasos seguir para formular el proyecto.')
                     <input class="pregunta1" id="radio3" name="radio_pregunta1" type="radio" value="3" checked/>
                     @else
                     <input class="pregunta1" id="radio3" name="radio_pregunta1" type="radio" value="3"/>
@@ -346,7 +346,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio3" name="radio_pregunta1" type="radio" value="3"/>
                 @endif
                 <label for="radio3" class="black-text">
-                    3. Tengo la idea del producto que quiero desarrollar, tengo los conocimientos para hacerlo, pero no se qué pasos seguir para formular el proyecto.
+                    Tengo la idea del producto que quiero desarrollar, tengo los conocimientos para hacerlo, pero no se qué pasos seguir para formular el proyecto.
                 </label>
             </p>
         </div>
@@ -357,7 +357,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 4)
+                    @if ($idea->datos_idea->pregunta1->answer == 'Tengo formulado el proyecto para desarrollar mi producto: tengo claros los objetivos, el alcance, los recursos y las actividades que debo realizar para conseguirlo, entre otros.')
                     <input class="pregunta1" id="radio4" name="radio_pregunta1" type="radio" value="4" checked/>
                     @else
                     <input class="pregunta1" id="radio4" name="radio_pregunta1" type="radio" value="4"/>
@@ -366,7 +366,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio4" name="radio_pregunta1" type="radio" value="4"/>
                 @endif
                 <label for="radio4" class="black-text">
-                    4. Tengo formulado el proyecto para desarrollar mi producto: tengo claros los objetivos, el alcance, los recursos y las actividades que debo realizar para conseguirlo, entre otros.
+                    Tengo formulado el proyecto para desarrollar mi producto: tengo claros los objetivos, el alcance, los recursos y las actividades que debo realizar para conseguirlo, entre otros.
                 </label>
             </p>
         </div>
@@ -375,7 +375,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 5)
+                    @if ($idea->datos_idea->pregunta1->answer == 'Mi proyecto está formulado y ya comencé la ejecución, pero necesito gestionar algunos recursos para poder avanzar.')
                     <input class="pregunta1" id="radio5" name="radio_pregunta1" type="radio" value="5" checked/>
                     @else
                     <input class="pregunta1" id="radio5" name="radio_pregunta1" type="radio" value="5"/>
@@ -384,7 +384,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio5" name="radio_pregunta1" type="radio" value="5"/>
                 @endif
                 <label for="radio5" class="black-text">
-                    5. Mi proyecto está formulado y ya comencé la ejecución, pero necesito gestionar algunos recursos para poder avanzar.
+                    Mi proyecto está formulado y ya comencé la ejecución, pero necesito gestionar algunos recursos para poder avanzar.
                 </label>
             </p>
         </div>
@@ -393,7 +393,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 6)
+                    @if ($idea->datos_idea->pregunta1->answer == 'Ya tengo un prototipo avanzado de mi producto y requiero gestionar algunos recursos para concluir mi proyecto.')
                     <input class="pregunta1" id="radio6" name="radio_pregunta1" type="radio" value="6" checked/>
                     @else
                     <input class="pregunta1" id="radio6" name="radio_pregunta1" type="radio" value="6"/>
@@ -402,7 +402,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio6" name="radio_pregunta1" type="radio" value="6"/>
                 @endif
                 <label for="radio6" class="black-text">
-                    6. Ya tengo un prototipo avanzado de mi producto y requiero gestionar algunos recursos para concluir mi proyecto.
+                    Ya tengo un prototipo avanzado de mi producto y requiero gestionar algunos recursos para concluir mi proyecto.
                 </label>
             </p>
         </div>
@@ -413,7 +413,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 1)
+                    @if ($idea->datos_idea->pregunta1->answer == 'Ya tengo un prototipo final, he realizado pruebas y ajustes, tengo planteada la idea de negocio y requiero gestionar algunos recursos para implementarla.')
                     <input class="pregunta1" id="radio1" name="radio_pregunta1" type="radio" value="1" checked/>
                     @else
                     <input class="pregunta1" id="radio1" name="radio_pregunta1" type="radio" value="1"/>
@@ -422,7 +422,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio1" name="radio_pregunta1" type="radio" value="1"/>
                 @endif
                 <label for="radio1" class="black-text">
-                    7. Ya tengo un prototipo final, he realizado pruebas y ajustes, tengo planteada la idea de negocio y requiero gestionar algunos recursos para implementarla.
+                    Ya tengo un prototipo final, he realizado pruebas y ajustes, tengo planteada la idea de negocio y requiero gestionar algunos recursos para implementarla.
                 </label>
             </p>
         </div>
@@ -431,7 +431,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 8)
+                    @if ($idea->datos_idea->pregunta1->answer == 'No voy a desarrollar un producto, voy a comercializar un producto de otro fabricante.')
                     <input class="pregunta1" id="radio8" name="radio_pregunta1" type="radio" value="8" checked/>
                     @else
                     <input class="pregunta1" id="radio8" name="radio_pregunta1" type="radio" value="8"/>
@@ -440,7 +440,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio8" name="radio_pregunta1" type="radio" value="8"/>
                 @endif
                 <label for="radio8" class="black-text">
-                    8. No voy a desarrollar un producto, voy a comercializar un producto de otro fabricante.
+                    No voy a desarrollar un producto, voy a comercializar un producto de otro fabricante.
                 </label>
             </p>
         </div>
@@ -449,7 +449,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta1 == 9)
+                    @if ($idea->datos_idea->pregunta1->answer == 'Quiero desarrollar una página web para promocionar mi negocio actual.')
                     <input class="pregunta1" id="radio9" name="radio_pregunta1" type="radio" value="9" checked/>
                     @else
                     <input class="pregunta1" id="radio9" name="radio_pregunta1" type="radio" value="9"/>
@@ -458,7 +458,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta1" id="radio9" name="radio_pregunta1" type="radio" value="9"/>
                 @endif
                 <label for="radio9" class="black-text">
-                    9. Quiero desarrollar una página web para promocionar mi negocio actual.
+                    Quiero desarrollar una página web para promocionar mi negocio actual.
                 </label>
             </p>
         </div>
@@ -474,7 +474,7 @@ $existe = isset($idea) ? true : false;
             <label>
                 No
                 @if ($existe)
-                    @if ($idea->modelo_negocio_definido == 1)
+                    @if (!Str::contains($idea->datos_idea->modelo_negocio_definido->answer, ['No', 'No hay información disponible']))
                     <input type="checkbox" name="check_modelo_negocio_definido" id="check_modelo_negocio_definido" checked value="1">
                     @else
                     <input type="checkbox" name="check_modelo_negocio_definido" id="check_modelo_negocio_definido" value="1">
@@ -500,7 +500,7 @@ $existe = isset($idea) ? true : false;
             pan_tool
         </i>
         @if ($existe)
-        <textarea class="materialize-textarea" id="txt_quien_usa" length="1400" name="txt_quien_usa">{{ $idea->quien_usa }}</textarea>
+        <textarea class="materialize-textarea" id="txt_quien_usa" length="1400" name="txt_quien_usa">{{ $idea->datos_idea->quien_usa->answer == 'No hay información disponible' ? '' : $idea->datos_idea->quien_usa->answer }}</textarea>
         @else
         <textarea class="materialize-textarea" id="txt_quien_usa" length="1400" name="txt_quien_usa"></textarea>
         @endif
@@ -514,7 +514,7 @@ $existe = isset($idea) ? true : false;
             sentiment_satisfied
         </i>
         @if ($existe)
-        <textarea class="materialize-textarea" id="txt_necesidades" length="3400" name="txt_necesidades">{{ $idea->necesidades }}</textarea>
+        <textarea class="materialize-textarea" id="txt_necesidades" length="3400" name="txt_necesidades">{{ $idea->datos_idea->necesidades->answer == 'No hay información disponible' ? '' : $idea->datos_idea->necesidades->answer }}</textarea>
         @else
         <textarea class="materialize-textarea" id="txt_necesidades" length="3400" name="txt_necesidades"></textarea>
         @endif
@@ -530,7 +530,7 @@ $existe = isset($idea) ? true : false;
             settings
         </i>
         @if ($existe)
-        <textarea class="materialize-textarea" id="txt_problema" length="3400" name="txt_problema">{{ $idea->problema }}</textarea>
+        <textarea class="materialize-textarea" id="txt_problema" length="3400" name="txt_problema">{{ $idea->datos_idea->problema->answer == 'No hay información disponible' ? '' : $idea->datos_idea->problema->answer }}</textarea>
         @else
         <textarea class="materialize-textarea" id="txt_problema" length="3400" name="txt_problema"></textarea>
         @endif
@@ -583,7 +583,7 @@ $existe = isset($idea) ? true : false;
             <label>
                 No
                 @if ($existe)
-                    @if ($idea->packing == 1)
+                    @if (!Str::contains($idea->datos_idea->tipo_packing->answer, ['No', 'No hay información disponible']))
                     <input type="checkbox" name="check_packing" id="check_packing" checked value="1">
                     @else
                     <input type="checkbox" name="check_packing" id="check_packing" value="1">
@@ -614,7 +614,7 @@ $existe = isset($idea) ? true : false;
             <label>
                 No
                 @if ($existe)
-                    @if ($idea->estrategia_fijar_precio == 1)
+                    @if (!Str::contains($idea->datos_idea->estrategia_fijar_precio->answer, ['No', 'No hay información disponible']))
                     <input type="checkbox" name="check_estrategia_fijar_precio" id="check_estrategia_fijar_precio" checked value="1">
                     @else
                     <input type="checkbox" name="check_estrategia_fijar_precio" id="check_estrategia_fijar_precio" value="1">
@@ -643,7 +643,7 @@ $existe = isset($idea) ? true : false;
             <label>
                 No
                 @if ($existe)
-                    @if ($idea->recursos_necesarios == 1)
+                    @if (!Str::contains($idea->datos_idea->recursos_necesarios->answer, ['No', 'No hay información disponible']))
                     <input type="checkbox" name="check_recursos_necesarios" id="check_recursos_necesarios" checked value="1">
                     @else
                     <input type="checkbox" name="check_recursos_necesarios" id="check_recursos_necesarios" value="1">
@@ -664,7 +664,7 @@ $existe = isset($idea) ? true : false;
             <label>
                 No
                 @if ($existe)
-                    @if ($idea->ha_generado_ventas == 1)
+                    @if (!Str::contains($idea->datos_idea->ha_generado_ventas->answer, ['No', 'No hay información disponible']))
                     <input type="checkbox" name="check_ha_generado_ventas" id="check_ha_generado_ventas" checked value="1">
                     @else
                     <input type="checkbox" name="check_ha_generado_ventas" id="check_ha_generado_ventas" value="1">
@@ -686,7 +686,7 @@ $existe = isset($idea) ? true : false;
         {{-- <div class="section"> --}}
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->apoyo_requerido == 1)
+                    @if ($idea->datos_idea->apoyo_requerido->answer == 'Requiero apoyo en marketing o espacios comerciales')
                     <input class="apoyo_requerido" id="rad1_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="1" checked/>
                     @else
                     <input class="apoyo_requerido" id="rad1_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="1"/>
@@ -695,7 +695,7 @@ $existe = isset($idea) ? true : false;
                 <input class="apoyo_requerido" id="rad1_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="1"/>
                 @endif
                 <label align="justify" for="rad1_apoyo_requerido" class="black-text">
-                    1. Requiero apoyo en marketing o espacios comerciales
+                    Requiero apoyo en marketing o espacios comerciales
                 </label>
             </p>
         {{-- </div> --}}
@@ -704,7 +704,7 @@ $existe = isset($idea) ? true : false;
         {{-- <div class="section"> --}}
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->apoyo_requerido == 2)
+                    @if ($idea->datos_idea->apoyo_requerido->answer == 'Requiero inversionistas')
                     <input class="apoyo_requerido" id="rad2_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="2" checked/>
                     @else
                     <input class="apoyo_requerido" id="rad2_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="2"/>
@@ -713,7 +713,7 @@ $existe = isset($idea) ? true : false;
                 <input class="apoyo_requerido" id="rad2_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="2"/>
                 @endif
                 <label align="justify" for="rad2_apoyo_requerido" class="black-text">
-                    2. Requiero inversionistas
+                    Requiero inversionistas
                 </label>
             </p>
         {{-- </div> --}}
@@ -722,7 +722,7 @@ $existe = isset($idea) ? true : false;
         {{-- <div class="section"> --}}
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->apoyo_requerido == 3)
+                    @if ($idea->datos_idea->apoyo_requerido->answer == 'Requiero inversión de capital semilla de Fondo Emprender')
                     <input class="apoyo_requerido" id="rad3_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="3" checked/>
                     @else
                     <input class="apoyo_requerido" id="rad3_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="3"/>
@@ -731,7 +731,7 @@ $existe = isset($idea) ? true : false;
                 <input class="apoyo_requerido" id="rad3_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="3"/>
                 @endif
                 <label align="justify" for="rad3_apoyo_requerido" class="black-text">
-                    3. Requiero inversión de capital semilla de Fondo Emprender
+                    Requiero inversión de capital semilla de Fondo Emprender
                 </label>
             </p>
         {{-- </div> --}}
@@ -740,7 +740,7 @@ $existe = isset($idea) ? true : false;
         {{-- <div class="section "> --}}
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->apoyo_requerido == 4)
+                    @if ($idea->datos_idea->apoyo_requerido->answer == 'Requiero relacionamiento con Cámara de Comercio, Aceleradoras, Incubadores, entre otros aliados estratégicos')
                     <input class="apoyo_requerido" id="rad4_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="4" checked/>
                     @else
                     <input class="apoyo_requerido" id="rad4_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="4"/>
@@ -749,7 +749,7 @@ $existe = isset($idea) ? true : false;
                 <input class="apoyo_requerido" id="rad4_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="4"/>
                 @endif
                 <label align="justify" for="rad4_apoyo_requerido" class="black-text">
-                    4. Requiero relacionamiento con Cámara de Comercio, Aceleradoras, Incubadores, entre otros aliados estratégicos
+                    Requiero relacionamiento con Cámara de Comercio, Aceleradoras, Incubadores, entre otros aliados estratégicos
                 </label>
             </p>
         {{-- </div> --}}
@@ -758,7 +758,7 @@ $existe = isset($idea) ? true : false;
         {{-- <div class="section "> --}}
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->apoyo_requerido == 5)
+                    @if ($idea->datos_idea->apoyo_requerido->answer == 'No requiero ningún tipo de recurso para escalar mi idea')
                     <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="5" checked/>
                     @else
                     <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="5"/>
@@ -767,7 +767,7 @@ $existe = isset($idea) ? true : false;
                 <input class="apoyo_requerido" id="rad5_apoyo_requerido" name="radio_apoyo_requerido" type="radio" value="5"/>
                 @endif
                 <label align="justify" for="rad5_apoyo_requerido" class="black-text">
-                    5. No requiero ningún tipo de recurso para escalar mi idea.
+                    No requiero ningún tipo de recurso para escalar mi idea.
                 </label>
             </p>
         {{-- </div> --}}
@@ -789,7 +789,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta2 == 1)
+                    @if ($idea->datos_idea->pregunta2->answer == 'No tengo equipo de trabajo, yo solo me encargaré de desarrollar el producto.')
                     <input class="pregunta2" id="rad1" name="radio_pregunta2" type="radio" value="1" checked/>
                     @else
                     <input class="pregunta2" id="rad1" name="radio_pregunta2" type="radio" value="1"/>
@@ -798,7 +798,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta2" id="rad1" name="radio_pregunta2" type="radio" value="1"/>
                 @endif
                 <label align="justify" for="rad1" class="black-text">
-                    1. No tengo equipo de trabajo, yo solo me encargaré de desarrollar el producto.
+                    No tengo equipo de trabajo, yo solo me encargaré de desarrollar el producto.
                 </label>
             </p>
         </div>
@@ -807,7 +807,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta2 == 2)
+                    @if ($idea->datos_idea->pregunta2->answer == 'Tengo un equipo de trabajo que cuenta con los conocimientos técnicos mínimos para el desarrollo del producto, pero no contamos con los conocimientos de mercadeo para la implementación de la idea de negocio.')
                     <input class="pregunta2" id="rad2" name="radio_pregunta2" type="radio" value="2" checked/>
                     @else
                     <input class="pregunta2" id="rad2" name="radio_pregunta2" type="radio" value="2"/>
@@ -816,7 +816,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta2" id="rad2" name="radio_pregunta2" type="radio" value="2"/>
                 @endif
                 <label align="justify" for="rad2" class="black-text">
-                    2. Tengo un equipo de trabajo que cuenta con los conocimientos técnicos mínimos para el desarrollo del producto, pero no contamos con los conocimientos de mercadeo para la implementación de la idea de negocio.
+                    Tengo un equipo de trabajo que cuenta con los conocimientos técnicos mínimos para el desarrollo del producto, pero no contamos con los conocimientos de mercadeo para la implementación de la idea de negocio.
                 </label>
             </p>
         </div>
@@ -825,7 +825,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta2 == 3)
+                    @if ($idea->datos_idea->pregunta2->answer == 'Tengo un equipo de trabajo que cuenta con los conocimientos de mercadeo mínimos para la implementación de la idea de negocio, pero no contamos con los conocimientos técnicos para desarrollar el producto.')
                     <input class="pregunta2" id="rad3" name="radio_pregunta2" type="radio" value="3" checked/>
                     @else
                     <input class="pregunta2" id="rad3" name="radio_pregunta2" type="radio" value="3"/>
@@ -834,7 +834,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta2" id="rad3" name="radio_pregunta2" type="radio" value="3"/>
                 @endif
                 <label align="justify" for="rad3" class="black-text">
-                    3. Tengo un equipo de trabajo que cuenta con los conocimientos de mercadeo mínimos para la implementación de la idea de negocio, pero no contamos con los conocimientos técnicos para desarrollar el producto.
+                    Tengo un equipo de trabajo que cuenta con los conocimientos de mercadeo mínimos para la implementación de la idea de negocio, pero no contamos con los conocimientos técnicos para desarrollar el producto.
                 </label>
             </p>
         </div>
@@ -843,7 +843,7 @@ $existe = isset($idea) ? true : false;
         <div class="section ">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta2 == 4)
+                    @if ($idea->datos_idea->pregunta2->answer == 'Tengo un equipo de trabajo multidisciplinar, que cuenta con los conocimientos técnicos, conocimientos de gestión y conocimientos de mercadeo necesarios para el desarrollo del producto y la implementación de la idea de negocio.')
                     <input class="pregunta2" id="rad4" name="radio_pregunta2" type="radio" value="4" checked/>
                     @else
                     <input class="pregunta2" id="rad4" name="radio_pregunta2" type="radio" value="4"/>
@@ -852,7 +852,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta2" id="rad4" name="radio_pregunta2" type="radio" value="4"/>
                 @endif
                 <label align="justify" for="rad4" class="black-text">
-                    4. Tengo un equipo de trabajo multidisciplinar, que cuenta con los conocimientos técnicos, conocimientos de gestión y conocimientos de mercadeo necesarios para el desarrollo del producto y la implementación de la idea de negocio.
+                    Tengo un equipo de trabajo multidisciplinar, que cuenta con los conocimientos técnicos, conocimientos de gestión y conocimientos de mercadeo necesarios para el desarrollo del producto y la implementación de la idea de negocio.
                 </label>
             </p>
         </div>
@@ -867,7 +867,7 @@ $existe = isset($idea) ? true : false;
                 <label>
                     No
                     @if ($existe)
-                        @if ($idea->requisitos_legales == 1)
+                        @if (!Str::contains($idea->datos_idea->requisitos_legales->answer, ['No', 'No hay información disponible']))
                         <input type="checkbox" name="check_requisitos_legales" id="check_requisitos_legales" checked value="1" onchange="hideAndShowDiv($(this), $('#requisitosLegales_content'))">
                         @else
                         <input type="checkbox" name="check_requisitos_legales" id="check_requisitos_legales" value="1" onchange="hideAndShowDiv($(this), $('#requisitosLegales_content'))">
@@ -883,7 +883,7 @@ $existe = isset($idea) ? true : false;
         <div class="row" id="requisitosLegales_content">
             <div class="input-field col s12 m12 l12">
                 @if ($existe)
-                <textarea class="materialize-textarea" id="txt_si_requisitos_legales" length="2100" name="txt_si_requisitos_legales">{{ $idea->si_requisitos_legales }}</textarea>
+                <textarea class="materialize-textarea" id="txt_si_requisitos_legales" length="2100" name="txt_si_requisitos_legales">{{ $idea->datos_idea->requisitos_legales->answer == 'No hay información disponible' ? '' : $idea->datos_idea->requisitos_legales->answer }}</textarea>
                 @else
                 <textarea class="materialize-textarea" id="txt_si_requisitos_legales" length="2100" name="txt_si_requisitos_legales"></textarea>
                 @endif
@@ -903,7 +903,7 @@ $existe = isset($idea) ? true : false;
                 <label>
                     No
                     @if ($existe)
-                        @if ($idea->requiere_certificaciones == 1)
+                        @if (!Str::contains($idea->datos_idea->requiere_certificaciones->answer, ['No', 'No hay información disponible']))
                         <input type="checkbox" name="check_requiere_certificaciones" id="check_requiere_certificaciones" checked value="1" onchange="hideAndShowDiv($(this), $('#certificaciones_content'))">
                         @else
                         <input type="checkbox" name="check_requiere_certificaciones" id="check_requiere_certificaciones" value="1" onchange="hideAndShowDiv($(this), $('#certificaciones_content'))">
@@ -919,7 +919,7 @@ $existe = isset($idea) ? true : false;
         <div class="row" id="certificaciones_content">
             <div class="input-field col s12 m12 l12">
                 @if ($existe)
-                <textarea class="materialize-textarea" id="txt_si_requiere_certificaciones" length="2100" name="txt_si_requiere_certificaciones">{{ $idea->si_requiere_certificaciones }}</textarea>
+                <textarea class="materialize-textarea" id="txt_si_requiere_certificaciones" length="2100" name="txt_si_requiere_certificaciones">{{ $idea->datos_idea->requiere_certificaciones->answer == 'No hay información disponible' ? '' : $idea->datos_idea->requiere_certificaciones->answer }}</textarea>
                 @else
                 <textarea class="materialize-textarea" id="txt_si_requiere_certificaciones" length="2100" name="txt_si_requiere_certificaciones"></textarea>
                 @endif
@@ -937,7 +937,7 @@ $existe = isset($idea) ? true : false;
             <label>
                 No
                 @if ($existe)
-                    @if ($idea->forma_juridica == 1)
+                    @if (!Str::contains($idea->datos_idea->pretende_forma_juridica->answer, ['No', 'No hay información disponible']))
                     <input type="checkbox" name="check_forma_juridica" id="check_forma_juridica" checked value="1" onclick="hideAndShowDiv($(this), $('#constiturseEmpresa_content'))">
                     @else
                     <input type="checkbox" name="check_forma_juridica" id="check_forma_juridica" value="1" onclick="hideAndShowDiv($(this), $('#constiturseEmpresa_content'))">
@@ -971,10 +971,10 @@ $existe = isset($idea) ? true : false;
             ondemand_video
         </i>
         @if ($existe)
-            @if ($idea->rutamodel == null)
+            @if (!Str::contains($idea->datos_idea->link_video->answer, ['No', 'No hay información disponible']))
                 <input id="txt_link_video" name="txt_link_video" type="text" value="">
             @else
-                <input id="txt_link_video" name="txt_link_video" type="text" value="{{$idea->rutamodel->ruta}}">
+                <input id="txt_link_video" name="txt_link_video" type="text" value="{{$idea->datos_idea->link_video->answer == 'No hay información disponible' ? '' : $idea->datos_idea->link_video->answer}}">
             @endif
         @else
         <input id="txt_link_video" name="txt_link_video" type="text">
@@ -997,7 +997,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->txtversion_beta == 1)
+                    @if ($idea->datos_idea->version_beta->answer == 'Concepto: Algo formulado, pero no tangible')
                     <input class="txtversion_beta" id="version_beta_radio1" name="radio_version_beta" type="radio" value="1" checked/>
                     @else
                     <input class="txtversion_beta" id="version_beta_radio1" name="radio_version_beta" type="radio" value="1"/>
@@ -1006,7 +1006,7 @@ $existe = isset($idea) ? true : false;
                 <input class="txtversion_beta" id="version_beta_radio1" name="radio_version_beta" type="radio" value="1"/>
                 @endif
                 <label align="justify" for="version_beta_radio1" class="black-text">
-                    1. <b>Concepto:</b> Algo formulado, pero no tangible
+                    <b>Concepto:</b> Algo formulado, pero no tangible
                 </label>
             </p>
         </div>
@@ -1014,8 +1014,8 @@ $existe = isset($idea) ? true : false;
     <div class="input-field col s12 m6 l6">
         <div class="section">
             <p class="p-v-xs">
-                @if ($existe)
-                    @if ($idea->txtversion_beta == 2)
+                @if ($existe) 
+                    @if ($idea->datos_idea->version_beta->answer == 'Modelo en 3D: Diseño de alternativa en software CAD que permite identificar la esencia del proyecto que se está presentando, con algunos detalles de concepto')
                     <input class="txtversion_beta" id="version_beta_radio2" name="radio_version_beta" type="radio" value="2" checked/>
                     @else
                     <input class="txtversion_beta" id="version_beta_radio2" name="radio_version_beta" type="radio" value="2"/>
@@ -1024,7 +1024,7 @@ $existe = isset($idea) ? true : false;
                 <input class="txtversion_beta" id="version_beta_radio2" name="radio_version_beta" type="radio" value="2"/>
                 @endif
                 <label align="justify" for="version_beta_radio2" class="black-text">
-                    2. <b>Modelo en 3D:</b> Diseño de alternativa en software CAD que permite identificar la esencia del proyecto que se está presentando, con algunos detalles de concepto
+                    <b>Modelo en 3D:</b> Diseño de alternativa en software CAD que permite identificar la esencia del proyecto que se está presentando, con algunos detalles de concepto
                 </label>
             </p>
         </div>
@@ -1033,7 +1033,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->txtversion_beta == 3)
+                    @if ($idea->datos_idea->version_beta->answer == 'Prototipo: Diseño en físico ya sea tamaño real, mayor o menor')
                     <input class="txtversion_beta" id="version_beta_radio3" name="radio_version_beta" type="radio" value="3" checked/>
                     @else
                     <input class="txtversion_beta" id="version_beta_radio3" name="radio_version_beta" type="radio" value="3"/>
@@ -1042,7 +1042,7 @@ $existe = isset($idea) ? true : false;
                 <input class="txtversion_beta" id="version_beta_radio3" name="radio_version_beta" type="radio" value="3"/>
                 @endif
                 <label align="justify" for="version_beta_radio3" class="black-text">
-                    3. <b>Prototipo:</b> Diseño en físico ya sea tamaño real, mayor o menor
+                    <b>Prototipo:</b> Diseño en físico ya sea tamaño real, mayor o menor
                 </label>
             </p>
         </div>
@@ -1051,7 +1051,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->txtversion_beta == 4)
+                    @if ($idea->datos_idea->version_beta->answer == 'Versión beta: Versión de prototipo final ya en pruebas con usuarios')
                     <input class="txtversion_beta" id="version_beta_radio4" name="radio_version_beta" type="radio" value="4" checked/>
                     @else
                     <input class="txtversion_beta" id="version_beta_radio4" name="radio_version_beta" type="radio" value="4"/>
@@ -1060,7 +1060,7 @@ $existe = isset($idea) ? true : false;
                 <input class="txtversion_beta" id="version_beta_radio4" name="radio_version_beta" type="radio" value="4"/>
                 @endif
                 <label align="justify" for="version_beta_radio4" class="black-text">
-                    4. <b>Versión beta:</b> Versión de prototipo final ya en pruebas con usuarios.
+                    <b>Versión beta:</b> Versión de prototipo final ya en pruebas con usuarios.
                 </label>
             </p>
         </div>
@@ -1077,7 +1077,7 @@ $existe = isset($idea) ? true : false;
             add_box
         </i>
         @if ($existe)
-        <textarea class="materialize-textarea" id="txt_cantidad_prototipos" length="2100" name="txt_cantidad_prototipos">{{ $idea->cantidad_prototipos }}</textarea>
+        <textarea class="materialize-textarea" id="txt_cantidad_prototipos" length="2100" name="txt_cantidad_prototipos">{{ $idea->datos_idea->cantidad_prototipos->answer == 'No hay información disponible' ? '' : $idea->datos_idea->cantidad_prototipos->answer }}</textarea>
         @else
         <textarea class="materialize-textarea" id="txt_cantidad_prototipos" length="2100" name="txt_cantidad_prototipos"></textarea>
         @endif
@@ -1097,7 +1097,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta3 == 1)
+                    @if ($idea->datos_idea->pregunta3->answer == 'Tecnologías Virtuales: Esta linea esta enfocada al desarrollo de aplicaciones web, móviles, inteligencia artificial, realidad aumentada, sistemas de información geográfica, seguridad informática y creación de entornos virtuales.')
                     <input class="pregunta3" id="r1" name="radio_pregunta3" type="radio" value="1" checked/>
                     @else
                     <input class="pregunta3" id="r1" name="radio_pregunta3" type="radio" value="1"/>
@@ -1106,7 +1106,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta3" id="r1" name="radio_pregunta3" type="radio" value="1" checked/>
                 @endif
                 <label align="justify" for="r1" class="black-text">
-                    1. Tecnologías Virtuales: Esta linea esta enfocada al desarrollo de aplicaciones web, móviles, inteligencia artificial, realidad aumentada, sistemas de información geográfica, seguridad informática y creación de entornos virtuales.
+                    Tecnologías Virtuales: Esta linea esta enfocada al desarrollo de aplicaciones web, móviles, inteligencia artificial, realidad aumentada, sistemas de información geográfica, seguridad informática y creación de entornos virtuales.
                 </label>
             </p>
         </div>
@@ -1115,7 +1115,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta3 == 2) {{--  Aqui se cambiará a un nuevo valor --}}
+                    @if ($idea->datos_idea->pregunta3->answer == 'Biotecnología y Nanotecnología: Esta linea esta enfocada al trabajo de la agroindustria alimentaria, biotecnologia vegetal, biotecnologia molecular aplicada a plantas, animales y microorganismos.') {{--  Aqui se cambiará a un nuevo valor --}}
                     <input class="pregunta3" id="r2" name="radio_pregunta3" type="radio" value="2" checked/>
                     @else
                     <input class="pregunta3" id="r2" name="radio_pregunta3" type="radio" value="2"/>
@@ -1124,7 +1124,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta3" id="r2" name="radio_pregunta3" type="radio" value="2"/>
                 @endif
                 <label align="justify" for="r2" class="black-text">
-                    2. Biotecnología y Nanotecnología: Esta linea esta enfocada al trabajo de la agroindustria alimentaria, biotecnologia vegetal, biotecnologia molecular aplicada a plantas, animales y microorganismos.
+                    Biotecnología y Nanotecnología: Esta linea esta enfocada al trabajo de la agroindustria alimentaria, biotecnologia vegetal, biotecnologia molecular aplicada a plantas, animales y microorganismos.
                 </label>
             </p>
         </div>
@@ -1135,7 +1135,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta3 == 3)
+                    @if ($idea->datos_idea->pregunta3->answer == 'Electrónica y Telecomunicaciones: Esta linea esta enfocada al internet de las cosas, automatización de procesos, sistemas embebidos, robótica, procesamiento de imágenes e instrumentación electrónica, gestión de la energía y energías renovables.')
                     <input class="pregunta3" id="r3" name="radio_pregunta3" type="radio" value="3" checked/>
                     @else
                     <input class="pregunta3" id="r3" name="radio_pregunta3" type="radio" value="3"/>
@@ -1144,7 +1144,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta3" id="r3" name="radio_pregunta3" type="radio" value="3"/>
                 @endif
                 <label align="justify" for="r3" class="black-text">
-                    3. Electrónica y Telecomunicaciones: Esta linea esta enfocada al internet de las cosas, automatización de procesos, sistemas embebidos, robótica, procesamiento de imágenes e instrumentación electrónica, gestión de la energía y energías renovables.
+                    Electrónica y Telecomunicaciones: Esta linea esta enfocada al internet de las cosas, automatización de procesos, sistemas embebidos, robótica, procesamiento de imágenes e instrumentación electrónica, gestión de la energía y energías renovables.
                 </label>
             </p>
         </div>
@@ -1153,7 +1153,7 @@ $existe = isset($idea) ? true : false;
         <div class="section">
             <p class="p-v-xs">
                 @if ($existe)
-                    @if ($idea->pregunta3 == 4)
+                    @if ($idea->datos_idea->pregunta3->answer == 'Ingeniería y Diseño: Esta linea esta enfocada al diseño mecánico, diseño de productos, sistemas CAD/CAM/CAE, optimización topológica, prototipado rápido y procesos de manufactura avanzada,  ingeniería inversa  y análisis dimensiona, prototipado 3d y impresión a laser.')
                     <input class="pregunta3" id="r4" name="radio_pregunta3" type="radio" value="4" checked/>
                     @else
                     <input class="pregunta3" id="r4" name="radio_pregunta3" type="radio" value="4"/>
@@ -1162,7 +1162,7 @@ $existe = isset($idea) ? true : false;
                 <input class="pregunta3" id="r4" name="radio_pregunta3" type="radio" value="4"/>
                 @endif
                 <label align="justify" for="r4" class="black-text">
-                    4. Ingeniería y Diseño: Esta linea esta enfocada al diseño mecánico, diseño de productos, sistemas CAD/CAM/CAE, optimización topológica, prototipado rápido y procesos de manufactura avanzada,  ingeniería inversa  y análisis dimensiona, prototipado 3d y impresión a laser.
+                    Ingeniería y Diseño: Esta linea esta enfocada al diseño mecánico, diseño de productos, sistemas CAD/CAM/CAE, optimización topológica, prototipado rápido y procesos de manufactura avanzada,  ingeniería inversa  y análisis dimensiona, prototipado 3d y impresión a laser.
                 </label>
             </p>
         </div>

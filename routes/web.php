@@ -141,7 +141,7 @@ Route::group(
         Route::put('/enviar_nodo/{id}', 'IdeaController@enviarIdeaAlNodo')->name('idea.enviar');
         Route::put('/duplicar_idea/{id}', 'IdeaController@duplicarIdea')->name('idea.duplicar');
         Route::put('/inhabilitar_idea/{id}', 'IdeaController@inhabilitarIdea')->name('idea.inhabilitar');
-        Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
+        Route::put('/{idea}', 'Idea\StoreIdeaController@update')->name('idea.update');
         Route::post('/', 'Idea\StoreIdeaController@store')->name('idea.store');
         Route::post('/buscar_ideas', 'IdeaController@search_idea')->name('idea.search.rq');
     }

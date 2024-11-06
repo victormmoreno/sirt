@@ -154,6 +154,10 @@ class UpdateJsonIdeasSeeder extends Seeder
                     'answer' => 'No hay información disponible',
                     'label' => 'Cuenta con una estrategia para fijar el precio de su producto o servicio?'
                 ],
+                'link_video' => [
+                    'answer' => isset($row->rutamodel) ? $row->rutamodel->ruta : 'No hay información disponible',
+                    'label' => 'Link del video presentación de la idea de proyecto'
+                ],
             ];
 
             // Actualizar el json para que se guarde el link del video en la tabla ideas y no en la tabla de ruta_model

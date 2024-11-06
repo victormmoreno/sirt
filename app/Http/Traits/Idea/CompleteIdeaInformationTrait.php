@@ -3,15 +3,12 @@
 namespace App\Http\Traits\Idea;
 
 use App\Models\{EstadoIdea, Sede, Idea};
-// use App\Notifications\User\CompleteTalentInformation;
-// use App\Values\TalentStorageValues;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-// use Illuminate\Support\Str;
 
 trait CompleteIdeaInformationTrait
 {
-    public function buildStorageRecord(Request $request) {
+    public function buildStorageRecord(Request $request, Idea $idea = null) {
         return [
             'datos_idea' => [
                 'fecha_acuerdo_no_confidencialidad' => [
@@ -124,24 +121,39 @@ trait CompleteIdeaInformationTrait
                 ],
             ],
             'nodo_id' => $request->slct_nodo,
-            'estadoidea_id' => EstadoIdea::where('nombre', '=', EstadoIdea::IsRegistro())->first()->id,
+            'estadoidea_id' => $idea == null ? EstadoIdea::where('nombre', '=', EstadoIdea::IsRegistro())->first()->id : $idea->estadoidea_id,
             // 'sede_id' => $this->buildSedeIdea($request),
-            'sede_id' => null,
-            'user_id' => request()->user()->id,
-            'codigo_idea' => $this->buildCodigoIdea($request->slct_nodo)
+            'sede_id' => $this->registrarEmpresaConIdea($request),
+            'user_id' => $idea == null ? request()->user()->id : $idea->user_id,
+            'codigo_idea' => $idea == null ? $this->buildCodigoIdea($request->slct_nodo) : $idea->codigo_idea
         ];
-        // Este fragmento debe ir al final del registro en Contract/Idea/IdeaStorage
-        // if ($request->input('txtlinkvideo') != null) {
-        //     $idea->rutamodel()->create([
-        //         'ruta' => $request->input('txtlinkvideo'),
-        //     ]);
-        // }
+    }
+
+    public function registrarEmpresaConIdea($request)
+    {
+        $sede_id = null;
+        if ($request->check_idea_empresa == 1) {
+            $sede_detalle = Sede::find($request->input('txt_sede_id'));
+            // $sede_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
+            if ($sede_detalle == null) {
+                // Registro de una nueva empresa
+                $empresa = $this->empresaRepository->store($request);
+                $sede_id = $empresa['sede']->id;
+            } else {
+                // Actualizar el responsable de la empresa en caso de que no se encuentre asociada a ningún usuario
+                if ($sede_detalle->empresa->user_id == null) {
+                    $sede_detalle->empresa->update(['user_id' => auth()->user()->id]);
+                }
+                $sede_id = $sede_detalle->id;
+            }
+        }
+        return $sede_id;
     }
 
     public function buildSedeIdea(Request $request) {
         $sede_id = null;
-        if ($request->txtidea_empresa == 1) {
-            $sede_detalle = Sede::find($request->input('txtsede_id'));
+        if ($request->check_idea_empresa == 1) {
+            $sede_detalle = Sede::find($request->input('txt_sede_id'));
             if ($sede_detalle == null) {
                 // Registro de una nueva empresa
                 $empresa = $this->empresaRepository->store($request);

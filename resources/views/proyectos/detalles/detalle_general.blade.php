@@ -16,7 +16,7 @@
                 Idea de Proyecto
             </span>
             <p>
-                <a class="primary-text" onclick="detallesIdeaPorId({{$proyecto->idea->id}})">{{$proyecto->idea->present()->ideaCode()}} - {{$proyecto->idea->present()->ideaName()}}</a>
+                <a class="primary-text" onclick="detallesIdeaPorId({{$proyecto->idea->id}})">{{$proyecto->idea->codigo_idea}} - {{$proyecto->idea->datos_idea->nombre_proyecto->answer}}</a>
             </p>
         </li>
         <li class="collection-item">
@@ -24,13 +24,7 @@
                 ¿La idea viene de una convocatoria?
             </span>
             <p>
-                {{$proyecto->idea->present()->ideaVieneConvocatoria()}}
-            </p>
-            <span class="title secondary-text">
-                Nombre de convocatoria
-            </span>
-            <p>
-                {{$proyecto->idea->present()->ideaNombreConvocatoria()}}
+                {{$proyecto->idea->datos_idea->convocatoria->answer}}
             </p>
         </li>
         <li class="collection-item">

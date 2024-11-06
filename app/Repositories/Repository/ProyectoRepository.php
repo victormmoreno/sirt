@@ -173,7 +173,7 @@ class ProyectoRepository extends Repository
             'proyectos.experto_id'
         )
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
-        ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
+        ->selectRaw('concat(ideas.codigo_idea, " - ", JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer"))) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
@@ -347,11 +347,12 @@ class ProyectoRepository extends Repository
     {
         return Proyecto::select(
             'entidades.nombre AS nombre_nodo', 'lineastecnologicas.nombre AS nombre_linea', 'sublineas.nombre AS nombre_sublinea',
-            'ideas.codigo_idea', 'ideas.nombre_proyecto AS nombre_idea', 'codigo_proyecto',
+            'ideas.codigo_idea', 'codigo_proyecto',
             'areasconocimiento.nombre AS nombre_area_conocimiento', 'otro_areaconocimiento', 'fecha_inicio',
             'fases.nombre AS nombre_fase', 'fecha_cierre', 'proyectos.id', 'proyectos.nombre AS nombre_proyecto',
             'fecha_inicio_planeacion', 'fecha_inicio_ejecucion', 'fecha_inicio_cierre'
         )
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer")) as nombre_proyecto')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS experto')
         ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
         ->selectRaw('IF(fases.nombre = "'.Proyecto::IsFinalizado().'", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado ó se ha cancelado") AS trl_obtenido')
@@ -524,7 +525,7 @@ class ProyectoRepository extends Repository
     public function proyectosDelTalento($id)
     {
         return Proyecto::select('proyectos.id', 'sublineas.nombre as sublinea_nombre', 'codigo_proyecto', 'proyectos.nombre', 'fases.nombre AS nombre_fase')
-        ->selectRaw('concat(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
+        ->selectRaw('concat(codigo_idea, " - ", JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer"))) AS nombre_idea')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
@@ -1338,7 +1339,7 @@ class ProyectoRepository extends Repository
             'proyectos.experto_id'
         )
         ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
-        ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
+        ->selectRaw('concat(ideas.codigo_idea, " - ", JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer"))) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')

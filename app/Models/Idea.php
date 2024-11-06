@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use App\Http\Traits\Idea\IdeaTrait;
+use App\Contracts\Idea\CompleteIdeaInformation;
+use App\Http\Traits\Idea\{IdeaTrait, CompleteIdeaInformationTrait};
 use Illuminate\Database\Eloquent\Model;
 use App\Models\EstadoIdea;
 use App\Presenters\IdeaPresenter;
 
 
-class Idea extends Model
+class Idea extends Model implements CompleteIdeaInformation
 {
 
-    use IdeaTrait;
+    use IdeaTrait, CompleteIdeaInformationTrait;
 
     const IS_EMPRENDEDOR        = 1;
     const IS_EMPRESA            = 2;
@@ -67,7 +68,7 @@ class Idea extends Model
 
     public function validarAcuerdoConfidencialidad()
     {
-        if ($this->acuerdo_no_confidencialidad == 0) {
+        if ($this->datos_idea->fecha_acuerdo_no_confidencialidad->answer == null) {
             return false;
         }
         return true;
@@ -86,13 +87,12 @@ class Idea extends Model
         return $query->select(
             'ideas.id AS consecutivo',
             'ideas.codigo_idea',
-            'nombre_proyecto',
-            'tipo_idea',
-            'viene_convocatoria',
-            'convocatoria',
+            // 'JSON_EXTRACT(ideas.datos_idea,  "$.convocatoria") AS convocatoria',
             'c.fechacomite',
             'ideas.user_id'
         )
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer")) AS nombre_proyecto')
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.convocatoria.answer")) AS convocatoria')
         ->selectRaw('DATEDIFF(now(), fechacomite) as dias')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
         ->selectRaw('concat(ug.nombres, " ", ug.apellidos) AS experto')
@@ -113,12 +113,14 @@ class Idea extends Model
         return $query->select(
             'ideas.id AS consecutivo',
             'ideas.codigo_idea',
-            'nombre_proyecto',
-            'tipo_idea',
-            'viene_convocatoria',
-            'convocatoria',
+            // 'nombre_proyecto',
+            // 'tipo_idea',
+            // 'viene_convocatoria',
+            // 'convocatoria',
             'ideas.talento_id'
         )
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer")) AS nombre_proyecto')
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.convocatoria.answer")) AS convocatoria')
         ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
@@ -136,17 +138,19 @@ class Idea extends Model
             'ideas.id',
             'ideas.created_at AS fecha_registro',
             'ideas.codigo_idea',
-            'nombre_proyecto',
-            'estadosidea.nombre AS estado',
-            'viene_convocatoria',
-            'convocatoria'
+            // 'nombre_proyecto',
+            'estadosidea.nombre AS estado'
+            // 'viene_convocatoria',
+            // 'convocatoria'
         )
-            ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
-            ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-            ->where('nodo_id', $id)
-            ->whereIn('estadosidea.nombre', [EstadoIdea::IsConvocado(), EstadoIdea::IsReprogramado()])
-            ->groupBy('ideas.id')
-            ->orderBy('nombre_proyecto');
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer")) AS nombre_proyecto')
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.convocatoria.answer")) AS convocatoria')
+        ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
+        ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+        ->where('nodo_id', $id)
+        ->whereIn('estadosidea.nombre', [EstadoIdea::IsConvocado(), EstadoIdea::IsReprogramado()])
+        ->groupBy('ideas.id')
+        ->orderBy('nombre_proyecto');
     }
 
     /**
@@ -162,11 +166,13 @@ class Idea extends Model
             'ideas.id AS id',
             'ideas.codigo_idea',
             'nombre_proyecto',
-            'tipo_idea',
-            'viene_convocatoria',
-            'convocatoria',
+            // 'tipo_idea',
+            // 'viene_convocatoria',
+            // 'convocatoria',
             'ideas.user_id'
         )
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer")) AS nombre_proyecto')
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.convocatoria.answer")) AS convocatoria')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
         ->selectRaw('concat(ug.nombres, " ", ug.apellidos) AS experto')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
@@ -202,7 +208,7 @@ class Idea extends Model
             } else {
                 $viene_convocatoria = 0;
             }
-            return $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(datos_idea,  '$.convocatoria')) = '.$viene_convocatoria.'");
+            return $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(datos_idea,  '$.convocatoria.answer')) = '.$viene_convocatoria.'");
             // return $query->whereRaw('viene_convocatoria', $viene_convocatoria);
         }
         return $query;
@@ -243,7 +249,7 @@ class Idea extends Model
     public function scopeConvocatoria($query, $convocatoria)
     {
         if (!empty($convocatoria) && $convocatoria != '' && $convocatoria != null) {
-            return $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(datos_idea,  '$.convocatoria')) like (%'.$convocatoria.'%)");
+            return $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(datos_idea,  '$.convocatoria.answer')) like (%'.$convocatoria.'%)");
         }
         return $query;
     }

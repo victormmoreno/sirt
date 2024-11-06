@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Idea;
 
 use App\Http\Controllers\Controller;
-use App\Http\Traits\Idea\StorageIdeaTrait;
-use App\Contracts\Idea\IdeaStorage;
+use App\Http\Traits\Idea\EnviarPostulacionIdeaTrait;
+use App\Contracts\Idea\EnviarPostulacionIdea;
 use App\Repositories\Repository\UserRepository\UserRepository;
 
-class StoreIdeaController extends Controller implements IdeaStorage
+class SendIdeaToNodoController extends Controller implements EnviarPostulacionIdea
 {
 
-    use StorageIdeaTrait;
+    use EnviarPostulacionIdeaTrait;
 
     // public $userRepository;
     /**

@@ -129,7 +129,8 @@ class EntrenamientoRepository
 
     public function consultarIdeasDelEntrenamiento($id)
     {
-        return Entrenamiento::select('nombre_proyecto', 'fecha_sesion1', 'fecha_sesion2', 'ideas.id', 'ideas.codigo_idea')
+        return Entrenamiento::select('fecha_sesion1', 'fecha_sesion2', 'ideas.id', 'ideas.codigo_idea')
+            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(datos_idea, "$.nombre_proyecto.answer")) AS nombre_proyecto')
             ->selectRaw('IF(confirmacion = 0,"No", "Si") AS confirmacion')
             ->selectRaw('IF(convocado_csibt = 0,"No", "Si") AS convocado')
             ->selectRaw('IF(canvas = 0,"No", "Si") AS canvas')

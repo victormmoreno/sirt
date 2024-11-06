@@ -360,14 +360,14 @@
                                 </b><br>
                             </p>
                         </div>
-                        <div class="col s12 m12 l12">
+                        {{-- <div class="col s12 m12 l12">
                             <p>
                                 <span class="primary-text">{{$idea->datos_idea->link_video->label}}</span><br>
                                 <b>
                                     {{$idea->datos_idea->link_video->answer}}
                                 </b><br>
                             </p>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="row no-m no-p">
                         <div class="col s12 m12 l12 no-m no-p">
@@ -392,9 +392,9 @@
                     </div>
                     <div class="col s12 m12 l12">
                         <p>
-                            <span class="primary-text">{{$idea->datos_idea->version_beta->label}}</span><br>
+                            <span class="primary-text">{{$idea->datos_idea->cantidad_prototipos->label}}</span><br>
                             <b>
-                                {{$idea->datos_idea->version_beta->answer}}
+                                {{$idea->datos_idea->cantidad_prototipos->answer}}
                             </b><br>
                         </p>
                     </div>

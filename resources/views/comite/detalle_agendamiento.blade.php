@@ -40,7 +40,7 @@
                                     <tbody>
                                         @foreach ($comite->ideas as $key => $value)
                                             <tr>
-                                                <td>{{$value->codigo_idea}} - {{$value->nombre_proyecto}}</td>
+                                                <td>{{$value->codigo_idea}} - {{$value->datos_idea->nombre_proyecto->answer}}</td>
                                                 <td>{{$value->pivot->direccion}}</td>
                                                 <td>{{$value->pivot->hora}}</td>
                                                 @can('notificar_comite', [$comite, $value])

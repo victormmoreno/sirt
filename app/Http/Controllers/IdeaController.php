@@ -182,7 +182,7 @@ class IdeaController extends Controller
     public function store(Request $request)
     {
         $empresa = null;
-        if ($request->input('txtidea_empresa') == 1) {
+        if ($request->input('check_idea_empresa') == 1) {
             // Idea con empresa
             $empresa = $this->empresaRepository->consultarEmpresaParams($request->input('txtnit'), 'nit')->first();
             if ($empresa == null) {
@@ -335,6 +335,7 @@ class IdeaController extends Controller
             })->get();
         } else {
             $nodos = $this->getIdNodoForIdeas($request);
+            // dd($nodos);
             $ideas = [];
             if (!empty($request->filter_year) && !empty($request->filter_state) && !empty($request->filter_vieneConvocatoria)) {
                 $ideas = Idea::with(['estadoIdea'])->createdAt($request->filter_year)
@@ -347,7 +348,7 @@ class IdeaController extends Controller
             }
 
         }
-        // dd($ideas);
+        // dd($ideas->first()->datos_idea->producto_minimo_viable);
         return $this->datatableIdeas($ideas);
     }
 
@@ -530,6 +531,7 @@ class IdeaController extends Controller
             alert('No autorizado', 'No tienes permisos para cambiar la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($idea->datos_idea->fecha_acuerdo_no_confidencialidad->answer);
         $nodos = $this->ideaRepository->getSelectNodo();
         return view('ideas.edit', ['idea' => $idea,
         'nodos' => $nodos,
@@ -555,7 +557,7 @@ class IdeaController extends Controller
             alert('No autorizado', 'No tienes permisos para cambiar la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        if ($request->input('txtidea_empresa') == 1) {
+        if ($request->input('check_idea_empresa') == 1) {
             // Idea con empresa
             $empresa = $this->empresaRepository->consultarEmpresaParams($request->input('txtnit'), 'nit')->first();
             if ($empresa == null) {
@@ -677,7 +679,11 @@ class IdeaController extends Controller
 
     public function show($id)
     {
-        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'user_id', 'sede_id')->with([
+        $idea = Idea::select('id', 'codigo_idea', 'user_id', 'sede_id')
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer")) as nombre_proyecto')
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.alcance.answer")) as alcance')
+        ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.objetivo.answer")) as objetivo')
+        ->with([
             'user' => function($query){
                 $query->select('id','documento', 'nombres', 'apellidos', 'email', 'celular');
             },

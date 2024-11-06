@@ -13,6 +13,7 @@ use App\Models\Entrenamiento;
 use App\Models\HistorialEntidad;
 use App\Models\UsoInfraestructura;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 
 trait IdeaTrait
 {
@@ -180,6 +181,43 @@ trait IdeaTrait
     public function getDatosIdeaAttribute($value)
     {
         $value = json_decode($value);
+
+        // dd($value);
+        $value->pregunta1->answer = $this->getPreguntaUno($value->pregunta1->answer);
+        $value->pregunta2->answer = $this->getPreguntaDos($value->pregunta2->answer);
+        $value->pregunta3->answer = $this->getPreguntaTres($value->pregunta3->answer);
+        $value->fecha_acuerdo_no_confidencialidad->answer = Carbon::parse($value->fecha_acuerdo_no_confidencialidad->answer)->format('Y-m-d H:m');
+        $value = $this->getApoyoRequerido($value);
+        $value = $this->getVersionBeta($value);
+        $value = $this->accessingInfo($value);
+        return $value;
+    }
+
+    // // Accesor para 'apoyo_requerido.answer'
+    // public function getApoyoRequeridoAnswerAttribute()
+    // {
+    //     return $this->datos_idea['apoyo_requerido']['answer'] ?? 'Respuesta de apoyo por defecto';
+    // }
+
+    // // Accesor para 'apoyo_requerido.label'
+    // public function getApoyoRequeridoLabelAttribute()
+    // {
+    //     return $this->datos_idea['apoyo_requerido']['label'] ?? 'Etiqueta de apoyo por defecto';
+    // }
+
+    // public function getApoyoRequeridoAnswerAttribute() {
+    //     return $this->datos_idea['apoyo_requerido']['answer'] ?? 'No se encontraron datos';
+    // }
+
+    /**
+     * Retorna la información del array controlada
+     *
+     * @param $value
+     * @return object
+     * @author dum
+     **/
+    private function accessingInfo($value)
+    {
         foreach ($value as $key => $item_value) {
             if ($item_value->answer === null) {
                 $item_value->answer = 'No hay información disponible';
@@ -191,12 +229,6 @@ trait IdeaTrait
                 $item_value->answer = 'Si';
             }
         }
-        $value->pregunta1->answer = $this->getPreguntaUno($value->pregunta1->answer);
-        $value->pregunta2->answer = $this->getPreguntaDos($value->pregunta2->answer);
-        $value->pregunta3->answer = $this->getPreguntaTres($value->pregunta3->answer);
-        $value->apoyo_requerido->answer = $this->getApoyoRequerido($value->apoyo_requerido->answer);
-        $value->version_beta->answer = $this->getVersionBeta($value->version_beta->answer);
-        $value->fecha_acuerdo_no_confidencialidad->answer = Carbon::parse($value->fecha_acuerdo_no_confidencialidad->answer)->format('Y-m-d H:m');
         return $value;
     }
 
@@ -207,7 +239,7 @@ trait IdeaTrait
      * @return array
      * @author dum
      **/
-    public function getPreguntaTres($value)
+    private function getPreguntaTres($value)
     {
         return [
             1 => 'Tecnologías Virtuales: Esta linea esta enfocada al desarrollo de aplicaciones web, móviles, inteligencia artificial, realidad aumentada, sistemas de información geográfica, seguridad informática y creación de entornos virtuales.',
@@ -226,7 +258,7 @@ trait IdeaTrait
      * @return array
      * @author dum
      **/
-    public function getPreguntaDos($value)
+    private function getPreguntaDos($value)
     {
         return [
             1 => 'No tengo equipo de trabajo, yo solo me encargaré de desarrollar el producto.',
@@ -244,7 +276,7 @@ trait IdeaTrait
      * @return array
      * @author dum
      **/
-    public function getPreguntaUno($value)
+    private function getPreguntaUno($value)
     {
         return [
             1 => 'Tengo el problema identificado, pero no tengo claro que producto debo desarrollar para resolverlo',
@@ -264,37 +296,65 @@ trait IdeaTrait
      * Retorna el valor para la pregunta de si hay un prototipo o version beta de la idea
      *
      * @param $value El valor de la version beta
-     * @return array
+     * @return object
      * @author dum
      **/
-    public function getVersionBeta($value)
+    private function getVersionBeta($value)
     {
-        return [
-            1 => 'Concepto: Algo formulado, pero no tangible',
-            2 => 'Modelo en 3D: Diseño de alternativa en software CAD que permite identificar la esencia del proyecto que se está presentando, con algunos detalles de concepto',
-            3 => 'Prototipo: Diseño en físico ya sea tamaño real, mayor o menor',
-            4 => 'Versión beta: Versión de prototipo final ya en pruebas con usuarios',
-            null => 'No hay información disponible'
-        ][$value];
+        // dd($value);
+        if (isset($value->version_beta->answer)) {
+            if (is_numeric($value->version_beta->answer) || $value->version_beta->answer == null) {
+                $value->version_beta->answer = [
+                    1 => 'Concepto: Algo formulado, pero no tangible',
+                    2 => 'Modelo en 3D: Diseño de alternativa en software CAD que permite identificar la esencia del proyecto que se está presentando, con algunos detalles de concepto',
+                    3 => 'Prototipo: Diseño en físico ya sea tamaño real, mayor o menor',
+                    4 => 'Versión beta: Versión de prototipo final ya en pruebas con usuarios',
+                    null => 'No hay información disponible'
+                ][$value->version_beta->answer];
+            } 
+        }
+        return $value;
     }
 
     /**
      * Retorna el valor para el tipo de apoyo requerido
      *
      * @param $value El valor del tipo de apoyo requerido
-     * @return array
+     * @return object
      * @author dum
      **/
-    public function getApoyoRequerido($value)
+    private function getApoyoRequerido($value)
     {
-        return [
-            1 => 'Requiero apoyo en marketing o espacios comerciales',
-            2 => 'Requiero inversionistas',
-            3 => 'Requiero inversión de capital semilla de Fondo Emprender',
-            4 => 'Requiero relacionamiento con Cámara de Comercio, Aceleradoras, Incubadores, entre otros aliados estratégicos',
-            5 => 'No requiero ningún tipo de recurso para escalar mi idea',
-            null => 'No hay información disponible'
-        ][$value];
+        $value = json_encode($value);
+        $value = json_decode($value, true);
+        if (!isset($value['apoyo_requerido']['label'])) {
+            $value['apoyo_requerido']['answer'] = 'No hay información disponible';
+            $value['apoyo_requerido']['label'] = '¿Ha identificado algún tipo de recurso y/o apoyo requerido para la escalabilidad de la idea?';
+        }
+        if (!isset($value['link_video']['label'])) {
+            $value['link_video']['answer'] = 'No hay información disponible';
+            $value['link_video']['label'] = 'Link del video presentación de la idea de proyecto';
+        }
+
+        $value = json_encode($value);
+        $value = json_decode($value);
+        if (isset($value->apoyo_requerido->answer)) {
+            if (is_numeric($value->apoyo_requerido->answer) || $value->apoyo_requerido->answer == null) {
+            
+
+                $value->apoyo_requerido->answer = [
+                    1 => 'Requiero apoyo en marketing o espacios comerciales',
+                    2 => 'Requiero inversionistas',
+                    3 => 'Requiero inversión de capital semilla de Fondo Emprender',
+                    4 => 'Requiero relacionamiento con Cámara de Comercio, Aceleradoras, Incubadores, entre otros aliados estratégicos',
+                    5 => 'No requiero ningún tipo de recurso para escalar mi idea',
+                    null => 'No hay información disponible'
+                ][$value->apoyo_requerido->answer];
+            }
+
+        }
+        // dd($value);
+        return $value;
     }
 
     //metodo para retorar el valor string de la primera preunta de registro de ideas
