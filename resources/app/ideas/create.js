@@ -95,7 +95,7 @@ function consultarEmpresaTecnoparque() {
 
 function reiniciarSede() {
   $('#sedesEmpresaFormIdea').empty();
-  $('#txtsede_id').val('');
+  $('#txt_sede_id').val('');
   $('#txtnombre_sede_disabled').val('Primero debes seleccionar una sede');
 }
 
@@ -116,7 +116,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
     type: 'get',
     url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
     success: function (response) {
-      $('#txtsede_id').val(response.sede.id);
+      $('#txt_sede_id').val(response.sede.id);
       $('#txtnombre_sede_disabled').val(response.sede.nombre_sede + ' - ' + response.sede.direccion + ' ' + response.sede.ciudad.nombre + ' (' + response.sede.ciudad.departamento.nombre + ')');
       Swal.fire({
         toast: true,
@@ -279,7 +279,7 @@ function mensajesIdeaForm(data) {
 
 
 function showInput_ProductoParecido() {
-    if ($('#txtproducto_parecido').is(':checked')) {
+    if ($('#check_producto_parecido').is(':checked')) {
         divProductoParecido.show();
     } else {
         divProductoParecido.hide();
@@ -287,7 +287,7 @@ function showInput_ProductoParecido() {
 }
 
 function showInput_Reemplaza() {
-    if ($('#txtreemplaza').is(':checked')) {
+    if ($('#check_reemplaza').is(':checked')) {
         divReemplaza.show();
     } else {
         divReemplaza.hide();
@@ -295,7 +295,7 @@ function showInput_Reemplaza() {
 }
 
 function showInput_Packing() {
-    if ($('#txtpacking').is(':checked')) {
+    if ($('#check_packing').is(':checked')) {
         divPacking.show();
     } else {
         divPacking.hide();
@@ -303,7 +303,7 @@ function showInput_Packing() {
 }
 
 function showInput_RequisitosLegales() {
-    if ($('#txtrequisitos_legales').is(':checked')) {
+    if ($('#check_requisitos_legales').is(':checked')) {
         divRequisitosLegales.show();
     } else {
         divRequisitosLegales.hide();
@@ -311,7 +311,7 @@ function showInput_RequisitosLegales() {
 }
 
 function showInput_BuscarEmpresa() {
-    if ($('#txtidea_empresa').is(':checked')) {
+    if ($('#check_idea_empresa').is(':checked')) {
         divBuscarEmpresa.show();
     } else {
         divBuscarEmpresa.hide();
@@ -319,7 +319,7 @@ function showInput_BuscarEmpresa() {
 }
 
 function showInput_Certificaciones() {
-    if ($('#txtrequiere_certificaciones').is(':checked')) {
+    if ($('#check_requiere_certificaciones').is(':checked')) {
         divCertificaciones.show();
     } else {
         divCertificaciones.hide();
@@ -327,7 +327,7 @@ function showInput_Certificaciones() {
 }
 
 function showInput_Recursos() {
-    if ($('#txtrecursos_necesarios').is(':checked')) {
+    if ($('#check_recursos_necesarios').is(':checked')) {
         divRecursos.show();
     } else {
         divRecursos.hide();
@@ -335,7 +335,7 @@ function showInput_Recursos() {
 }
 
 function showInput_Convocatoria() {
-    if ($('#txtviene_convocatoria').is(':checked')) {
+    if ($('#check_viene_convocatoria').is(':checked')) {
         divConvocatoria.show();
     } else {
         divConvocatoria.hide();
@@ -343,7 +343,7 @@ function showInput_Convocatoria() {
 }
 
 function showInput_AvalEmpresa() {
-    if ($('#txtaval_empresa').is(':checked')) {
+    if ($('#check_aval_empresa').is(':checked')) {
         divAvalEmpresa.show();
     } else {
         divAvalEmpresa.hide();
