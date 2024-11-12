@@ -25,7 +25,7 @@ En los próximos días se le enviará un correo con los datos para asistir al co
         <h3 class="subtittle">Código Idea:</h3>
         <h3 class="subtittle-value">{{$idea->codigo_idea}}</h3>
         <h3 class="subtittle">Nombre Idea de proyecto: </h3>
-        <h3 class="subtittle-value">{{$idea->nombre_proyecto}}</h3>
+        <h3 class="subtittle-value">{{$idea->datos_idea->nombre_proyecto->answer}}</h3>
         @if ($observaciones != null)
         <h3 class="subtittle-value">Tecnoparque {{$idea->nodo->entidad->nombre}} te ha dejado las siguientes observaciones:</h3>
         <h3 class="subtittle-value">{{$observaciones}}</h3>

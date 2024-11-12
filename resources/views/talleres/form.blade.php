@@ -15,7 +15,7 @@
       <select class="js-states browser-default select2" id="txtidea_taller" name="txtidea_taller">
         <option value="0">Seleccione una idea de proyecto</option>
         @foreach ($ideas as $key => $idea)
-          <option value="{{$idea->id}}">{{$idea->codigo_idea}} - {{$idea->nombre_proyecto}}</option>
+          <option value="{{$idea->id}}">{{$idea->codigo_idea}} - {{$idea->datos_idea->nombre_proyecto->answer}}</option>
         @endforeach
       </select>
       <label for="txtidea_taller" class="active">Idea de proyecto <span class="red-text">*</span></label>

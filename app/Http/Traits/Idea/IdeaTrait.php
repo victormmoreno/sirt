@@ -242,6 +242,7 @@ trait IdeaTrait
     private function getPreguntaTres($value)
     {
         return [
+            0 => 'No hay información disponible',
             1 => 'Tecnologías Virtuales: Esta linea esta enfocada al desarrollo de aplicaciones web, móviles, inteligencia artificial, realidad aumentada, sistemas de información geográfica, seguridad informática y creación de entornos virtuales.',
             2 => 'Biotecnología y Nanotecnología: Esta linea esta enfocada al trabajo de la agroindustria alimentaria, biotecnologia vegetal, biotecnologia molecular aplicada a plantas, animales y microorganismos.',
             3 => 'Electrónica y Telecomunicaciones: Esta linea esta enfocada al internet de las cosas, automatización de procesos, sistemas embebidos, robótica, procesamiento de imágenes e instrumentación electrónica, gestión de la energía y energías renovables.',

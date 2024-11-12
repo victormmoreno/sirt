@@ -18,7 +18,7 @@ Ha recibido este mensaje porque hemos recibido la postulación de su idea, la cu
         <h3 class="subtittle">Código Idea:</h3>
         <h3 class="subtittle-value">{{$idea->codigo_idea}}</h3>
         <h3 class="subtittle">Nombre Idea de proyecto: </h3>
-        <h3 class="subtittle-value">{{$idea->nombre_proyecto}}</h3>
+        <h3 class="subtittle-value">{{$idea->datos_idea->nombre_proyecto->answer}}</h3>
     </center>
 @endcomponent
 

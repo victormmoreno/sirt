@@ -8,9 +8,9 @@
             <th>Nombre Completo</th>
             <th>Correo Electrónico</th>
             <th>Teléfono / Celular</th>
-            <th>¿Viene de Convocatoria?</th>
+            {{-- <th>¿Viene de Convocatoria?</th> --}}
             <th>Nombre de convocatoria</th>
-            <th>¿Avalada por empresa?</th>
+            {{-- <th>¿Avalada por empresa?</th> --}}
             <th>Empresa</th>
             <th>Fecha de registro</th>
             <th>Código del taller de fortalecimiento</th>
@@ -61,17 +61,17 @@
                 @endif
             </td>
             <td>
-                {{$idea->viene_convocatoria == 1 ? 'Si': 'No'}}
+                {{$idea->datos_idea->convocatoria->answer}}
             </td>
-            <td>
+            {{-- <td>
                 {{$idea->viene_convocatoria == 1 ? $idea->convocatoria: 'No Aplica'}}
-            </td>
+            </td> --}}
             <td>
-                {{$idea->aval_empresa == 1 ? 'Si': 'No'}}
+                {{$idea->datos_idea->empresa->answer}}
             </td>
-            <td>
+            {{-- <td>
                 {{$idea->aval_empresa == 1 ? $idea->empresa: 'No Aplica'}}
-            </td>
+            </td> --}}
             <td>
                 {{isset($idea->created_at) ? $idea->created_at->isoFormat('DD/MM/YYYY'): 'No registra'}}
             </td>

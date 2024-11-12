@@ -145,7 +145,7 @@ class Idea extends Model implements CompleteIdeaInformation
         )
         ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer")) AS nombre_proyecto')
         ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.convocatoria.answer")) AS convocatoria')
-        ->selectRaw('CONCAT(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
+        ->selectRaw('CONCAT(codigo_idea, " - ", JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  "$.nombre_proyecto.answer"))) AS nombre_idea')
         ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
         ->where('nodo_id', $id)
         ->whereIn('estadosidea.nombre', [EstadoIdea::IsConvocado(), EstadoIdea::IsReprogramado()])
@@ -165,7 +165,7 @@ class Idea extends Model implements CompleteIdeaInformation
         return $query->select(
             'ideas.id AS id',
             'ideas.codigo_idea',
-            'nombre_proyecto',
+            // 'nombre_proyecto',
             // 'tipo_idea',
             // 'viene_convocatoria',
             // 'convocatoria',
@@ -208,7 +208,7 @@ class Idea extends Model implements CompleteIdeaInformation
             } else {
                 $viene_convocatoria = 0;
             }
-            return $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(datos_idea,  '$.convocatoria.answer')) = '.$viene_convocatoria.'");
+            return $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea,  '$.convocatoria.answer')) = '.$viene_convocatoria.'");
             // return $query->whereRaw('viene_convocatoria', $viene_convocatoria);
         }
         return $query;

@@ -60,7 +60,7 @@
     </tr>
     <tr>
         <td colspan="100">
-            <b>Código y nombre de la Idea de Proyecto:</b> {{$data->idea->codigo_idea}} - {{$data->idea->nombre_proyecto}}
+            <b>Código y nombre de la Idea de Proyecto:</b> {{$data->idea->codigo_idea}} - {{$data->idea->datos_idea->nombre_proyecto->answer}}
         </td>
     </tr>
     <tr>

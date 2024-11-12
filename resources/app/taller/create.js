@@ -168,7 +168,7 @@ function reiniciarCamposTaller() {
 function prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia) {
   let idIdea = ajax.detalles.id;
   let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' +
-      '<td><input type="hidden" name="ideas_taller[]" value="' + idIdea + '">' + ajax.detalles.codigo_idea + ' - ' + ajax.detalles.nombre_proyecto + '</td>' +
+      '<td><input type="hidden" name="ideas_taller[]" value="' + idIdea + '">' + ajax.detalles.codigo_idea + ' - ' + ajax.detalles.datos_idea.nombre_proyecto.answer + '</td>' +
       '<td><input type="hidden" name="confirmaciones[]" value="' + confirmacion + '">' + getYesOrNot(confirmacion) + '</td>' +
       '<td><input type="hidden" name="asistencias[]" value="' + asistencia + '">' + getYesOrNot(asistencia) + '</td>' +
       '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +

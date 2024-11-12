@@ -16,7 +16,7 @@
   </p>
   <p style="text-align: justify">
     Luego de analizar la información presentada en el Comité de Selección de Ideas de Base Tecnológica realizado en el 
-    mes de {{ $comite->fechacomite->isoFormat('MMMM [de] YYYY') }}, el comité evaluador considera la No aceptación del proyecto <b>“{{ $idea->nombre_proyecto }}”</b>.
+    mes de {{ $comite->fechacomite->isoFormat('MMMM [de] YYYY') }}, el comité evaluador considera la No aceptación del proyecto <b>“{{ $idea->datos_idea->nombre_proyecto->answer }}”</b>.
     Para esto le solicitamos seguir las siguientes recomendaciones.
     <br>
     <br>

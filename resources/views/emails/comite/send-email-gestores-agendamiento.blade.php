@@ -23,7 +23,7 @@ impacto y equipo de trabajo. También se contara con un espacio de cinco minutos
             <h3 class="subtittle">Código Idea:</h3>
             <h3 class="subtittle-value">{{$idea->codigo_idea}}</h3>
             <h3 class="subtittle">Nombre Idea de proyecto: </h3>
-            <h3 class="subtittle-value">{{$idea->nombre_proyecto}}</h3>
+            <h3 class="subtittle-value">{{$idea->datos_idea->nombre_proyecto->answer}}</h3>
             <h3 class="subtittle">Lugar donde se realizará el comité: </h3>
             <h3 class="subtittle-value">{{$idea->pivot->direccion}}</h3>
             <h3 class="subtittle">Fecha y hora que se realizará el comité: </h3>

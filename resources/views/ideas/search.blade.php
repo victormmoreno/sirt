@@ -44,7 +44,7 @@
                                                         <div class="input-field col s12 m4 l4">
                                                             <select class="js-states browser-default select2" tabindex="-1" style="width: 100%" name="txttype_search" id="txttype_search">
                                                                 <option value="codigo_idea">Código de idea</option>
-                                                                <option value="nombre_proyecto">Nombre de idea</option>
+                                                                {{-- <option value='JSON_EXTRACT(datos_idea, "$.nombre_proyecto.answer")'>Nombre de idea</option> --}}
                                                                 <option value="users.nombres">Nombres del talento</option>
                                                                 <option value="users.apellidos">Apellidos del talento</option>
                                                                 <option value="ug.nombres">Nombres del experto</option>

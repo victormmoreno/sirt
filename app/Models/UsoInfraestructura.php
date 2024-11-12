@@ -69,7 +69,7 @@ class UsoInfraestructura extends Model
                     break;
                 case class_basename(Idea::class):
                     return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.codigo', 'usoinfraestructuras.fecha', 'entidades.nombre as nodo')
-                        ->selectRaw("estadosidea.nombre as fase, concat(ideas.codigo_idea, ' - ',ideas.nombre_proyecto) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Idea', 'Idea', 'No registra') as tipo_asesoria,
+                        ->selectRaw("estadosidea.nombre as fase, concat(ideas.codigo_idea, ' - ', JSON_UNQUOTE(JSON_EXTRACT(ideas.datos_idea, '$.nombre_proyecto.answer'))) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Idea', 'Idea', 'No registra') as tipo_asesoria,
                         GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos)  SEPARATOR ';') as asesores,
                         GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos) SEPARATOR ';') as talentos,
                         sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta");

@@ -63,7 +63,7 @@
                         <tr id="ideaAsociadaAgendamiento{{ $value->id }}">
                             <td><input type="hidden" name="ideas[]"
                                     value="{{ $value->id }}">{{ $value->codigo_idea }} -
-                                {{ $value->nombre_proyecto }}</td>
+                                {{ $value->datos_idea->nombre_proyecto->answer }}</td>
                             <td>
                                 <div class="switch m-b-md">
                                     <label>

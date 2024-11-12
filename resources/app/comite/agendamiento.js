@@ -215,7 +215,7 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
 function prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion) {
 let idIdea = ajax.detalles.id;
 let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' +
-    '<td><input type="hidden" name="ideas[]" value="' + idIdea + '">' + ajax.detalles.nombre_proyecto + '</td>' +
+    '<td><input type="hidden" name="ideas[]" value="' + idIdea + '">' + ajax.detalles.datos_idea.nombre_proyecto.answer + '</td>' +
     '<td><input type="hidden" name="horas[]" value="' + hora + '">' + hora + '</td>' +
     '<td><input type="hidden" name="direcciones[]" value="' + direccion + '">' + direccion + '</td>' +
     '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +

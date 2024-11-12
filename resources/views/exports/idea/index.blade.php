@@ -43,15 +43,15 @@
             <th>
                 ¿Viene de Convocatoria?
             </th>
-            <th>
+            {{-- <th>
                 Nombre de convocatoria
-            </th>
+            </th> --}}
             <th>
                 ¿Avalada por empresa?
             </th>
-            <th>
+            {{-- <th>
                 Empresa
-            </th>
+            </th> --}}
             <th>
                 Fecha de registro
             </th>
@@ -67,7 +67,7 @@
                 {{isset($idea->codigo_idea) ? $idea->codigo_idea : 'No registra'}}
             </td>
             <td>
-                {{isset($idea->nombre_proyecto) ? $idea->nombre_proyecto : 'No registra'}}
+                {{$idea->datos_idea->nombre_proyecto->answer}}
             </td>
             <td>
                 {{isset($idea->estadoIdea) ? $idea->estadoIdea->nombre : 'No registra'}}
@@ -94,13 +94,13 @@
                 @endif
             </td>
             <td>
-                {{App\Models\Idea::preguntaUno($idea->pregunta1)}}
+                {{ $idea->datos_idea->pregunta1->answer }}
             </td>
             <td>
-                {{App\Models\Idea::preguntaDos($idea->pregunta2)}}
+                {{ $idea->datos_idea->pregunta2->answer }}
             </td>
             <td>
-                {{App\Models\Idea::preguntaTres($idea->pregunta3)}}
+                {{ $idea->datos_idea->pregunta3->answer }}
             </td>
             <td>
                 {{isset($idea->descripcion)? $idea->descripcion: 'No registra'}}
@@ -112,16 +112,16 @@
                 {{isset($idea->alcance)? $idea->alcance: 'No registra'}}
             </td>
             <td>
-                {{$idea->viene_convocatoria == 1 ? 'Si': 'No'}}
+                {{$idea->datos_idea->convocatoria->answer}}
             </td>
-            <td>
+            {{-- <td>
                 {{$idea->viene_convocatoria == 1 ? $idea->convocatoria: 'No Aplica'}}
-            </td>
-            <td>
+            </td> --}}
+            {{-- <td>
                 {{$idea->aval_empresa == 1 ? 'Si': 'No'}}
-            </td>
+            </td> --}}
             <td>
-                {{$idea->aval_empresa == 1 ? $idea->empresa: 'No Aplica'}}
+                {{$idea->datos_idea->empresa->answer}}
             </td>
             <td>
                 {{isset($idea->created_at) ? $idea->created_at->isoFormat('DD/MM/YYYY'): 'No registra'}}
